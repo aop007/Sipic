@@ -24,4 +24,9 @@ typedef    signed  short  CPU_INT16S;
 typedef  unsigned  int    CPU_INT32U;
 typedef    signed  int    CPU_INT32S;
 
+
+CPU_INT16U  CPU_Swap16 (CPU_INT16U  val);
+
+CPU_INT32U  CPU_Swap32 (CPU_INT32U  val);
+
 #endif

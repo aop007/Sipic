@@ -67,12 +67,12 @@ typedef  struct  external_filehdr {
     {
         unsigned short 	magic;		/* type of file				*/
         unsigned short	vstamp;		/* version stamp			*/
-        unsigned long	tsize;		/* text size in bytes, padded to FW bdry*/
-        unsigned long	dsize;		/* initialized data "  "		*/
-        unsigned long	bsize;		/* uninitialized data "   "		*/
-        unsigned long	entry;		/* entry pt.				*/
-        unsigned long 	text_start;	/* base of text used for this file */
-        unsigned long 	data_start;	/* base of data used for this file */
+        unsigned int	tsize;		/* text size in bytes, padded to FW bdry*/
+        unsigned int	dsize;		/* initialized data "  "		*/
+        unsigned int	bsize;		/* uninitialized data "   "		*/
+        unsigned int	entry;		/* entry pt.				*/
+        unsigned int 	text_start;	/* base of text used for this file */
+        unsigned int 	data_start;	/* base of data used for this file */
     }
     AOUTHDR;
     
@@ -101,15 +101,15 @@ typedef  struct  external_filehdr {
     
 typedef struct external_scnhdr {
         char		s_name[8];	/* section name			*/
-        unsigned long		s_paddr;	/* physical address, aliased s_nlib */
-        unsigned long		s_vaddr;	/* virtual address		*/
-        unsigned long		s_size;		/* section size			*/
-        unsigned long		s_scnptr;	/* file ptr to raw data for section */
-        unsigned long		s_relptr;	/* file ptr to relocation	*/
-        unsigned long		s_lnnoptr;	/* file ptr to line numbers	*/
+        unsigned int		s_paddr;	/* physical address, aliased s_nlib */
+        unsigned int		s_vaddr;	/* virtual address		*/
+        unsigned int		s_size;		/* section size			*/
+        unsigned int		s_scnptr;	/* file ptr to raw data for section */
+        unsigned int		s_relptr;	/* file ptr to relocation	*/
+        unsigned int		s_lnnoptr;	/* file ptr to line numbers	*/
         unsigned short		s_nreloc;	/* number of relocation entries	*/
         unsigned short		s_nlnno;	/* number of line number entries*/
-        unsigned long		s_flags;	/* flags			*/
+        unsigned int		s_flags;	/* flags			*/
     } SECTION_HDR;
     
 #define	SECTION_HDR_SIZE	sizeof(SECTION_HDR)
@@ -352,12 +352,19 @@ typedef struct external_scnhdr {
 #define  COFF_PARSER_ERR_FILE_OPEN  1001u
 #define  COFF_PARSER_ERR_FILE_READ  1002u
 
+#define  COFF_PARSER_ERR_MEM_ALLOC  1101u
+
 
 /*
  ********** TYPE DEFINITION *********
  */
 
 typedef  CPU_INT16U        COFF_PARSER_ERR;
+
+typedef  struct   section {
+    SECTION_HDR   section;
+    CPU_INT08U   *p_data;
+} SECTION;
 
 
 /*
