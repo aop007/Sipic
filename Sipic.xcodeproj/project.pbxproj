@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		690ADF0C161BE536001DCA06 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 690ADF0B161BE536001DCA06 /* main.c */; };
 		690ADF0E161BE536001DCA06 /* Sipic.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 690ADF0D161BE536001DCA06 /* Sipic.1 */; };
+		690ADF15161BE5DD001DCA06 /* coff_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 690ADF14161BE5DD001DCA06 /* coff_parser.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,6 +29,10 @@
 		690ADF07161BE536001DCA06 /* Sipic */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Sipic; sourceTree = BUILT_PRODUCTS_DIR; };
 		690ADF0B161BE536001DCA06 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		690ADF0D161BE536001DCA06 /* Sipic.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Sipic.1; sourceTree = "<group>"; };
+		690ADF14161BE5DD001DCA06 /* coff_parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = coff_parser.c; sourceTree = "<group>"; };
+		690ADF16161BE613001DCA06 /* coff_parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = coff_parser.h; sourceTree = "<group>"; };
+		690ADF17161BEBB6001DCA06 /* cpu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cpu.h; sourceTree = "<group>"; };
+		690ADF18161BEF0F001DCA06 /* coff_cfg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = coff_cfg.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +67,10 @@
 			children = (
 				690ADF0B161BE536001DCA06 /* main.c */,
 				690ADF0D161BE536001DCA06 /* Sipic.1 */,
+				690ADF14161BE5DD001DCA06 /* coff_parser.c */,
+				690ADF16161BE613001DCA06 /* coff_parser.h */,
+				690ADF17161BEBB6001DCA06 /* cpu.h */,
+				690ADF18161BEF0F001DCA06 /* coff_cfg.h */,
 			);
 			path = Sipic;
 			sourceTree = "<group>";
@@ -118,6 +127,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				690ADF0C161BE536001DCA06 /* main.c in Sources */,
+				690ADF15161BE5DD001DCA06 /* coff_parser.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,7 +137,7 @@
 		690ADF0F161BE536001DCA06 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -157,7 +167,7 @@
 		690ADF10161BE536001DCA06 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
