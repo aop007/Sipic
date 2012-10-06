@@ -13,4 +13,6 @@
 
 #define  SECTION_COUNT  5u
 
+#define  COFF_CFG_DATA_PREVIEW_SIZE  32u
+
 #endif

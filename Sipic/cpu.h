@@ -16,6 +16,7 @@
 typedef  unsigned  char   CPU_BOOLEAN;
 
 typedef  unsigned  char   CPU_INT08U;
+typedef            char   CPU_CHAR;
 typedef    signed  char   CPU_INT08S;
 
 typedef  unsigned  short  CPU_INT16U;
@@ -23,6 +24,9 @@ typedef    signed  short  CPU_INT16S;
 
 typedef  unsigned  int    CPU_INT32U;
 typedef    signed  int    CPU_INT32S;
+
+typedef  unsigned  long   CPU_INT64U;
+typedef    signed  long   CPU_INT64S;
 
 
 CPU_INT16U  CPU_Swap16 (CPU_INT16U  val);

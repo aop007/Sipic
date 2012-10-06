@@ -10,6 +10,7 @@
 #define Sipic_coff_parser_h
 
 #include <cpu.h>
+#include <coff_cfg.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -26,14 +27,13 @@ extern "C" {
     /********************** FILE HEADER **********************/
 
 typedef  struct  external_filehdr {
-    unsigned short f_magic;		/* magic number			*/
-    unsigned short f_nscns;		/* number of sections		*/
-    
-    unsigned int f_timdat;     /* time & date stamp		*/
-    unsigned int f_symptr;     /* file pointer to symtab	*/
-    unsigned int f_nsyms;		/* number of symtab entries	*/
-    unsigned short f_opthdr;	/* sizeof(optional hdr)		*/
-    unsigned short f_flags;		/* flags			*/
+    CPU_INT16U  f_magic;		/* magic number             */
+    CPU_INT16U  f_nscns;		/* number of sections		*/
+    CPU_INT32U  f_timdat;       /* time & date stamp		*/
+    CPU_INT32U  f_symptr;       /* file pointer to symtab	*/
+    CPU_INT32U  f_nsyms;		/* number of symtab entries	*/
+    CPU_INT16U  f_opthdr;       /* sizeof(optional hdr)		*/
+    CPU_INT16U  f_flags;		/* flags                    */
 } FILE_HDR;
     
     
@@ -63,42 +63,21 @@ typedef  struct  external_filehdr {
     /********************** AOUT "OPTIONAL HEADER" **********************/
     
     
-    typedef struct
-    {
-        unsigned short 	magic;		/* type of file				*/
-        unsigned short	vstamp;		/* version stamp			*/
-        unsigned int	tsize;		/* text size in bytes, padded to FW bdry*/
-        unsigned int	dsize;		/* initialized data "  "		*/
-        unsigned int	bsize;		/* uninitialized data "   "		*/
-        unsigned int	entry;		/* entry pt.				*/
-        unsigned int 	text_start;	/* base of text used for this file */
-        unsigned int 	data_start;	/* base of data used for this file */
-    }
-    AOUTHDR;
+typedef struct opthdr
+{
+    CPU_INT16U magic;
+    CPU_INT16U vstamp;
+    CPU_INT32U proc_type;
+    CPU_INT32U rom_width_bits;
+    CPU_INT32U ram_width_bits;
+} OPT_HDR;
     
-    
-    typedef struct gnu_aout {
-        unsigned long info;
-        unsigned long tsize;
-        unsigned long dsize;
-        unsigned long bsize;
-        unsigned long symsize;
-        unsigned long entry;
-        unsigned long txrel;
-        unsigned long dtrel;
-	} GNU_AOUT;
-    
-#define AOUTSZ (sizeof(AOUTHDR))
-    
-#define OMAGIC          0404    /* object files, eg as output */
-#define ZMAGIC          0413    /* demand load format, eg normal ld output */
-#define STMAGIC		0401	/* target shlib */
-#define SHMAGIC		0443	/* host   shlib */
+#define  OPT_HDR_SIZE  sizeof(OPT_HDR)
     
     
     /********************** SECTION HEADER **********************/
     
-    
+#if 0
 typedef struct external_scnhdr {
         char		s_name[8];	/* section name			*/
         unsigned int		s_paddr;	/* physical address, aliased s_nlib */
@@ -111,6 +90,27 @@ typedef struct external_scnhdr {
         unsigned short		s_nlnno;	/* number of line number entries*/
         unsigned int		s_flags;	/* flags			*/
     } SECTION_HDR;
+#else
+    typedef struct scnhdr
+    {
+        union {
+            CPU_INT08U _s_name[8]; /* section name is a string */
+            struct
+            {
+                CPU_INT32U _s_zeroes;
+                CPU_INT32U _s_offset;
+            }_s_s; }_s;
+        CPU_INT32U s_paddr;
+        CPU_INT32U s_vaddr;
+        CPU_INT32U s_size;
+        CPU_INT32U s_scnptr;
+        CPU_INT32U s_relptr;
+        CPU_INT32U s_lnnoptr;
+        CPU_INT16U s_nreloc;
+        CPU_INT16U s_nlnno;
+        CPU_INT32U s_flags;
+    } SECTION_HDR;
+#endif
     
 #define	SECTION_HDR_SIZE	sizeof(SECTION_HDR)
     
@@ -364,6 +364,7 @@ typedef  CPU_INT16U        COFF_PARSER_ERR;
 typedef  struct   section {
     SECTION_HDR   section;
     CPU_INT08U   *p_data;
+    CPU_INT08U    data[COFF_CFG_DATA_PREVIEW_SIZE];
 } SECTION;
 
 

@@ -11,6 +11,9 @@
 #include <coff_cfg.h>
 #include <cpu.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 
 /*
@@ -20,7 +23,7 @@
 static  void  CoffParser_SwapSectionHdr (SECTION          *p_section);
 
 static  void  CoffParser_LoadSection    (SECTION          *p_section,
-                                         FILE             *p_file,
+                                         CPU_INT08U       *p_file_data,
                                          COFF_PARSER_ERR  *p_err);
 
 /*
@@ -36,8 +39,15 @@ void  CoffParser_ReadFile(const char       *p_file_name,
     SECTION      section[SECTION_COUNT];
     SECTION     *p_section;
     CPU_INT16U   section_iterator;
+#if 0
     CPU_INT08U   optional_hdr[64];
-    
+#endif
+    struct stat  file_status;
+    CPU_INT64U   file_size;
+    CPU_INT64U   file_rem_size;
+    CPU_INT64U   file_index;
+    CPU_INT08U  *p_file_content;
+    OPT_HDR      opt_hdr;
     
                                                                 /* Open File. */
     p_file = fopen(p_file_name, "r");
@@ -54,11 +64,37 @@ void  CoffParser_ReadFile(const char       *p_file_name,
                         p_file);
     
     if (stream_err != FILE_HDR_SIZE) {
-       *p_err = COFF_PARSER_ERR_FILE_READ;
         stream_err = fclose(p_file);
+       *p_err = COFF_PARSER_ERR_FILE_READ;
         return;
     }
     
+    stat(p_file_name, &file_status);
+    
+    file_size      = file_status.st_size;
+    file_rem_size  = file_size - FILE_HDR_SIZE;
+    p_file_content = malloc(file_rem_size);
+
+    if (p_file_content == NULL) {
+       *p_err = COFF_PARSER_ERR_MEM_ALLOC;
+        return;
+    }
+    
+    fread(p_file_content, 1u, file_rem_size, p_file);
+    fclose(p_file);
+    
+#if 0
+    stream_err = fread(&optional_hdr[0],
+                       1u,
+                       file_hdr.f_opthdr,
+                       p_file);
+    
+    if (stream_err != file_hdr.f_opthdr) {
+        *p_err = COFF_PARSER_ERR_FILE_READ;
+        stream_err = fclose(p_file);
+        return;
+    }
+
                                                                 /* Read optional header. */
     if (file_hdr.f_opthdr > 0) {
         stream_err = fread(&optional_hdr[0],
@@ -72,33 +108,30 @@ void  CoffParser_ReadFile(const char       *p_file_name,
             return;
         }
     }
+#else
+    memcpy(&opt_hdr, &p_file_content[0], OPT_HDR_SIZE);
     
-    //p_sec_hdr = &section_hdr_tbl[0];
-    p_section = &section[0];
+#endif
+
+    p_section  = &section[0];
+    file_index = file_hdr.f_opthdr;
                                                                 /* Read Section Header. */
     for (section_iterator = 0 ; section_iterator < file_hdr.f_nscns ; section_iterator++) {
-        stream_err = fread(&p_section->section,
-                            1u,
-                            SECTION_HDR_SIZE,
-                            p_file);
         
-        if (stream_err != SECTION_HDR_SIZE) {
-            *p_err = COFF_PARSER_ERR_FILE_READ;
-            stream_err = fclose(p_file);
-            return;
-        }
-        
-        CoffParser_SwapSectionHdr(p_section);
-        
+        (void)memcpy(((       void         *)&p_section->section),
+                     ((const  void         *)&p_file_content[file_index]),
+                     ((       unsigned  long) SECTION_HDR_SIZE));
+    
         p_section->p_data = (CPU_INT08U *)0;
         p_section++;
+        file_index += SECTION_HDR_SIZE;
     }
     
     p_section = &section[0];
     
     for (section_iterator = 0 ; section_iterator < file_hdr.f_nscns ; section_iterator++) {
         CoffParser_LoadSection(p_section,
-                               p_file,
+                               p_file_content,
                               &stream_err);
         
         switch (stream_err) {
@@ -143,16 +176,18 @@ static  void  CoffParser_SwapSectionHdr(SECTION  *p_section)
 }
 
 static  void  CoffParser_LoadSection(SECTION          *p_section,
-                                     FILE             *p_file,
+                                     CPU_INT08U       *p_file_data,
                                      COFF_PARSER_ERR  *p_err)
 {
     SECTION_HDR  *p_sec_hdr;
     void         *p_mem;
-    CPU_INT32U   stream_err;
+    CPU_INT16U   data_preview_size;
+    CPU_INT32U   section_idx;
+    CPU_INT32U   section_size;
     
-    
-    p_sec_hdr = &p_section->section;
-    p_mem = malloc(p_sec_hdr->s_size);
+    p_sec_hdr    = &p_section->section;
+    section_size =  p_sec_hdr->s_size;
+    p_mem = malloc(section_size);
     
     if (p_mem == NULL) {
        *p_err = COFF_PARSER_ERR_MEM_ALLOC;
@@ -160,17 +195,23 @@ static  void  CoffParser_LoadSection(SECTION          *p_section,
     }
     
     p_section->p_data = p_mem;
+    section_idx = p_sec_hdr->s_scnptr + 8;
     
-    stream_err = fread(p_mem,
-                       1u,
-                       p_sec_hdr->s_size,
-                       p_file);
+    memcpy(p_mem, &p_file_data[section_idx], section_size);
     
-    if (stream_err != p_sec_hdr->s_size) {
-        *p_err = COFF_PARSER_ERR_FILE_READ;
-        return;
+    data_preview_size = section_size;
+    
+    if (data_preview_size > COFF_CFG_DATA_PREVIEW_SIZE) {
+        data_preview_size = COFF_CFG_DATA_PREVIEW_SIZE;
     }
     
+    if (p_sec_hdr->s_scnptr != 0) {
+    
+        memcpy(&p_section->data[0],
+                p_section->p_data,
+                data_preview_size);
+    
+    }
     
     *p_err = COFF_PARSER_ERR_NONE;
 }
