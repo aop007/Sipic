@@ -9,6 +9,17 @@
 #ifndef Sipic_cpu_h
 #define Sipic_cpu_h
 
+#include "err.h"
+
+#define  DEF_NO     0u
+#define  DEF_FAIL   0u
+#define  DEF_FALSE  0u
+
+#define  DEF_YES    1u
+#define  DEF_OK     1u
+#define  DEF_TRUE   1u
+
+
 /*
  ********** TYPE DEFINITION *********
  */

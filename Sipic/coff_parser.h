@@ -11,6 +11,7 @@
 
 #include <cpu.h>
 #include <coff_cfg.h>
+#include "err.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -348,12 +349,13 @@ typedef struct external_scnhdr {
  ************* ERROR TYPE ***********
  */
 
+#if 0
 #define  COFF_PARSER_ERR_NONE       1000u
 #define  COFF_PARSER_ERR_FILE_OPEN  1001u
 #define  COFF_PARSER_ERR_FILE_READ  1002u
 
 #define  COFF_PARSER_ERR_MEM_ALLOC  1101u
-
+#endif
 
 /*
  ********** TYPE DEFINITION *********

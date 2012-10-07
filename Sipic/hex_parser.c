@@ -19,17 +19,22 @@ void HexParser_ReadFile(const char      *p_file_name,
                          HEX_PARSER_ERR  *p_err)
 {
     FILE        *p_file;
+    MEM_HDR     *p_mem_hdr;
     CPU_CHAR     sol;
     CPU_INT08U   byte_count;
-    CPU_INT16U   address;
+    CPU_INT16U   address_lo;
+    CPU_INT16U   address_hi;
+    CPU_INT32U   address;
     CPU_INT08U   record_type;
     CPU_INT32U   block[4];
     CPU_INT08U   check_sum;
     CPU_INT08U   ix;
+    CPU_BOOLEAN  eof;
+    MEM_ERR      mem_err;
     
-    
-    p_mem->Ptr  = (CPU_INT32U *)malloc(SIPIC_CFG_MEM_SIZE_OCTET);
-    p_mem->Size =                      SIPIC_CFG_MEM_SIZE_OCTET;
+    p_mem_hdr       = &p_mem->Hdr;
+    address_hi      = 0u;
+    eof             = DEF_NO;
     
     p_file = fopen(p_file_name, "r");
     
@@ -43,8 +48,12 @@ void HexParser_ReadFile(const char      *p_file_name,
         
         if (sol == HEX_PARSER_START_OF_LINE_CHAR) {
             byte_count  = ASCII_GetByte(p_file);
-            address     = ASCII_GetShort(p_file);
-            address     = CPU_Swap16(address);
+            address_lo     = ASCII_GetShort(p_file);
+            address_lo     = CPU_Swap16(address_lo);
+            address        = (address_hi << 16) | address_lo;
+            
+            //printf("\r\nAddress = %x", address);
+            
             record_type = ASCII_GetByte(p_file);
             
             if (byte_count >= 4) {
@@ -63,12 +72,53 @@ void HexParser_ReadFile(const char      *p_file_name,
                 block[3] = ASCII_GetInt(p_file);
             }
             
+            switch (record_type) {
+                case HEX_PARSER_RCRD_TYPE_DATA:
+                    
+                    for (ix = 0 ; ix < (byte_count / 4) ; ix++) {
+                        
+                        Mem_Set(p_mem,
+                                (address + ix * 4) / 2,
+                                block[ix],
+                               &mem_err);
+                        
+                        if (mem_err != MEM_ERR_NONE) {
+                            printf("\r\nMEM_Set() Error at %x", address + ix * 4);
+                           *p_err = mem_err;
+                        }
+
+                        //printf("\r\n%x", block[ix]);
+                    }
+                    
+                    break;
+                    
+                case HEX_PARSER_RCRD_TYPE_EOF:
+                    eof = DEF_YES;
+                    break;
+                    
+                case HEX_PARSER_RCRD_TYPE_ESA:
+                    break;
+                    
+                case HEX_PARSER_RCRD_TYPE_SSAR:
+                    break;
+                    
+                case HEX_PARSER_RCRD_TYPE_ELA:
+                    address_hi = ASCII_GetShort(p_file);
+                    address_hi = CPU_Swap16(address_hi);
+                    break;
+                    
+                case HEX_PARSER_RCRD_TYPE_SLA:
+                    break;
+            }
+
             check_sum    = ASCII_GetByte(p_file);
             
-            for (ix = 0 ; ix < (byte_count / 4) ; ix++) {
-                p_mem->Ptr[address + ix * 4] = block[ix];
-                printf("\r\n%x", block[ix]);
+            if (eof == DEF_YES) {
+                break;
             }
+            
         }
     }
+    
+    *p_err = HEX_PARSER_ERR_NONE;
 }

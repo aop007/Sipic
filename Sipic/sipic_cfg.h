@@ -16,4 +16,6 @@
 
 #define  SIPIC_CFG_MEM_SIZE_OCTET  (64 * 1024)
 
+#define  SIPIC_CFG_PC_START        0u
+
 #endif

@@ -48,6 +48,8 @@
 		6958E9BC161FC03C00D2B690 /* core_24f.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = core_24f.c; sourceTree = "<group>"; };
 		6958E9BE161FEC4100D2B690 /* core_24f_opcode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = core_24f_opcode.h; sourceTree = "<group>"; };
 		6958E9BF161FEC5100D2B690 /* core_24f_opcode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = core_24f_opcode.c; sourceTree = "<group>"; };
+		6958E9C11620BE7B00D2B690 /* mem_cfg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mem_cfg.h; sourceTree = "<group>"; };
+		6958E9C21620C49900D2B690 /* err.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = err.h; sourceTree = "<group>"; };
 		69E7B6BC161D2E1C002588BF /* cpu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cpu.c; sourceTree = "<group>"; };
 		69E7B6BF161D3469002588BF /* main.cof */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o"; name = main.cof; path = "../../dsPIC workspace/main.cof"; sourceTree = "<group>"; };
 		69E7B6C0161D4508002588BF /* main.err */ = {isa = PBXFileReference; lastKnownFileType = text; name = main.err; path = "../../dsPIC workspace/main.err"; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 				6958E9AB161F969500D2B690 /* HEX */,
 				690ADF0B161BE536001DCA06 /* main.c */,
 				6958E9B1161F9A4800D2B690 /* sipic_cfg.h */,
+				6958E9C21620C49900D2B690 /* err.h */,
 			);
 			path = Sipic;
 			sourceTree = "<group>";
@@ -152,6 +155,7 @@
 			children = (
 				6958E9B8161FBA2A00D2B690 /* mem.c */,
 				6958E9B7161FBA2000D2B690 /* mem.h */,
+				6958E9C11620BE7B00D2B690 /* mem_cfg.h */,
 			);
 			name = Mem;
 			sourceTree = "<group>";
@@ -159,8 +163,8 @@
 		6958E9BA161FC01400D2B690 /* 24FCore */ = {
 			isa = PBXGroup;
 			children = (
-				6958E9BB161FC03000D2B690 /* core_24f.h */,
 				6958E9BC161FC03C00D2B690 /* core_24f.c */,
+				6958E9BB161FC03000D2B690 /* core_24f.h */,
 				6958E9BF161FEC5100D2B690 /* core_24f_opcode.c */,
 				6958E9BE161FEC4100D2B690 /* core_24f_opcode.h */,
 			);

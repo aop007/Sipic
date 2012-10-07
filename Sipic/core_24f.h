@@ -10,8 +10,12 @@
 #define Sipic_core_24f_h
 
 #include "cpu.h"
+#include "mem.h"
+#include "err.h"
 
 typedef struct core_24f {
+    
+#if 0
     CPU_INT16U  W0;
     CPU_INT16U  W1;
     CPU_INT16U  W2;
@@ -28,6 +32,9 @@ typedef struct core_24f {
     CPU_INT16U  W13;
     CPU_INT16U  W14;
     CPU_INT16U  W15;
+#endif
+    
+    CPU_INT16U  W[16];
     
     CPU_INT16U  SPLIM;
     
@@ -57,5 +64,11 @@ typedef struct core_24f {
 } CORE_24F;
 
 extern  CORE_24F  Core;
+
+typedef  CPU_INT16U  CORE_ERR;
+
+void  Core_Run(MEM         *p_mem,
+               CPU_INT32U   addr,
+               CORE_ERR    *p_err);
 
 #endif

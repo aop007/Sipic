@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include "cpu.h"
+#include "err.h"
 
 CPU_CHAR    ASCII_GetChar  (FILE  *p_file);
 CPU_INT08U  ASCII_GetByte  (FILE  *p_file);
