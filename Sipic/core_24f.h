@@ -67,8 +67,16 @@ extern  CORE_24F  Core;
 
 typedef  CPU_INT16U  CORE_ERR;
 
-void  Core_Run(MEM         *p_mem,
-               CPU_INT32U   addr,
-               CORE_ERR    *p_err);
+void        Core_Push(CPU_INT32U   val,
+                      CORE_24F    *p_core,
+                      MEM         *p_mem,
+                      CORE_ERR    *p_err);
+
+CPU_INT32U  Core_Pop (CORE_24F    *p_core,
+                      MEM         *p_mem,
+                      CORE_ERR    *p_err);
+
+void        Core_Run (MEM         *p_mem,
+                      CORE_ERR    *p_err);
 
 #endif

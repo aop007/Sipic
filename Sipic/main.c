@@ -45,11 +45,11 @@ int main(int argc, const char * argv[])
         printf("\r\nError in HexParser_ReadFile().");
         return -1;
     }
-    
+#ifdef  CORE_STAT_EN
     Core_OPC_Stats(p_mem);
+#endif
     
     Core_Run(p_mem,
-             SIPIC_CFG_PC_START,
             &core_err);
 #endif
     return 0;

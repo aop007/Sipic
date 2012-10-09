@@ -44,4 +44,7 @@ CPU_INT16U  CPU_Swap16 (CPU_INT16U  val);
 
 CPU_INT32U  CPU_Swap32 (CPU_INT32U  val);
 
+#define  DEF_FIELD_IS_SET(x, y) ((x & y) == y)
+#define  DEF_FIELD_IS_CLR(x, y) ((x & y) == y)
+
 #endif

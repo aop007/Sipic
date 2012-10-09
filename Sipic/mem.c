@@ -111,12 +111,16 @@ void  Mem_Set (MEM         *p_mem,
         
         if ((addr >= p_mem_hdr->Start) &&
             (addr <= p_mem_hdr->End)) {
-            
+
+#if 0
             if (p_mem_current->Ptr[(addr - p_mem_hdr->Start) / 2] == 0u) {
-                p_mem_current->Ptr[(addr - p_mem_hdr->Start) / 2] = val;
+#endif
+            p_mem_current->Ptr[(addr - p_mem_hdr->Start) / 2] = val;
+#if 0
             } else {
                 printf("\r\nCorrupting Memory!!!");
             }
+#endif
             mem_loc_found = DEF_YES;
             break;
             
