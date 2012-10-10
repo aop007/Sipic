@@ -14,7 +14,6 @@
 #include "err.h"
 
 typedef  CPU_INT32U  OPCODE;
-typedef  CPU_INT16U  MEM_ERR;
 
 //typedef  struct  mem;
 
@@ -44,15 +43,17 @@ typedef  struct  mem_cfg {
 
 #define  MEM_SIZE  sizeof(MEM);
 
-MEM   *Mem_Init(MEM_ERR     *p_err);
+MEM        *Mem_Init (const  MEM_CFG     *p_cfg,
+                             CPU_INT32U    cfg_size,
+                             MEM_ERR      *p_err);
 
-void        Mem_Set (MEM         *p_mem,
-                     CPU_INT32U   addr,
-                     CPU_INT32U   val,
-                     MEM_ERR     *p_err);
+void        Mem_Set  (MEM         *p_mem,
+                      CPU_INT32U   addr,
+                      CPU_INT32U   val,
+                      MEM_ERR     *p_err);
 
-CPU_INT32U  Mem_Get (MEM         *p_mem,
-                     CPU_INT32U   addr,
-                     MEM_ERR     *p_err);
+CPU_INT32U  Mem_Get  (MEM         *p_mem,
+                      CPU_INT32U   addr,
+                      MEM_ERR     *p_err);
 
 #endif

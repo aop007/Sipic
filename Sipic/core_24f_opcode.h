@@ -48,6 +48,7 @@
 
 
 #define  CORE_OPC_SETM_WS    0xEB8000
+#define  CORE_OPC_INC_EC0    0xEC0000
 #define  CORE_OPC_CLR_M_W0   0xEF0000
 #define  CORE_OPC_SETM_M_W0  0xEF8000
 
@@ -65,106 +66,135 @@
 
 void Core_OPC_Stats           (MEM         *p_mem);
 
-void  Core_NOP_00             (MEM         *p_mem,
+void  Core_NOP_00             (MEM         *p_mem_prog,
+                               MEM         *p_mem_data,
                                CORE_24F    *p_core,
                                CPU_INT32U   args,
                                CORE_ERR    *p_err);
 
-void  Core_CALL_02            (MEM         *p_mem,
+void  Core_CALL_02            (MEM         *p_mem_prog,
+                               MEM         *p_mem_data,
                                CORE_24F    *p_core,
                                CPU_INT32U   args,
                                CORE_ERR    *p_err);
 
 
-void Core_GOTO_04      (MEM         *p_mem,
+void Core_GOTO_04      (MEM         *p_mem_prog,
+                        MEM         *p_mem_data,
                         CORE_24F    *p_core,
                         CPU_INT32U   args,
                         CORE_ERR    *p_err);
 
-void Core_RETURN_060  (MEM         *p_mem,
+void Core_RETURN_060  (MEM         *p_mem_prog,
+                       MEM         *p_mem_data,
                        CORE_24F    *p_core,
                        CPU_INT32U   args,
                        CORE_ERR    *p_err);
 
-void Core_MOV_2        (CORE_24F    *p_core,
-                        CPU_INT32U   args,
-                        CORE_ERR    *p_err);
-
-void Core_BRA_37       (MEM         *p_mem,
+void Core_MOV_2        (MEM         *p_mem_prog,
+                        MEM         *p_mem_data,
                         CORE_24F    *p_core,
                         CPU_INT32U   args,
                         CORE_ERR    *p_err);
 
-void Core_MOV_WS_WD_78 (MEM         *p_mem,
+void Core_BRA_37       (MEM         *p_mem_prog,
+                        MEM         *p_mem_data,
                         CORE_24F    *p_core,
                         CPU_INT32U   args,
                         CORE_ERR    *p_err);
 
-void Core_MOV_M_W_80   (MEM         *p_mem,
+void Core_MOV_WS_WD_78 (MEM         *p_mem_prog,
+                        MEM         *p_mem_data,
                         CORE_24F    *p_core,
                         CPU_INT32U   args,
                         CORE_ERR    *p_err);
 
-void Core_MOV_W_M_88   (MEM         *p_mem,
+void Core_MOV_M_W_80   (MEM         *p_mem_prog,
+                        MEM         *p_mem_data,
                         CORE_24F    *p_core,
                         CPU_INT32U   args,
                         CORE_ERR    *p_err);
 
-void Core_BSET_W_A0    (CORE_24F    *p_core,
-                        CPU_INT32U   args,
-                        CORE_ERR    *p_err);
-
-void Core_BSET_M_A8    (MEM         *p_mem,
+void Core_MOV_W_M_88   (MEM         *p_mem_prog,
+                        MEM         *p_mem_data,
                         CORE_24F    *p_core,
                         CPU_INT32U   args,
                         CORE_ERR    *p_err);
 
-void Core_BCLR_M_A9    (MEM         *p_mem,
+void Core_BSET_W_A0    (MEM         *p_mem_prog,
+                        MEM         *p_mem_data,
                         CORE_24F    *p_core,
                         CPU_INT32U   args,
                         CORE_ERR    *p_err);
 
-void  Core_BTSC_AF (MEM         *p_mem,
+void Core_BSET_M_A8    (MEM         *p_mem_prog,
+                        MEM         *p_mem_data,
+                        CORE_24F    *p_core,
+                        CPU_INT32U   args,
+                        CORE_ERR    *p_err);
+
+void Core_BCLR_M_A9    (MEM         *p_mem_prog,
+                        MEM         *p_mem_data,
+                        CORE_24F    *p_core,
+                        CPU_INT32U   args,
+                        CORE_ERR    *p_err);
+
+void  Core_BTSC_AF (MEM         *p_mem_prog,
+                    MEM         *p_mem_data,
                     CORE_24F    *p_core,
                     CPU_INT32U   args,
                     CORE_ERR    *p_err);
 
-void Core_SETM_MOV_8BL_WN_B3C (MEM         *p_mem,
+void Core_SETM_MOV_8BL_WN_B3C (MEM         *p_mem_prog,
+                               MEM         *p_mem_data,
                                CORE_24F    *p_core,
                                CPU_INT32U   args,
                                CORE_ERR    *p_err);
 
-void Core_SETM_MOV_8BL_WN_B7A (MEM         *p_mem,
+void Core_SETM_MOV_8BL_WN_B7A (MEM         *p_mem_prog,
+                               MEM         *p_mem_data,
                                CORE_24F    *p_core,
                                CPU_INT32U   args,
                                CORE_ERR    *p_err);
 
-void Core_SETM_WS_EB8  (MEM         *p_mem,
+void Core_SETM_WS_EB8  (MEM         *p_mem_prog,
+                        MEM         *p_mem_data,
                         CORE_24F    *p_core,
                         CPU_INT32U   args,
                         CORE_ERR    *p_err);
 
-void Core_SETM_M_W0_EF8 (MEM         *p_mem,
+void Core_INC_EC0      (MEM         *p_mem_prog,
+                        MEM         *p_mem_data,
+                        CORE_24F    *p_core,
+                        CPU_INT32U   args,
+                        CORE_ERR    *p_err);
+
+void Core_SETM_M_W0_EF8 (MEM         *p_mem_prog,
+                         MEM         *p_mem_data,
                          CORE_24F    *p_core,
                          CPU_INT32U   args,
                          CORE_ERR    *p_err);
 
-void Core_CLR_M_W0_EF0  (MEM         *p_mem,
+void Core_CLR_M_W0_EF0  (MEM         *p_mem_prog,
+                         MEM         *p_mem_data,
                          CORE_24F    *p_core,
                          CPU_INT32U   args,
                          CORE_ERR    *p_err);
 
-void Core_CLR_M_W0_EF0  (MEM         *p_mem,
+void Core_CLR_M_W0_EF0  (MEM         *p_mem_prog,
+                         MEM         *p_mem_data,
                          CORE_24F    *p_core,
                          CPU_INT32U   args,
                          CORE_ERR    *p_err);
 
-void Core_PUSH_F8       (MEM         *p_mem,
+void Core_PUSH_F8       (MEM         *p_mem_prog,
+                         MEM         *p_mem_data,
                          CORE_24F    *p_core,
                          CPU_INT32U   args,
                          CORE_ERR    *p_err);
 
-void Core_POP_F9        (MEM         *p_mem,
+void Core_POP_F9        (MEM         *p_mem_prog,
+                         MEM         *p_mem_data,
                          CORE_24F    *p_core,
                          CPU_INT32U   args,
                          CORE_ERR    *p_err);

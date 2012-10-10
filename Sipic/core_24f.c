@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "core_24f.h"
 #include "core_24f_opcode.h"
 #include "mem.h"
@@ -18,8 +19,9 @@ static  void  Core_Init(CORE_24F  *p_core)
     p_core->W[15] = 0x0800;
 }
 
-void  Core_Run(MEM         *p_mem,
-               CORE_ERR    *p_err)
+void  Core_Run(MEM       *p_mem_prog,
+               MEM       *p_mem_data,
+               CORE_ERR  *p_err)
 {
     CPU_BOOLEAN  found_instruction;
     CORE_24F     core_24f;
@@ -37,17 +39,23 @@ void  Core_Run(MEM         *p_mem,
         printf("\r\nPC = 0x%X", core_24f.PC);
         
         
-        opcode = Mem_Get(p_mem,
+        opcode = Mem_Get(p_mem_prog,
                          core_24f.PC,
                         &mem_err);
-        
+#if 0
+        if (core_24f.PC == 0x2EBC) {
+            printf("Here comes INVALID_MEM");
+        }
+#endif
         instruction = opcode & 0xF00000;
         args        = opcode & 0x0FFFFF;
         found_instruction = DEF_YES;
         
         switch (instruction) {
             case CORE_OPC_MOV_L_W:
-                Core_MOV_2(&core_24f,
+                Core_MOV_2(p_mem_prog,
+                           p_mem_data,
+                           &core_24f,
                            args,
                            &core_err);
                 break;
@@ -65,7 +73,8 @@ void  Core_Run(MEM         *p_mem,
             
             switch (instruction) {
                 case CORE_OPC_MOV_WS_WD:
-                    Core_MOV_WS_WD_78(p_mem,
+                    Core_MOV_WS_WD_78(p_mem_prog,
+                                      p_mem_data,
                                       &core_24f,
                                       args,
                                       &core_err);
@@ -73,7 +82,8 @@ void  Core_Run(MEM         *p_mem,
                     
                     
                 case CORE_OPC_MOV_M_W:
-                    Core_MOV_M_W_80(p_mem,
+                    Core_MOV_M_W_80(p_mem_prog,
+                                    p_mem_data,
                                    &core_24f,
                                     args,
                                    &core_err);
@@ -81,7 +91,8 @@ void  Core_Run(MEM         *p_mem,
                     
                     
                 case CORE_OPC_MOV_W_M:
-                    Core_MOV_W_M_88(p_mem,
+                    Core_MOV_W_M_88(p_mem_prog,
+                                    p_mem_data,
                                    &core_24f,
                                     args,
                                    &core_err);
@@ -100,7 +111,7 @@ void  Core_Run(MEM         *p_mem,
             
             switch (instruction) {
                 case CORE_OPC_NOP:
-                    Core_NOP_00(p_mem, &core_24f, args, &core_err);
+                    Core_NOP_00(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
                     
 #if 0
@@ -109,45 +120,45 @@ void  Core_Run(MEM         *p_mem,
 #endif
 
                 case CORE_OPC_CALL:
-                    Core_CALL_02(p_mem, &core_24f, args, &core_err);
+                    Core_CALL_02(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
 
                     
                 case CORE_OPC_GOTO:
-                    Core_GOTO_04(p_mem, &core_24f, args, &core_err);
+                    Core_GOTO_04(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
                     
 
                 case CORE_OPC_BRA_EXPR:
-                    Core_BRA_37(p_mem, &core_24f, args, &core_err);
+                    Core_BRA_37(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
 
                     
                 case CORE_OPC_BSET_W:
-                    Core_BSET_W_A0(&core_24f, args, &core_err);
+                    Core_BSET_W_A0(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
                     
                     
                 case CORE_OPC_BSET_M:
-                    Core_BSET_M_A8(p_mem, &core_24f, args, &core_err);
+                    Core_BSET_M_A8(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
                     
                     
                 case CORE_OPC_BCLR_M:
-                    Core_BCLR_M_A9(p_mem, &core_24f, args, &core_err);
+                    Core_BCLR_M_A9(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
                     
                     
                 case CORE_OPC_BTSC:
-                    Core_BTSC_AF(p_mem, &core_24f, args, &core_err);
+                    Core_BTSC_AF(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
                     
                 case CORE_OPC_PUSH_F8:
-                    Core_PUSH_F8(p_mem, &core_24f, args, &core_err);
+                    Core_PUSH_F8(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
                     
                 case CORE_OPC_POP_F9:
-                    Core_POP_F9(p_mem, &core_24f, args, &core_err);
+                    Core_POP_F9(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
                 
                     
@@ -165,17 +176,20 @@ void  Core_Run(MEM         *p_mem,
             
             switch (instruction) {
                 case CORE_OPC_SETM_WS:
-                    Core_SETM_WS_EB8(p_mem, &core_24f, args, &core_err);
+                    Core_SETM_WS_EB8(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
                 
+                case CORE_OPC_INC_EC0:
+                    Core_INC_EC0(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
                     
                 case CORE_OPC_SETM_M_W0:
-                    Core_SETM_M_W0_EF8(p_mem, &core_24f, args, &core_err);
+                    Core_SETM_M_W0_EF8(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
                     
                     
                 case CORE_OPC_CLR_M_W0:
-                    Core_CLR_M_W0_EF0(p_mem, &core_24f, args, &core_err);
+                    Core_CLR_M_W0_EF0(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
                     
                     
@@ -192,7 +206,7 @@ void  Core_Run(MEM         *p_mem,
             
             switch (instruction) {
                 case CORE_OPC_MOV_WN_M:
-                    Core_SETM_MOV_8BL_WN_B7A(p_mem, &core_24f, args, &core_err);
+                    Core_SETM_MOV_8BL_WN_B7A(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
                     
                     
@@ -209,7 +223,7 @@ void  Core_Run(MEM         *p_mem,
             
             switch (instruction) {
                 case CORE_OPC_MOV_8BL_WN:
-                    Core_SETM_MOV_8BL_WN_B3C(p_mem, &core_24f, args, &core_err);
+                    Core_SETM_MOV_8BL_WN_B3C(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
                     
                     
@@ -226,7 +240,7 @@ void  Core_Run(MEM         *p_mem,
             
             switch (instruction) {
                 case CORE_OPC_RETURN:
-                    Core_RETURN_060(p_mem, &core_24f, args, &core_err);
+                    Core_RETURN_060(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
                     
                     
@@ -290,7 +304,17 @@ CPU_INT32U  Core_Pop (CORE_24F    *p_core,
     return (val);
 }
 
-
+CPU_INT32U  Core_OPC_Words (OPCODE  opc)
+{
+    if (((opc & 0xFF0001) == 0x020000) |                        /* CALL EXPR           0x020000 /  0xFF0001 */
+        ((opc & 0xFFC000) == 0x080000) |                        /* DO   #lit14, Expr   0x080000 /  0xFFC000 */
+        ((opc & 0xFFFFF0) == 0x088000) |                        /* DO   Wn,     Expr   0x088000 /  0xFFFFF0 */
+        ((opc & 0xFFFFF0) == 0x014000)) {                       /* GOTO Wn             0x014000 /  0xFFFFF0 */
+        return 2;
+    } else {
+        return 1;
+    }
+}
 
 
 

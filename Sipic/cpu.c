@@ -21,3 +21,17 @@ CPU_INT32U  CPU_Swap32 (CPU_INT32U  val)
             ((0x0000FF00 & val) <<  8) |
             ((0x000000FF & val) <<  24));
 }
+
+CPU_INT32S  CPU_SignExt (CPU_INT32U val)
+{
+    CPU_INT32S  return_val;
+    
+    
+    if ((val & 0x8000) == 1) {
+        return_val = 0xFFFF0000 | (val & 0x0000FFFF);
+    } else {
+        return_val = val;
+    }
+    
+    return (return_val);
+}

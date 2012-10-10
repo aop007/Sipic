@@ -24,23 +24,9 @@
 #define  HEX_PARSER_RCRD_TYPE_SLA   5u
 
 
-
-/*
- ************* ERROR TYPE ***********
- */
-#if 0
-#define  HEX_PARSER_ERR_NONE        2000u
-#define  HEX_PARSER_ERR_FILE_OPEN   2001u
-#define  HEX_PARSER_ERR_FILE_READ   2002u
-
-#define  HEX_PARSER_ERR_MEM_ALLOC   2101u
-#endif
-
 /*
  ********** TYPE DEFINITION *********
  */
-
-typedef  CPU_INT16U        HEX_PARSER_ERR;
 
 
 /*

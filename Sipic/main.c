@@ -11,6 +11,7 @@
 #include "mem.h"
 #include "core_24f.h"
 #include "core_24f_opcode.h"
+#include "mem_cfg_24f3011.h"
 
 #if    (SIPIC_CFG_PARSE_METHOD == SIPIC_PARSE_METHOD_COFF)
 #include <coff_parser.h>
@@ -23,11 +24,18 @@
 
 int main(int argc, const char * argv[])
 {
-    MEM      *p_mem;
+    MEM      *p_mem_prog;
+    MEM      *p_mem_data;
     MEM_ERR   mem_err;
     CORE_ERR  core_err;
     
-    p_mem = Mem_Init(&mem_err);
+    p_mem_prog = Mem_Init(&mem_cfg_prog_dsPIC30F[0],
+                    sizeof(mem_cfg_prog_dsPIC30F),
+                          &mem_err);
+    
+    p_mem_data = Mem_Init(&mem_cfg_data_dsPIC30F[0],
+                    sizeof(mem_cfg_data_dsPIC30F),
+                          &mem_err);
     
 #if  (SIPIC_CFG_PARSE_METHOD == SIPIC_PARSE_METHOD_COFF)
     COFF_PARSER_ERR  coff_err;
@@ -38,8 +46,8 @@ int main(int argc, const char * argv[])
     HEX_PARSER_ERR  hex_err;
     
     HexParser_ReadFile(HEX_CFG_FILE_PATH,
-                        p_mem,
-                       &hex_err);
+                       p_mem_prog,
+                      &hex_err);
     
     if (hex_err != HEX_PARSER_ERR_NONE) {
         printf("\r\nError in HexParser_ReadFile().");
@@ -49,7 +57,8 @@ int main(int argc, const char * argv[])
     Core_OPC_Stats(p_mem);
 #endif
     
-    Core_Run(p_mem,
+    Core_Run(p_mem_prog,
+             p_mem_data,
             &core_err);
 #endif
     return 0;

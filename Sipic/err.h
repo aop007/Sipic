@@ -13,38 +13,54 @@
  * COFF PARSER ERRORS
  */
 
-#define  COFF_PARSER_ERR_NONE         1000u
-#define  COFF_PARSER_ERR_FILE_OPEN    1001u
-#define  COFF_PARSER_ERR_FILE_READ    1002u
+enum coff_parser_err {
+    COFF_PARSER_ERR_NONE      = 1000u,
+    COFF_PARSER_ERR_FILE_OPEN = 1001u,
+    COFF_PARSER_ERR_FILE_READ = 1002u,
+    
+    COFF_PARSER_ERR_MEM_ALLOC = 1101u
+};
 
-#define  COFF_PARSER_ERR_MEM_ALLOC    1101u
+typedef enum coff_parser_err COFF_PARSER_ERR;
 
 /*
  * HEX PARSER ERRORS
  */
+enum hex_parser_err {
+    HEX_PARSER_ERR_NONE      = 2000u,
+    HEX_PARSER_ERR_FILE_OPEN = 2001u,
+    HEX_PARSER_ERR_FILE_READ = 2002u,
+    
+    HEX_PARSER_ERR_MEM_ALLOC = 2101u
+};
 
-#define  HEX_PARSER_ERR_NONE          2000u
-#define  HEX_PARSER_ERR_FILE_OPEN     2001u
-#define  HEX_PARSER_ERR_FILE_READ     2002u
-
-#define  HEX_PARSER_ERR_MEM_ALLOC     2101u
+typedef enum hex_parser_err HEX_PARSER_ERR;
 
 /*
  * MEM ERRORS
  */
 
-#define  MEM_ERR_NONE                 3000u
-#define  MEM_ERR_ALLOC_FAIL           3001u
-#define  MEM_ERR_INVALID_LOC          3002u
+enum mem_err {
+    MEM_ERR_NONE        = 3000u,
+    MEM_ERR_ALLOC_FAIL  = 3001u,
+    MEM_ERR_INVALID_LOC = 3002u,
+};
+
+typedef enum mem_err MEM_ERR;
 
 /*
  * CORE ERRORS
  */
 
-#define  CORE_ERR_NONE                4000u
-#define  CORE_ERR_OPC_NOTFOUND        4001u
-#define  CORE_ERR_INVALID_MEM         4002u
-#define  CORE_ERR_INVALID_OPC_ARG     4003u
-#define  CORE_ERR_OPC_UNSUPORTED_YET  4004u
+enum core_err {
+    CORE_ERR_NONE               = 4000u,
+    CORE_ERR_OPC_NOTFOUND       = 4001u,
+    CORE_ERR_INVALID_MEM        = 4002u,
+    CORE_ERR_INVALID_OPC_ARG    = 4003u,
+    CORE_ERR_OPC_UNSUPORTED_YET = 4004u,
+    CORE_ERR_INVALID_OPC_CYCLE  = 4005u
+};
+
+typedef enum core_err CORE_ERR;
 
 #endif

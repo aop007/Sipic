@@ -361,7 +361,7 @@ typedef struct external_scnhdr {
  ********** TYPE DEFINITION *********
  */
 
-typedef  CPU_INT16U        COFF_PARSER_ERR;
+//typedef  CPU_INT16U        COFF_PARSER_ERR;
 
 typedef  struct   section {
     SECTION_HDR   section;

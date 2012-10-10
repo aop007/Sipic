@@ -11,28 +11,16 @@
 #include <string.h>
 #include "mem.h"
 
-static  CPU_INT32U  Mem_GetSegSize(MEM_CFG  *p_cfg);
+static  CPU_INT32U  Mem_GetSegSize(const MEM_CFG  *p_cfg);
 
 
-const MEM_CFG mem_cfg_dsPIC30F[7] = {
-    /* See http://ww1.microchip.com/downloads/en/DeviceDoc/70157C.pdf Figure 6-3 */
-    
-    {"Main Vector Table",  0x000000, 0x00007E},
-    {"Alt. Vector Table",  0x000080, 0x0000FE},
-    {"User Flash Program", 0x000100, 0x017FFE},
-    {"Data Flash",         0x7FF000, 0x7FFFFE},
 
-    {"UNITID",             0x8005C0, 0x8005FE},
-    {"Fuse Cfg Registers", 0xF80000, 0xF8000E},
-    {"DEVID",              0xFF0000, 0xFFFFFE}
-};
-
-
-MEM * Mem_Init(MEM_ERR *p_err)
+MEM * Mem_Init(const  MEM_CFG     *p_cfg,
+                      CPU_INT32U       cfg_size,
+                      MEM_ERR       *p_err)
 {
     CPU_INT16U  mem_seg_cnt;
     CPU_INT16U  ix;
-    MEM_CFG     *p_cfg;
     MEM         *p_mem_head;
     MEM         *p_mem;
     MEM         *p_mem_prev;
@@ -40,8 +28,7 @@ MEM * Mem_Init(MEM_ERR *p_err)
     CPU_INT32U   seg_size;
     
     
-    mem_seg_cnt = sizeof(mem_cfg_dsPIC30F) / sizeof(MEM_CFG);
-    p_cfg       = (MEM_CFG *)&mem_cfg_dsPIC30F[0];
+    mem_seg_cnt = cfg_size / sizeof(MEM_CFG);
     p_mem_prev  = (MEM *)0;
     
     
@@ -184,7 +171,7 @@ CPU_INT32U  Mem_Get(MEM         *p_mem,
     return (0u);
 }
 
-CPU_INT32U  Mem_GetSegSize(MEM_CFG *p_cfg)
+CPU_INT32U  Mem_GetSegSize(const MEM_CFG *p_cfg)
 {
     return ((p_cfg->End - p_cfg->Start + 2) / 2);
 }
