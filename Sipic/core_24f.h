@@ -12,6 +12,7 @@
 #include "cpu.h"
 #include "mem.h"
 #include "err.h"
+#include "sipic_cfg.h"
 
 #define  CORE_SR_C     0x0001
 #define  CORE_SR_Z     0x0002
@@ -72,6 +73,10 @@ typedef struct core_24f {
     CPU_INT32U  DOEND;
     
     CPU_INT16U SR;
+    
+#ifdef  CORE_CFG_CYCLE_CNTR
+    CPU_INT64U CYCLE;
+#endif
     
 } CORE_24F;
 

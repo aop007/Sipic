@@ -18,4 +18,6 @@
 
 #define  SIPIC_CFG_PC_START        0u
 
+#define  CORE_CFG_CYCLE_CNTR
+
 #endif

@@ -17,6 +17,7 @@
 static  void  Core_Init(CORE_24F  *p_core)
 {
     p_core->W[15] = 0x0800;
+    p_core->CYCLE = 0;
 }
 
 void  Core_Run(MEM       *p_mem_prog,
@@ -42,8 +43,8 @@ void  Core_Run(MEM       *p_mem_prog,
         opcode = Mem_Get(p_mem_prog,
                          core_24f.PC,
                         &mem_err);
-#if 0
-        if (core_24f.PC == 0x2EBC) {
+#if 1
+        if (core_24f.PC == 0xA32) {
             printf("Here comes INVALID_MEM");
         }
 #endif
@@ -260,6 +261,10 @@ void  Core_Run(MEM       *p_mem_prog,
         if (core_err != CORE_ERR_NONE) {
             break;
         }
+        
+#ifdef  CORE_CFG_CYCLE_CNTR
+        core_24f.CYCLE++;
+#endif
     }
     
     printf("\r\nFATAL CORE ERROR: %d", core_err);

@@ -527,21 +527,26 @@ void  Core_BTSC_AF (MEM         *p_mem_prog,
     CPU_INT32U  addr;
     CPU_INT32U  bit;
     CPU_INT32U  opc_words;
+    CPU_INT32U  size_op;
     OPCODE      opc;
     MEM_ERR     mem_err;
     
-    addr  = (args & 0x001FFE);
-    bit   = (args & 0x00E000) >> 12 |
-    (args & 0x000001);
+    addr    =  args & 0x001FFE;
+    size_op =  args & 0x000001;
+    bit     =  1 << ((args & 0x00E000) >> 12);
     
-    value = Mem_Get(p_mem_data, args, &mem_err);
+    if (size_op == 1) {
+        bit <<= 8;
+    }
+    
+    value   = Mem_Get(p_mem_data, addr, &mem_err);
     
     if (mem_err != MEM_ERR_NONE) {
         *p_err = CORE_ERR_INVALID_MEM;
         return;
     }
     
-    if ((value & (1 << bit)) == 0u) {
+    if ((value & bit) == 0u) {
         
         
         opc = Mem_Get(p_mem_prog, p_core->PC, &mem_err);
