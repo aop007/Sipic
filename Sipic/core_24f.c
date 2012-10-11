@@ -43,8 +43,8 @@ void  Core_Run(MEM       *p_mem_prog,
         opcode = Mem_Get(p_mem_prog,
                          core_24f.PC,
                         &mem_err);
-#if 1
-        if (core_24f.PC == 0xA32) {
+#if 0
+        if (core_24f.PC == 0x892) {
             printf("Here comes INVALID_MEM");
         }
 #endif
@@ -176,6 +176,14 @@ void  Core_Run(MEM       *p_mem_prog,
             found_instruction = DEF_YES;
             
             switch (instruction) {
+                case CORE_OPC_ADD_B40:
+                    Core_ADD_B40(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
+                    
+                case CORE_OPC_MOV_M_WM:
+                    Core_MOV_BF8(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
+                    
                 case CORE_OPC_SETM_WS:
                     Core_SETM_WS_EB8(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;

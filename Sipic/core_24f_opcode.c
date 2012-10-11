@@ -209,6 +209,8 @@ void Core_MOV_WS_WD_78 (MEM         *p_mem_prog,
     CPU_INT32U  src_w;
     CPU_INT32U  dst_w;
     CPU_INT32U  value;
+    CPU_INT32U  value_mask;
+    CPU_INT32U  value_temp;
     CPU_INT08S  addr_offset;
     MEM_ERR     mem_err;
     
@@ -223,43 +225,61 @@ void Core_MOV_WS_WD_78 (MEM         *p_mem_prog,
     
     if (size_op == 0u) {
         addr_offset = 2;
+        value_mask  = 0xFFFF;
     } else {
         addr_offset = 1;
-        *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+        value_mask  = 0x00FF;
+        //*p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+        //return;
     }
     
     switch (src_addr_mode) {
         case CORE_OPC_ADDR_MODE_DIR:
-            value = p_core->W[src_w];
+            value = p_core->W[src_w] & value_mask;
             break;
             
         case CORE_OPC_ADDR_MODE_IND:
-            value = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
+            value  = Mem_Get(p_mem_data, (p_core->W[src_w] & 0xFFFE), &mem_err);
             
             if (mem_err != MEM_ERR_NONE) {
                 *p_err = CORE_ERR_INVALID_MEM;
                 return;
             }
-
+            
+            if ((size_op != 0) &&
+                ((p_core->W[src_w] & 0x0001) == 0x0001)) {
+                value >>= 8;
+            }
+            
             break;
             
         case CORE_OPC_ADDR_MODE_IND_POS_DEC:
-            value = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
+            value = Mem_Get(p_mem_data, (p_core->W[src_w] & 0xFFFE), &mem_err);
             
             if (mem_err != MEM_ERR_NONE) {
                 *p_err = CORE_ERR_INVALID_MEM;
                 return;
+            }
+            
+            if ((size_op != 0) &&
+                ((p_core->W[src_w] & 0x0001) == 0x0001)) {
+                value >>= 8;
             }
             
             p_core->W[src_w] -= addr_offset;
             break;
             
         case CORE_OPC_ADDR_MODE_IND_POS_INC:
-            value = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
+            value = Mem_Get(p_mem_data, (p_core->W[src_w] & 0xFFFE), &mem_err);
             
             if (mem_err != MEM_ERR_NONE) {
                 *p_err = CORE_ERR_INVALID_MEM;
                 return;
+            }
+            
+            if ((size_op != 0) &&
+                ((p_core->W[src_w] & 0x0001) == 0x0001)) {
+                value >>= 8;
             }
             
             p_core->W[src_w] += addr_offset;
@@ -268,32 +288,50 @@ void Core_MOV_WS_WD_78 (MEM         *p_mem_prog,
         case CORE_OPC_ADDR_MODE_IND_PRE_DEC:
             p_core->W[src_w] -= addr_offset;
             
-            value = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
+            value = Mem_Get(p_mem_data, (p_core->W[src_w] & 0xFFFE), &mem_err);
             
             if (mem_err != MEM_ERR_NONE) {
                 *p_err = CORE_ERR_INVALID_MEM;
                 return;
             }
+            
+            if ((size_op != 0) &&
+                ((p_core->W[src_w] & 0x0001) == 0x0001)) {
+                value >>= 8;
+            }
+            
             break;
             
         case CORE_OPC_ADDR_MODE_IND_PRE_INC:
             p_core->W[src_w] += addr_offset;
             
-            value = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
+            value = Mem_Get(p_mem_data, (p_core->W[src_w] & 0xFFFE), &mem_err);
             
             if (mem_err != MEM_ERR_NONE) {
                 *p_err = CORE_ERR_INVALID_MEM;
                 return;
             }
+            
+            if ((size_op != 0) &&
+                ((p_core->W[src_w] & 0x0001) == 0x0001)) {
+                value >>= 8;
+            }
+            
             break;
             
         case CORE_OPC_ADDR_MODE_OFFSET:
-            value = Mem_Get(p_mem_data, p_core->W[src_w] + p_core->W[off_w], &mem_err);
+            value = Mem_Get(p_mem_data, ((p_core->W[src_w] + p_core->W[off_w]) & 0xFFFE), &mem_err);
             
             if (mem_err != MEM_ERR_NONE) {
                 *p_err = CORE_ERR_INVALID_MEM;
                 return;
             }
+            
+            if ((size_op != 0) &&
+                ((p_core->W[src_w] + p_core->W[off_w]) == 0x0001)) {
+                value >>= 8;
+            }
+            
             break;
             
         default:
@@ -301,38 +339,113 @@ void Core_MOV_WS_WD_78 (MEM         *p_mem_prog,
             return;
     }
     
+    value &= value_mask;
+    
     switch (dst_addr_mode) {
         case CORE_OPC_ADDR_MODE_DIR:
-            p_core->W[dst_w] = value;
+                p_core->W[dst_w] &= ~(value_mask);
+                p_core->W[dst_w] |=   value;            
             break;
             
         case CORE_OPC_ADDR_MODE_IND:
-            Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
-            
-            if (mem_err != MEM_ERR_NONE) {
-                *p_err = CORE_ERR_INVALID_MEM;
-                return;
+            if (size_op == 0) {
+                Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
+                
+                if (mem_err != MEM_ERR_NONE) {
+                    *p_err = CORE_ERR_INVALID_MEM;
+                    return;
+                }
+                
+            } else {
+                value_temp = Mem_Get(p_mem_data, (p_core->W[dst_w] & 0xFFFE), &mem_err);
+                
+                if (mem_err != MEM_ERR_NONE) {
+                    *p_err = CORE_ERR_INVALID_MEM;
+                    return;
+                }
+                
+                if ((p_core->W[dst_w] & 0x0001) == 0x0001) {
+                    value_temp &= 0x00FF;
+                    value_temp |= (value << 8);
+                } else {
+                    value_temp &= 0xFF00;
+                    value_temp |= value;
+                }
+                Mem_Set(p_mem_data, (p_core->W[dst_w] & 0xFFFE), value_temp, &mem_err);
+                
+                if (mem_err != MEM_ERR_NONE) {
+                    *p_err = CORE_ERR_INVALID_MEM;
+                    return;
+                }
             }
             
             break;
             
         case CORE_OPC_ADDR_MODE_IND_POS_DEC:
-            Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
-            
-            if (mem_err != MEM_ERR_NONE) {
-                *p_err = CORE_ERR_INVALID_MEM;
-                return;
+            if (size_op == 0) {
+                Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
+                
+                if (mem_err != MEM_ERR_NONE) {
+                    *p_err = CORE_ERR_INVALID_MEM;
+                    return;
+                }
+                
+            } else {
+                value_temp = Mem_Get(p_mem_data, (p_core->W[dst_w] & 0xFFFE), &mem_err);
+                
+                if (mem_err != MEM_ERR_NONE) {
+                    *p_err = CORE_ERR_INVALID_MEM;
+                    return;
+                }
+                
+                if ((p_core->W[dst_w] & 0x0001) == 0x0001) {
+                    value_temp &= 0x00FF;
+                    value_temp |= (value << 8);
+                } else {
+                    value_temp &= 0xFF00;
+                    value_temp |= value;
+                }
+                Mem_Set(p_mem_data, (p_core->W[dst_w] & 0xFFFE), value_temp, &mem_err);
+                
+                if (mem_err != MEM_ERR_NONE) {
+                    *p_err = CORE_ERR_INVALID_MEM;
+                    return;
+                }
             }
             
             p_core->W[dst_w] -= addr_offset;
             break;
             
         case CORE_OPC_ADDR_MODE_IND_POS_INC:
-            Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
-            
-            if (mem_err != MEM_ERR_NONE) {
-                *p_err = CORE_ERR_INVALID_MEM;
-                return;
+            if (size_op == 0) {
+                Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
+                
+                if (mem_err != MEM_ERR_NONE) {
+                    *p_err = CORE_ERR_INVALID_MEM;
+                    return;
+                }
+                
+            } else {
+                value_temp = Mem_Get(p_mem_data, (p_core->W[dst_w] & 0xFFFE), &mem_err);
+                
+                if (mem_err != MEM_ERR_NONE) {
+                    *p_err = CORE_ERR_INVALID_MEM;
+                    return;
+                }
+                
+                if ((p_core->W[dst_w] & 0x0001) == 0x0001) {
+                    value_temp &= 0x00FF;
+                    value_temp |= (value << 8);
+                } else {
+                    value_temp &= 0xFF00;
+                    value_temp |= value;
+                }
+                Mem_Set(p_mem_data, (p_core->W[dst_w] & 0xFFFE), value_temp, &mem_err);
+                
+                if (mem_err != MEM_ERR_NONE) {
+                    *p_err = CORE_ERR_INVALID_MEM;
+                    return;
+                }
             }
             
             p_core->W[dst_w] += addr_offset;
@@ -341,31 +454,104 @@ void Core_MOV_WS_WD_78 (MEM         *p_mem_prog,
         case CORE_OPC_ADDR_MODE_IND_PRE_DEC:
             p_core->W[dst_w] -= addr_offset;
             
-            Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
-            
-            if (mem_err != MEM_ERR_NONE) {
-                *p_err = CORE_ERR_INVALID_MEM;
-                return;
+            if (size_op == 0) {
+                Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
+                
+                if (mem_err != MEM_ERR_NONE) {
+                    *p_err = CORE_ERR_INVALID_MEM;
+                    return;
+                }
+                
+            } else {
+                value_temp = Mem_Get(p_mem_data, (p_core->W[dst_w] & 0xFFFE), &mem_err);
+                
+                if (mem_err != MEM_ERR_NONE) {
+                    *p_err = CORE_ERR_INVALID_MEM;
+                    return;
+                }
+                
+                if ((p_core->W[dst_w] & 0x0001) == 0x0001) {
+                    value_temp &= 0x00FF;
+                    value_temp |= (value << 8);
+                } else {
+                    value_temp &= 0xFF00;
+                    value_temp |= value;
+                }
+                Mem_Set(p_mem_data, (p_core->W[dst_w] & 0xFFFE), value_temp, &mem_err);
+                
+                if (mem_err != MEM_ERR_NONE) {
+                    *p_err = CORE_ERR_INVALID_MEM;
+                    return;
+                }
             }
             break;
             
         case CORE_OPC_ADDR_MODE_IND_PRE_INC:
             p_core->W[dst_w] += addr_offset;
             
-            Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
-            
-            if (mem_err != MEM_ERR_NONE) {
-                *p_err = CORE_ERR_INVALID_MEM;
-                return;
+            if (size_op == 0) {
+                Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
+                
+                if (mem_err != MEM_ERR_NONE) {
+                    *p_err = CORE_ERR_INVALID_MEM;
+                    return;
+                }
+                
+            } else {
+                value_temp = Mem_Get(p_mem_data, (p_core->W[dst_w] & 0xFFFE), &mem_err);
+                
+                if (mem_err != MEM_ERR_NONE) {
+                    *p_err = CORE_ERR_INVALID_MEM;
+                    return;
+                }
+                
+                if ((p_core->W[dst_w] & 0x0001) == 0x0001) {
+                    value_temp &= 0x00FF;
+                    value_temp |= (value << 8);
+                } else {
+                    value_temp &= 0xFF00;
+                    value_temp |= value;
+                }
+                Mem_Set(p_mem_data, (p_core->W[dst_w] & 0xFFFE), value_temp, &mem_err);
+                
+                if (mem_err != MEM_ERR_NONE) {
+                    *p_err = CORE_ERR_INVALID_MEM;
+                    return;
+                }
             }
             break;
             
         case CORE_OPC_ADDR_MODE_OFFSET:
-            Mem_Set(p_mem_data, p_core->W[dst_w] + p_core->W[off_w], value, &mem_err);
             
-            if (mem_err != MEM_ERR_NONE) {
-                *p_err = CORE_ERR_INVALID_MEM;
-                return;
+            if (size_op == 0) {
+                Mem_Set(p_mem_data, p_core->W[dst_w] + p_core->W[off_w], value, &mem_err);
+                
+                if (mem_err != MEM_ERR_NONE) {
+                    *p_err = CORE_ERR_INVALID_MEM;
+                    return;
+                }
+                
+            } else {
+                value_temp = Mem_Get(p_mem_data, ((p_core->W[dst_w] + p_core->W[off_w]) & 0xFFFE), &mem_err);
+                
+                if (mem_err != MEM_ERR_NONE) {
+                    *p_err = CORE_ERR_INVALID_MEM;
+                    return;
+                }
+                
+                if (((p_core->W[dst_w] + p_core->W[off_w]) & 0x0001) == 0x0001) {
+                    value_temp &= 0xFF00;
+                    value_temp |= (value << 8);
+                } else {
+                    value_temp &= 0x00FF;
+                    value_temp |= value;
+                }
+                Mem_Set(p_mem_data, ((p_core->W[dst_w] + p_core->W[off_w]) & 0xFFFE), value_temp, &mem_err);
+                
+                if (mem_err != MEM_ERR_NONE) {
+                    *p_err = CORE_ERR_INVALID_MEM;
+                    return;
+                }
             }
             break;
             
@@ -375,6 +561,8 @@ void Core_MOV_WS_WD_78 (MEM         *p_mem_prog,
     }
     
     p_core->PC += 2;
+    
+    *p_err = CORE_ERR_NONE;
 }
 
 void  Core_MOV_M_W_80 (MEM         *p_mem_prog,
@@ -649,6 +837,156 @@ void Core_SETM_MOV_8BL_WN_B7A (MEM         *p_mem_prog,
         return;
     }
     
+    
+    p_core->PC += 2;
+    *p_err = CORE_ERR_NONE;
+}
+
+void Core_ADD_B40     (MEM         *p_mem_prog,
+                       MEM         *p_mem_data,
+                       CORE_24F    *p_core,
+                       CPU_INT32U   args,
+                       CORE_ERR    *p_err)
+{
+    CPU_INT32U  size_op;
+    CPU_INT32U  dest;
+    CPU_INT32U  addr;
+    CPU_INT32S  value_0;
+    CPU_INT32S  value_1;
+    CPU_INT32S  val_wreg;
+    MEM_ERR     mem_err;
+    
+    
+    size_op = args & 0x004000;
+    dest    = args & 0x002000;
+    addr    = args & 0x001FFF;
+    
+    if (size_op != 0) {
+        *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+        return;
+    }
+    
+    value_0 = Mem_Get(p_mem_data, (addr & 0xFFFE), &mem_err);
+    
+    if (mem_err != MEM_ERR_NONE) {
+        *p_err = CORE_ERR_INVALID_MEM;
+        return;
+    }
+    
+    value_0  = CPU_SignExt(value_0);
+    val_wreg = CPU_SignExt(p_core->W[0]);
+    
+    value_1 = value_0 + val_wreg;
+    
+    if (dest == 0) {
+        p_core->W[0] = value_1 & 0xFFFF;
+    } else {
+        Mem_Set(p_mem_data, (addr & 0xFFFE), (value_1 & 0xFFFF), &mem_err);
+        
+        if (mem_err != MEM_ERR_NONE) {
+            *p_err = CORE_ERR_INVALID_MEM;
+            return;
+        }
+    }
+    
+    /* Update Status Register */
+    if (((value_0 & 0x00000080) &&                              /* DC */
+         (value_1 & 0x00000080))) {
+        p_core->SR |=   CORE_SR_DC;
+    } else {
+        p_core->SR &= ~(CORE_SR_DC);
+    }
+    
+    if (value_1 < 0) {                                          /* N */
+        p_core->SR |=   CORE_SR_N;
+    } else {
+        p_core->SR &= ~(CORE_SR_N);
+    }
+    
+    if ((value_0 >= 0) &&                                       /* OV */
+        (value_1 <  0)) {
+        p_core->SR |=   CORE_SR_OV;
+    } else {
+        p_core->SR &= ~(CORE_SR_OV);
+    }
+    
+    if (value_1 == 0) {                                         /* Z */
+        p_core->SR |=   CORE_SR_Z;
+    } else {
+        p_core->SR &= ~(CORE_SR_Z);
+    }
+    
+    if (((value_0 & 0x00008000) &&                              /* C */
+         (value_1 & 0x00008000))) {
+        p_core->SR |=   CORE_SR_C;
+    } else {
+        p_core->SR &= ~(CORE_SR_C);
+    }
+    
+    p_core->PC += 2;
+    *p_err = CORE_ERR_NONE;
+}
+
+void Core_MOV_BF8 (MEM         *p_mem_prog,
+                   MEM         *p_mem_data,
+                   CORE_24F    *p_core,
+                   CPU_INT32U   args,
+                   CORE_ERR    *p_err)
+{
+    CPU_INT32U  size_op;
+    CPU_INT32U  dest;
+    CPU_INT32U  addr;
+    CPU_INT32S  value_0;
+    CPU_INT32S  val_wreg;
+    MEM_ERR     mem_err;
+    
+    
+    size_op = args & 0x004000;
+    dest    = args & 0x002000;
+    addr    = args & 0x001FFF;
+    
+#if 0
+    if (size_op != 0) {
+        *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+        return;
+    }
+#endif
+    
+    value_0 = Mem_Get(p_mem_data, (addr & 0xFFFE), &mem_err);
+    value_0 = CPU_SignExt(value_0);
+    
+    if (dest == 0) {
+        if (size_op == 0) {
+            p_core->W[0] = value_0;
+        } else {
+            val_wreg = p_core->W[0];
+            
+            if ((addr & 0x0001) == 0) {
+                value_0 = (val_wreg & 0xFF00) | (value_0 & 0x00FF);
+                value_0 = CPU_SignExt(value_0);
+                p_core->W[0] = value_0;
+            } else {
+                value_0 = (val_wreg & 0xFF00) | ((value_0 & 0xFF00) >> 8);
+                value_0 = CPU_SignExt(value_0);
+                p_core->W[0] = value_0;
+            }
+        }
+    } else {
+        // Nothing to do, f -> f.
+        // Just update N & Z flags.
+    }
+    
+    if (value_0 < 0) {                                          /* N */
+        p_core->SR |=   CORE_SR_N;
+    } else {
+        p_core->SR &= ~(CORE_SR_N);
+    }
+    
+    if (value_0 == 0) {                                         /* Z */
+        p_core->SR |=   CORE_SR_Z;
+    } else {
+        p_core->SR &= ~(CORE_SR_Z);
+    }
     
     p_core->PC += 2;
     *p_err = CORE_ERR_NONE;

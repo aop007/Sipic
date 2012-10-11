@@ -40,12 +40,15 @@
 #define  CORE_OPC_MOV_8BL_WN 0xB3C000
 #define  CORE_OPC_MOV_WN_M   0xB7A000
 
+#define  CORE_OPC_MOV_M_WM   0xBF8000
+
 #define  CORE_OPC_MOV_L_W    0x200000
 
 #define  CORE_OPC_MOV_WS_WD  0x780000
 #define  CORE_OPC_MOV_M_W    0x800000
 #define  CORE_OPC_MOV_W_M    0x880000
 
+#define  CORE_OPC_ADD_B40    0xB40000
 
 #define  CORE_OPC_SETM_WS    0xEB8000
 #define  CORE_OPC_INC_EC0    0xEC0000
@@ -156,6 +159,12 @@ void Core_SETM_MOV_8BL_WN_B7A (MEM         *p_mem_prog,
                                CORE_24F    *p_core,
                                CPU_INT32U   args,
                                CORE_ERR    *p_err);
+
+void Core_MOV_BF8 (MEM         *p_mem_prog,
+                   MEM         *p_mem_data,
+                   CORE_24F    *p_core,
+                   CPU_INT32U   args,
+                   CORE_ERR    *p_err);
 
 void Core_SETM_WS_EB8  (MEM         *p_mem_prog,
                         MEM         *p_mem_data,
