@@ -31,6 +31,8 @@
 
 #define  CORE_OPC_BRA_EXPR   0x370000
 
+#define  CORE_OPC_ADD_WB_WS  0x400000
+
 #define  CORE_OPC_BSET_W     0xA00000
 #define  CORE_OPC_BSET_M     0xA80000
 #define  CORE_OPC_BCLR_M     0xA90000
@@ -57,6 +59,8 @@
 
 #define  CORE_OPC_PUSH_F8    0xF80000
 #define  CORE_OPC_POP_F9     0xF90000
+
+#define  CORE_OPC_SE         0xFB0000
 
 #define  CORE_OPC_ADDR_MODE_DIR          0x00
 #define  CORE_OPC_ADDR_MODE_IND          0x01
@@ -101,6 +105,12 @@ void Core_MOV_2        (MEM         *p_mem_prog,
                         CORE_ERR    *p_err);
 
 void Core_BRA_37       (MEM         *p_mem_prog,
+                        MEM         *p_mem_data,
+                        CORE_24F    *p_core,
+                        CPU_INT32U   args,
+                        CORE_ERR    *p_err);
+
+void Core_ADD_WS_WD_40 (MEM         *p_mem_prog,
                         MEM         *p_mem_data,
                         CORE_24F    *p_core,
                         CPU_INT32U   args,
@@ -203,6 +213,12 @@ void Core_PUSH_F8       (MEM         *p_mem_prog,
                          CORE_ERR    *p_err);
 
 void Core_POP_F9        (MEM         *p_mem_prog,
+                         MEM         *p_mem_data,
+                         CORE_24F    *p_core,
+                         CPU_INT32U   args,
+                         CORE_ERR    *p_err);
+
+void Core_SE_FB00       (MEM         *p_mem_prog,
                          MEM         *p_mem_data,
                          CORE_24F    *p_core,
                          CPU_INT32U   args,

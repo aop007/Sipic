@@ -73,6 +73,14 @@ void  Core_Run(MEM       *p_mem_prog,
             found_instruction = DEF_YES;
             
             switch (instruction) {
+                case CORE_OPC_ADD_WB_WS:
+                    Core_ADD_WS_WD_40(p_mem_prog,
+                                      p_mem_data,
+                                      &core_24f,
+                                      args,
+                                      &core_err);
+                    break;
+                    
                 case CORE_OPC_MOV_WS_WD:
                     Core_MOV_WS_WD_78(p_mem_prog,
                                       p_mem_data,
@@ -233,6 +241,23 @@ void  Core_Run(MEM       *p_mem_prog,
             switch (instruction) {
                 case CORE_OPC_MOV_8BL_WN:
                     Core_SETM_MOV_8BL_WN_B3C(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
+                    
+                    
+                default:
+                    found_instruction = DEF_NO;
+                    break;
+            }
+        }
+        
+        if (found_instruction == DEF_NO) {
+            instruction = opcode & 0xFFF800;
+            args        = opcode & 0x000000;
+            found_instruction = DEF_YES;
+            
+            switch (instruction) {
+                case CORE_OPC_SE:
+                    Core_SE_FB00(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
                     
                     

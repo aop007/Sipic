@@ -29,6 +29,7 @@ int main(int argc, const char * argv[])
     MEM_ERR   mem_err;
     CORE_ERR  core_err;
     
+    
     p_mem_prog = Mem_Init(&mem_cfg_prog_dsPIC30F[0],
                     sizeof(mem_cfg_prog_dsPIC30F),
                           &mem_err);
