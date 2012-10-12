@@ -1,0 +1,180 @@
+
+ROM used: 12462 (76%)
+          12462 (76%) including unused fragments
+
+          2 Average locations per line
+          5 Average locations per statement
+
+RAM used: 419 (45%) at main() level
+          717 (77%) worst case
+
+Stack used: 13 worst case (out of 30 total available)
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+  134    39   2  main.c
+   29     0   0  includes.h
+  136     0   0  main.h
+  413     0   0  C:\Program Files\PICC\devices\30F3011.h
+ 2172   898  36  C:\Program Files\PICC\drivers\math.h
+   12     0   0  uart.h
+   24     0   0  i2c.h
+   42     0   0  EEPROM.h
+   87     0   0  Menu.h
+ 1273   478  19  C:\Program Files\PICC\drivers\stdlib.h
+   28     0   0  C:\Program Files\PICC\drivers\stddef.h
+  409   121   5  C:\Program Files\PICC\drivers\string.h
+   28     0   0  C:\Program Files\PICC\drivers\ctype.h
+   97     0   0  RBGLighting.h
+   57     0   0  Chime.h
+   54     0   0  LCDDriver.h
+   76     0   0  LoadControl.h
+    7     0   0  LumMonitor.h
+   80     0   0  RTCC.h
+  106    44   2  customTime.c
+   24     0   0  Userinput.h
+   36    13   1  uart.c
+  246    73   3  RBGLighting.c
+   29    11   0  LumMonitor.c
+  406   100   4  LoadControl.c
+  126    59   2  LCDDriver.c
+   50    21   1  Chime.c
+  375   135   5  RTCC.c
+   47     9   0  UserInput.c
+   93     0   0  EEPROM.c
+  980   519  21  Menu.c
+----- -----
+ 7676  2520 Total
+
+Page ROM  %  RAM   Vol Diff  Functions:
+---- --- --- ---   --- ----  ----------
+0     20   0   2             @delay_ms1
+0    344   1  21  1127 10.5  CEIL_FLOOR
+0    104   0   8             @FLT
+0     44   0   4             @SFTOI
+0     58   0   2             @ITOF
+0    202   1   8             @DIVFF
+0    416   2   8             @ADDFF
+0    190   1   8             @MULFF
+0     18   0   4    44  1.9  floor
+0     20   0   4    44  1.9  ceil
+0    140   1  17   257  7.2  fmod
+0     74   0   2             @SITOF
+0     66   0   8             @MULS3232
+0     48   0   8             @MUL3232
+0      2   0   0             @GOTOPTR
+0    230   1  18   598  8.5  DS1371_DateToBinary
+0    570   2  75  2306 11.9  DS1371_BinaryToDate
+0     84   0   8             @DIV3232A
+0     82   0   7   267  5.2  transmitTLV
+0     18   0   0    84  3.1  TransmitDataStreaming
+0    102   0   0   514  4.7  TIMER5_isr
+0     48   0   0   370  3.3  initRGBLighting
+0    522   2  35  1654  8.1  HSVtoRGB
+0    122   0   5   531  5.2  UpdateRGB_Out
+0     36   0   7    71  2.8  IncreaseHue
+0     16   0   0    52  1.9  initLumMonitor
+0    114   0   0   354  6.0  readLumMonitor
+0    166   1   6  1038  6.3  CNI_isr
+0     98   0   0   429  6.1  TIMER4_isr
+0     56   0   0   460  3.3  InitLoadControl
+0    306   1   5   823  7.5  CalculateLuminosity
+0     56   0   4             @DTOF
+0    106   0  13   187  4.0  SetLampIntensity
+0     22   0   2   108  3.3  TurnTriacOn
+0      6   0   0    21  0.9  TurnLoadCtrlLow
+0      6   0   0    21  0.9  TurnLoadCtrlHigh
+0     22   0   2   110  3.1  TurnTriacOff
+0    174   1   0   784  4.4  initLCD
+0     14   0   0    56  1.6  shutdownLCD
+0     34   0   2   172  2.5  writeToLCD
+0     44   0   3   283  4.6  writeByte
+0     34   0   5   106  4.0  writeToDDRAM
+0     24   0   2    80  3.0  writeToDDRAM
+0     52   0   0   141  2.6  refreshLCD
+0     38   0   5   138  3.3  clearLCDLines
+0     70   0   3    55  2.6  TIMER3_isr
+0     18   0   5             @READBITA
+0     28   0   0   223  2.7  initChime
+0     24   0   1   154  2.6  setChime
+0      8   0   1    27  1.3  beep
+0     84   0  13   333  4.4  timeToStruct
+0     36   0   0   292  2.8  updateSnoozeTimeWithAlarmTime
+0     28   0   0   195  2.7  updateAlarmTimeWithCurrentTime
+0    236   1  13   165  3.1  PowerToTimeOn
+0     50   0   0    66  3.1  TIMER1_isr
+0    164   1   0   650  3.4  InitRTCC
+0    714   3   5  3610 11.8  AlarmStateMachine
+0    112   0   8   496  7.6  FindNextAlarmTime
+0     28   0   0    98  1.8  RTCC_TransitionToSTANDBY
+0     28   0   0     5  1.0  QEI_isr
+0     16   0   0    61  1.9  initUserInput
+0      8   0   0    17  1.3  encoderMonitoring
+0     26   0   0   128  2.7  addSelector
+0    304   1   8  1647 11.4  EditMenu
+0    414   2   3  2069 12.3  EditDateAndTime
+0    246   1   9  1179 10.4  EditAlarmDays
+0    320   1   9  1722 12.9  EditAlarmTime
+0    274   1   9  1323 11.9  EditLoadLighting
+0    276   1   9  1323 11.9  EditVolume
+0    224   1   8  1172 11.4  EditCarillon
+0    248   1   9  1222 11.9  EditAlarmSnooze
+0    314   1   9  1600 12.4  EditRGBLighting
+0    224   1   8  1147 11.5  EditPowerCtrls
+0    150   1  11   788  7.5  editField
+0    136   1  13   764  7.4  editIntField
+0    132   1   3   267  3.6  displayEditDateAndTime
+0     36   0   0             @const1183
+0     14   0   1             @SPRINTF
+0    188   1   0             @PRINTFU16_1185
+0     94   0   0   204  3.0  displayEditAlarmOptions
+0     32   0   0             @const1192
+0    126   1   0   380  4.1  displayEditAlarmTime
+0     24   0   0             @const1193
+0     32   0   0             @const1194
+0     96   0   0   179  3.3  displayCarillon
+0     22   0   0             @const1195
+0     98   0   0   134  2.4  displayLoadLighting
+0     28   0   0             @const1198
+0     30   0   0             @const1199
+0    102   0   3   319  5.4  displayAlarmDays
+0     28   0   0             @const1200
+0     88   0   0   123  2.4  displaySnooze
+0     20   0   0             @const1202
+0     22   0   0             @const1203
+0    170   1   0   494  4.6  displayRGBLight
+0     28   0   0             @const1204
+0     30   0   0             @const1205
+0     98   0   0   134  2.4  displayVolume
+0     26   0   0             @const1206
+0     26   0   0             @const1207
+0    128   1   0   183  2.8  displayPowerCtrls
+0     26   0   0             @const1208
+0     28   0   0             @const1209
+0     28   0   0     5  1.0  RDA_isr
+0     28   0   0     5  1.0  TBE_isr
+0     28   0   0     5  1.0  ADC1_isr
+0     30   0   0    22  1.2  ADDRERR_isr
+0     28   0   0     3  0.0  default_isr
+0    536   2   0  1020  6.1  MAIN
+
+Program metrics:
+    Functions               77
+    Statements              2520
+    Comments                2180
+    Volume (V)              74567
+    Difficilty (D)          386.2
+    Effort to implement (E) 28797705
+    Time to implement (T)   444 hours, 25 minutes
+    Est Delivered Bugs (B)  31
+    Cyclomatic Complexity   176
+    Maintainability (MI)    124
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00002     4  0  
+00004-000FE   252  0  
+00100-03FFE  12206  3922  
+
+
+

@@ -30,6 +30,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6907C71B1627AB80000A513F /* main.cof */ = {isa = PBXFileReference; lastKnownFileType = file; name = main.cof; path = InputFiles/main.cof; sourceTree = "<group>"; };
+		6907C71C1627AB80000A513F /* main.err */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.err; path = InputFiles/main.err; sourceTree = "<group>"; };
+		6907C71D1627AB80000A513F /* main.esym */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.esym; path = InputFiles/main.esym; sourceTree = "<group>"; };
+		6907C71E1627AB80000A513F /* main.exe */ = {isa = PBXFileReference; lastKnownFileType = file; name = main.exe; path = InputFiles/main.exe; sourceTree = "<group>"; };
+		6907C71F1627AB80000A513F /* main.hex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.hex; path = InputFiles/main.hex; sourceTree = "<group>"; };
+		6907C7201627AB80000A513F /* main.lst */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.lst; path = InputFiles/main.lst; sourceTree = "<group>"; };
+		6907C7211627AB80000A513F /* main.sta */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.sta; path = InputFiles/main.sta; sourceTree = "<group>"; };
+		6907C7221627AB80000A513F /* main.sym */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.sym; path = InputFiles/main.sym; sourceTree = "<group>"; };
+		6907C7231627AB80000A513F /* main.tre */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.tre; path = InputFiles/main.tre; sourceTree = "<group>"; };
 		690ADF07161BE536001DCA06 /* Sipic */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Sipic; sourceTree = BUILT_PRODUCTS_DIR; };
 		690ADF0B161BE536001DCA06 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		690ADF14161BE5DD001DCA06 /* coff_parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = coff_parser.c; sourceTree = "<group>"; };
@@ -52,14 +61,6 @@
 		6958E9C21620C49900D2B690 /* err.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = err.h; sourceTree = "<group>"; };
 		69E367CC1624DEE900A38020 /* mem_cfg_24f3011.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mem_cfg_24f3011.h; sourceTree = "<group>"; };
 		69E7B6BC161D2E1C002588BF /* cpu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cpu.c; sourceTree = "<group>"; };
-		69E7B6BF161D3469002588BF /* main.cof */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o"; name = main.cof; path = "../../dsPIC workspace/main.cof"; sourceTree = "<group>"; };
-		69E7B6C0161D4508002588BF /* main.err */ = {isa = PBXFileReference; lastKnownFileType = text; name = main.err; path = "../../dsPIC workspace/main.err"; sourceTree = "<group>"; };
-		69E7B6C2161D4517002588BF /* main.esym */ = {isa = PBXFileReference; lastKnownFileType = text; name = main.esym; path = "../../dsPIC workspace/main.esym"; sourceTree = "<group>"; };
-		69E7B6C3161D4517002588BF /* main.hex */ = {isa = PBXFileReference; lastKnownFileType = text; name = main.hex; path = "../../dsPIC workspace/main.hex"; sourceTree = "<group>"; };
-		69E7B6C4161D4517002588BF /* main.lst */ = {isa = PBXFileReference; lastKnownFileType = text; name = main.lst; path = "../../dsPIC workspace/main.lst"; sourceTree = "<group>"; };
-		69E7B6C5161D4517002588BF /* main.sta */ = {isa = PBXFileReference; lastKnownFileType = text; name = main.sta; path = "../../dsPIC workspace/main.sta"; sourceTree = "<group>"; };
-		69E7B6C6161D4517002588BF /* main.sym */ = {isa = PBXFileReference; lastKnownFileType = text; name = main.sym; path = "../../dsPIC workspace/main.sym"; sourceTree = "<group>"; };
-		69E7B6C7161D4517002588BF /* main.tre */ = {isa = PBXFileReference; lastKnownFileType = text; name = main.tre; path = "../../dsPIC workspace/main.tre"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,19 +74,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6907C7191627AAD8000A513F /* Input Files */ = {
+			isa = PBXGroup;
+			children = (
+				6907C71B1627AB80000A513F /* main.cof */,
+				6907C71C1627AB80000A513F /* main.err */,
+				6907C71D1627AB80000A513F /* main.esym */,
+				6907C71E1627AB80000A513F /* main.exe */,
+				6907C71F1627AB80000A513F /* main.hex */,
+				6907C7201627AB80000A513F /* main.lst */,
+				6907C7211627AB80000A513F /* main.sta */,
+				6907C7221627AB80000A513F /* main.sym */,
+				6907C7231627AB80000A513F /* main.tre */,
+			);
+			name = "Input Files";
+			sourceTree = "<group>";
+		};
 		690ADEFC161BE535001DCA06 = {
 			isa = PBXGroup;
 			children = (
 				690ADF0A161BE536001DCA06 /* Sipic */,
 				690ADF08161BE536001DCA06 /* Products */,
-				69E7B6BF161D3469002588BF /* main.cof */,
-				69E7B6C0161D4508002588BF /* main.err */,
-				69E7B6C2161D4517002588BF /* main.esym */,
-				69E7B6C3161D4517002588BF /* main.hex */,
-				69E7B6C4161D4517002588BF /* main.lst */,
-				69E7B6C5161D4517002588BF /* main.sta */,
-				69E7B6C6161D4517002588BF /* main.sym */,
-				69E7B6C7161D4517002588BF /* main.tre */,
 			);
 			sourceTree = "<group>";
 		};
@@ -100,6 +109,7 @@
 		690ADF0A161BE536001DCA06 /* Sipic */ = {
 			isa = PBXGroup;
 			children = (
+				6907C7191627AAD8000A513F /* Input Files */,
 				6958E9BA161FC01400D2B690 /* 24FCore */,
 				6958E9B6161FBA0F00D2B690 /* Mem */,
 				6958E9B2161F9E0600D2B690 /* ASCII */,

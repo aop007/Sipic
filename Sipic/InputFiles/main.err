@@ -1,0 +1,10 @@
+>>> Warning 216 "main.c" Line 135(0,1): Interrupts disabled during call to prevent re-entrancy:  (TurnTriacOff)
+>>> Warning 216 "main.c" Line 135(0,1): Interrupts disabled during call to prevent re-entrancy:  (@MUL3232)
+>>> Warning 216 "main.c" Line 135(0,1): Interrupts disabled during call to prevent re-entrancy:  (DS1371_BinaryToDate)
+>>> Warning 202 "Z:\Users\aop007\Documents\Projets\DawnStar\dsPIC workspace\RBGLighting.h" Line 59(54,61): Variable never used:   dimmer0
+>>> Warning 202 "Z:\Users\aop007\Documents\Projets\DawnStar\dsPIC workspace\RBGLighting.h" Line 60(71,78): Variable never used:   dimmer1
+>>> Warning 202 "Z:\Users\aop007\Documents\Projets\DawnStar\dsPIC workspace\RBGLighting.h" Line 61(91,101): Variable never used:   dimmerCtrl
+>>> Warning 202 "Z:\Users\aop007\Documents\Projets\DawnStar\dsPIC workspace\UserInput.c" Line 3(17,27): Variable never used:   ENCA_value
+>>> Warning 202 "Z:\Users\aop007\Documents\Projets\DawnStar\dsPIC workspace\UserInput.c" Line 4(17,27): Variable never used:   ENCB_value
+      Memory usage:   ROM=76%      RAM=45% - 77%
+      0 Errors,  8 Warnings.
