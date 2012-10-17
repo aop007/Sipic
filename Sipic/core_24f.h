@@ -31,6 +31,11 @@
 #define  CORE_SR_OB    0x4000
 #define  CORE_SR_OA    0x8000
 
+#define  CORE_MATH_OP_ADD  0x0001
+#define  CORE_MATH_OP_SUB  0x0002
+#define  CORE_MATH_OP_MUL  0x0003
+#define  CORE_MATH_OP_DIV  0x0004
+
 
 typedef struct core_24f {
     
@@ -79,6 +84,8 @@ typedef struct core_24f {
 #endif
     
 } CORE_24F;
+
+typedef  CPU_INT16U  CORE_MATH_OP;
 
 void        Core_Push(CPU_INT32U   val,
                       CORE_24F    *p_core,

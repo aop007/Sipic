@@ -9,6 +9,6 @@
 #ifndef Sipic_hex_parser_cfg_h
 #define Sipic_hex_parser_cfg_h
 
-#define  HEX_CFG_FILE_PATH  "/Users/aop007/Documents/Projets/DawnStar/dsPIC workspace/main.hex"
+#define  HEX_CFG_FILE_PATH  "/Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/InputFiles/main.hex"
 
 #endif

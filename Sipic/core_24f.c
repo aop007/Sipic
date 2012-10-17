@@ -37,12 +37,11 @@ void  Core_Run(MEM       *p_mem_prog,
     Core_Init(&core_24f);
     
     while (1) {
-        printf("\r\nPC = 0x%X", core_24f.PC);
-        
-        
         opcode = Mem_Get(p_mem_prog,
                          core_24f.PC,
                         &mem_err);
+
+        printf("\r\nPC = 0x%X\tOPC = 0x%X", core_24f.PC, opcode);
 #if 0
         if (core_24f.PC == 0x892) {
             printf("Here comes INVALID_MEM");
@@ -74,11 +73,21 @@ void  Core_Run(MEM       *p_mem_prog,
             
             switch (instruction) {
                 case CORE_OPC_ADD_WB_WS:
-                    Core_ADD_WS_WD_40(p_mem_prog,
-                                      p_mem_data,
-                                      &core_24f,
-                                      args,
-                                      &core_err);
+                    Core_MATH_WS_WD(p_mem_prog,
+                                    p_mem_data,
+                                    &core_24f,
+                                    args,
+                                    CORE_MATH_OP_ADD,
+                                    &core_err);
+                    break;
+                    
+                case CORE_OPC_SUB_WB_WS:
+                    Core_MATH_WS_WD(p_mem_prog,
+                                    p_mem_data,
+                                    &core_24f,
+                                    args,
+                                    CORE_MATH_OP_SUB,
+                                    &core_err);
                     break;
                     
                 case CORE_OPC_MOV_WS_WD:
@@ -188,6 +197,10 @@ void  Core_Run(MEM       *p_mem_prog,
                     Core_ADD_B40(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
                     
+                case CORE_OPC_MUL_SS:
+                    Core_MUL_SS_B98(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
+                    
                 case CORE_OPC_MOV_M_WM:
                     Core_MOV_BF8(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
@@ -252,7 +265,7 @@ void  Core_Run(MEM       *p_mem_prog,
         
         if (found_instruction == DEF_NO) {
             instruction = opcode & 0xFFF800;
-            args        = opcode & 0x000000;
+            args        = opcode & 0x0007FF;
             found_instruction = DEF_YES;
             
             switch (instruction) {

@@ -196,11 +196,12 @@ void Core_BRA_37       (MEM         *p_mem_prog,
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_ADD_WS_WD_40 (MEM         *p_mem_prog,
-                        MEM         *p_mem_data,
-                        CORE_24F    *p_core,
-                        CPU_INT32U   args,
-                        CORE_ERR    *p_err)
+void Core_MATH_WS_WD   (MEM          *p_mem_prog,
+                        MEM          *p_mem_data,
+                        CORE_24F     *p_core,
+                        CPU_INT32U    args,
+                        CORE_MATH_OP  math_op,
+                        CORE_ERR     *p_err)
 {
     CPU_INT32U  base_w_addr;                                    /* wwww */
     CPU_INT32U  size_op;                                        /* B    */
@@ -327,8 +328,28 @@ void Core_ADD_WS_WD_40 (MEM         *p_mem_prog,
             return;
     }
 
+    switch (math_op) {
+        case CORE_MATH_OP_ADD:
+            result = operand_1 + operand_2;
+            break;
+            
+        case CORE_MATH_OP_SUB:
+            result = operand_1 - operand_2;
+            break;
+            
+        case CORE_MATH_OP_MUL:
+            result = operand_1 * operand_2;
+            break;
+            
+        case CORE_MATH_OP_DIV:
+            result = operand_1 / operand_2;
+            break;
+            
+        default:
+            *p_err = CORE_ERR_INVALID_MATH_OP;
+            return;
+    }
     
-    result = operand_1 + operand_2;
     
     switch (dst_addr_mode) {
         case CORE_OPC_ADDR_MODE_DIR:
@@ -1248,6 +1269,28 @@ void Core_ADD_B40     (MEM         *p_mem_prog,
     
     p_core->PC += 2;
     *p_err = CORE_ERR_NONE;
+}
+
+void Core_MUL_SS_B98 (MEM         *p_mem_prog,
+                      MEM         *p_mem_data,
+                      CORE_24F    *p_core,
+                      CPU_INT32U   args,
+                      CORE_ERR    *p_err)
+{
+    CPU_INT32U  base_reg;
+    CPU_INT32U  dest_reg;
+    CPU_INT32U  addr_mode;
+    CPU_INT32U  srce_reg;
+    
+    CPU_INT32S  
+
+    
+    base_reg  = (args & 0x007800) >> 11;
+    dest_reg  = (args & 0x000780) >>  7;
+    addr_mode = (args & 0x000070) >>  4;
+    srce_reg  =  args & 0x00000F;
+    
+    
 }
 
 void Core_MOV_BF8 (MEM         *p_mem_prog,

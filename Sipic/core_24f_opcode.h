@@ -32,12 +32,15 @@
 #define  CORE_OPC_BRA_EXPR   0x370000
 
 #define  CORE_OPC_ADD_WB_WS  0x400000
+#define  CORE_OPC_SUB_WB_WS  0x500000
 
 #define  CORE_OPC_BSET_W     0xA00000
 #define  CORE_OPC_BSET_M     0xA80000
 #define  CORE_OPC_BCLR_M     0xA90000
 
 #define  CORE_OPC_BTSC       0xAF0000
+
+#define  CORE_OPC_MUL_SS     0xB98000
 
 #define  CORE_OPC_MOV_8BL_WN 0xB3C000
 #define  CORE_OPC_MOV_WN_M   0xB7A000
@@ -110,11 +113,12 @@ void Core_BRA_37       (MEM         *p_mem_prog,
                         CPU_INT32U   args,
                         CORE_ERR    *p_err);
 
-void Core_ADD_WS_WD_40 (MEM         *p_mem_prog,
-                        MEM         *p_mem_data,
-                        CORE_24F    *p_core,
-                        CPU_INT32U   args,
-                        CORE_ERR    *p_err);
+void Core_MATH_WS_WD   (MEM           *p_mem_prog,
+                        MEM           *p_mem_data,
+                        CORE_24F      *p_core,
+                        CPU_INT32U     args,
+                        CORE_MATH_OP   math_op,
+                        CORE_ERR      *p_err);
 
 void Core_MOV_WS_WD_78 (MEM         *p_mem_prog,
                         MEM         *p_mem_data,
@@ -169,6 +173,18 @@ void Core_SETM_MOV_8BL_WN_B7A (MEM         *p_mem_prog,
                                CORE_24F    *p_core,
                                CPU_INT32U   args,
                                CORE_ERR    *p_err);
+
+void Core_ADD_B40     (MEM         *p_mem_prog,
+                       MEM         *p_mem_data,
+                       CORE_24F    *p_core,
+                       CPU_INT32U   args,
+                       CORE_ERR    *p_err);
+
+void Core_MUL_SS_B98 (MEM         *p_mem_prog,
+                      MEM         *p_mem_data,
+                      CORE_24F    *p_core,
+                      CPU_INT32U   args,
+                      CORE_ERR    *p_err);
 
 void Core_MOV_BF8 (MEM         *p_mem_prog,
                    MEM         *p_mem_data,

@@ -58,7 +58,8 @@ enum core_err {
     CORE_ERR_INVALID_MEM        = 4002u,
     CORE_ERR_INVALID_OPC_ARG    = 4003u,
     CORE_ERR_OPC_UNSUPORTED_YET = 4004u,
-    CORE_ERR_INVALID_OPC_CYCLE  = 4005u
+    CORE_ERR_INVALID_OPC_CYCLE  = 4005u,
+    CORE_ERR_INVALID_MATH_OP    = 4006u
 };
 
 typedef enum core_err CORE_ERR;
