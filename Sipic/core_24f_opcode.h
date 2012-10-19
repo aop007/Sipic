@@ -33,6 +33,7 @@
 
 #define  CORE_OPC_ADD_WB_WS  0x400000
 #define  CORE_OPC_SUB_WB_WS  0x500000
+#define  CORE_OPC_LIT_WB     0x500060
 
 #define  CORE_OPC_BSET_W     0xA00000
 #define  CORE_OPC_BSET_M     0xA80000
@@ -119,6 +120,12 @@ void Core_MATH_WS_WD   (MEM           *p_mem_prog,
                         CPU_INT32U     args,
                         CORE_MATH_OP   math_op,
                         CORE_ERR      *p_err);
+
+void Core_SUB_50006 (MEM         *p_mem_prog,
+                     MEM         *p_mem_data,
+                     CORE_24F    *p_core,
+                     CPU_INT32U   args,
+                     CORE_ERR    *p_err);
 
 void Core_MOV_WS_WD_78 (MEM         *p_mem_prog,
                         MEM         *p_mem_data,

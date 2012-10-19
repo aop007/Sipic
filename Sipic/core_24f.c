@@ -47,74 +47,18 @@ void  Core_Run(MEM       *p_mem_prog,
             printf("Here comes INVALID_MEM");
         }
 #endif
-        instruction = opcode & 0xF00000;
-        args        = opcode & 0x0FFFFF;
-        found_instruction = DEF_YES;
-        
-        switch (instruction) {
-            case CORE_OPC_MOV_L_W:
-                Core_MOV_2(p_mem_prog,
-                           p_mem_data,
-                           &core_24f,
-                           args,
-                           &core_err);
-                break;
-                
-                
-            default:
-                found_instruction = DEF_NO;
-                break;
-        }
+        found_instruction = DEF_NO;
         
         if (found_instruction == DEF_NO) {
-            instruction = opcode & 0xF80000;
-            args        = opcode & 0x07FFFF;
+            instruction = opcode & 0xFFFFFF;
+            args        = opcode & 0x000000;
             found_instruction = DEF_YES;
             
             switch (instruction) {
-                case CORE_OPC_ADD_WB_WS:
-                    Core_MATH_WS_WD(p_mem_prog,
-                                    p_mem_data,
-                                    &core_24f,
-                                    args,
-                                    CORE_MATH_OP_ADD,
-                                    &core_err);
+                case CORE_OPC_RETURN:
+                    Core_RETURN_060(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
                     
-                case CORE_OPC_SUB_WB_WS:
-                    Core_MATH_WS_WD(p_mem_prog,
-                                    p_mem_data,
-                                    &core_24f,
-                                    args,
-                                    CORE_MATH_OP_SUB,
-                                    &core_err);
-                    break;
-                    
-                case CORE_OPC_MOV_WS_WD:
-                    Core_MOV_WS_WD_78(p_mem_prog,
-                                      p_mem_data,
-                                      &core_24f,
-                                      args,
-                                      &core_err);
-                    break;
-                    
-                    
-                case CORE_OPC_MOV_M_W:
-                    Core_MOV_M_W_80(p_mem_prog,
-                                    p_mem_data,
-                                   &core_24f,
-                                    args,
-                                   &core_err);
-                    break;
-                    
-                    
-                case CORE_OPC_MOV_W_M:
-                    Core_MOV_W_M_88(p_mem_prog,
-                                    p_mem_data,
-                                   &core_24f,
-                                    args,
-                                   &core_err);
-                    break;
                     
                 default:
                     found_instruction = DEF_NO;
@@ -123,62 +67,14 @@ void  Core_Run(MEM       *p_mem_prog,
         }
         
         if (found_instruction == DEF_NO) {
-            instruction = opcode & 0xFF0000;
-            args        = opcode & 0x00FFFF;
+            instruction = opcode & 0xF80060;
+            args        = opcode & 0x07FF9F;
             found_instruction = DEF_YES;
             
             switch (instruction) {
-                case CORE_OPC_NOP:
-                    Core_NOP_00(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                case CORE_OPC_LIT_WB:
+                    Core_SUB_50006(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
-                    
-#if 0
-                case CORE_OPC_BRA:
-                    break;
-#endif
-
-                case CORE_OPC_CALL:
-                    Core_CALL_02(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
-                    break;
-
-                    
-                case CORE_OPC_GOTO:
-                    Core_GOTO_04(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
-                    break;
-                    
-
-                case CORE_OPC_BRA_EXPR:
-                    Core_BRA_37(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
-                    break;
-
-                    
-                case CORE_OPC_BSET_W:
-                    Core_BSET_W_A0(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
-                    break;
-                    
-                    
-                case CORE_OPC_BSET_M:
-                    Core_BSET_M_A8(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
-                    break;
-                    
-                    
-                case CORE_OPC_BCLR_M:
-                    Core_BCLR_M_A9(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
-                    break;
-                    
-                    
-                case CORE_OPC_BTSC:
-                    Core_BTSC_AF(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
-                    break;
-                    
-                case CORE_OPC_PUSH_F8:
-                    Core_PUSH_F8(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
-                    break;
-                    
-                case CORE_OPC_POP_F9:
-                    Core_POP_F9(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
-                    break;
-                
                     
                     
                 default:
@@ -187,6 +83,40 @@ void  Core_Run(MEM       *p_mem_prog,
             }
         }
         
+        if (found_instruction == DEF_NO) {
+            instruction = opcode & 0xFFF800;
+            args        = opcode & 0x0007FF;
+            found_instruction = DEF_YES;
+            
+            switch (instruction) {
+                case CORE_OPC_SE:
+                    Core_SE_FB00(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
+                    
+                    
+                default:
+                    found_instruction = DEF_NO;
+                    break;
+            }
+        }
+        
+        if (found_instruction == DEF_NO) {
+            instruction = opcode & 0xFFF000;
+            args        = opcode & 0x000FFF;
+            found_instruction = DEF_YES;
+            
+            switch (instruction) {
+                case CORE_OPC_MOV_8BL_WN:
+                    Core_SETM_MOV_8BL_WN_B3C(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
+                    
+                    
+                default:
+                    found_instruction = DEF_NO;
+                    break;
+            }
+        }
+
         if (found_instruction == DEF_NO) {
             instruction = opcode & 0xFF8000;
             args        = opcode & 0x007FFF;
@@ -247,14 +177,62 @@ void  Core_Run(MEM       *p_mem_prog,
         }
         
         if (found_instruction == DEF_NO) {
-            instruction = opcode & 0xFFF000;
-            args        = opcode & 0x000FFF;
+            instruction = opcode & 0xFF0000;
+            args        = opcode & 0x00FFFF;
             found_instruction = DEF_YES;
             
             switch (instruction) {
-                case CORE_OPC_MOV_8BL_WN:
-                    Core_SETM_MOV_8BL_WN_B3C(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                case CORE_OPC_NOP:
+                    Core_NOP_00(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
+                    
+#if 0
+                case CORE_OPC_BRA:
+                    break;
+#endif
+                    
+                case CORE_OPC_CALL:
+                    Core_CALL_02(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
+                    
+                    
+                case CORE_OPC_GOTO:
+                    Core_GOTO_04(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
+                    
+                    
+                case CORE_OPC_BRA_EXPR:
+                    Core_BRA_37(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
+                    
+                    
+                case CORE_OPC_BSET_W:
+                    Core_BSET_W_A0(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
+                    
+                    
+                case CORE_OPC_BSET_M:
+                    Core_BSET_M_A8(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
+                    
+                    
+                case CORE_OPC_BCLR_M:
+                    Core_BCLR_M_A9(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
+                    
+                    
+                case CORE_OPC_BTSC:
+                    Core_BTSC_AF(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
+                    
+                case CORE_OPC_PUSH_F8:
+                    Core_PUSH_F8(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
+                    
+                case CORE_OPC_POP_F9:
+                    Core_POP_F9(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
+                    
                     
                     
                 default:
@@ -262,40 +240,86 @@ void  Core_Run(MEM       *p_mem_prog,
                     break;
             }
         }
+
         
         if (found_instruction == DEF_NO) {
-            instruction = opcode & 0xFFF800;
-            args        = opcode & 0x0007FF;
+            instruction = opcode & 0xF80000;
+            args        = opcode & 0x07FFFF;
             found_instruction = DEF_YES;
             
             switch (instruction) {
-                case CORE_OPC_SE:
-                    Core_SE_FB00(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                case CORE_OPC_ADD_WB_WS:
+                    Core_MATH_WS_WD(p_mem_prog,
+                                    p_mem_data,
+                                    &core_24f,
+                                    args,
+                                    CORE_MATH_OP_ADD,
+                                    &core_err);
                     break;
                     
+                case CORE_OPC_SUB_WB_WS:
+                    Core_MATH_WS_WD(p_mem_prog,
+                                    p_mem_data,
+                                    &core_24f,
+                                    args,
+                                    CORE_MATH_OP_SUB,
+                                    &core_err);
+                    break;
+                    
+                case CORE_OPC_MOV_WS_WD:
+                    Core_MOV_WS_WD_78(p_mem_prog,
+                                      p_mem_data,
+                                      &core_24f,
+                                      args,
+                                      &core_err);
+                    break;
+                    
+                    
+                case CORE_OPC_MOV_M_W:
+                    Core_MOV_M_W_80(p_mem_prog,
+                                    p_mem_data,
+                                    &core_24f,
+                                    args,
+                                    &core_err);
+                    break;
+                    
+                    
+                case CORE_OPC_MOV_W_M:
+                    Core_MOV_W_M_88(p_mem_prog,
+                                    p_mem_data,
+                                    &core_24f,
+                                    args,
+                                    &core_err);
+                    break;
                     
                 default:
                     found_instruction = DEF_NO;
                     break;
             }
         }
+
         
         if (found_instruction == DEF_NO) {
-            instruction = opcode & 0xFFFFFF;
-            args        = opcode & 0x000000;
+            instruction = opcode & 0xF00000;
+            args        = opcode & 0x0FFFFF;
             found_instruction = DEF_YES;
-            
+        
             switch (instruction) {
-                case CORE_OPC_RETURN:
-                    Core_RETURN_060(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                case CORE_OPC_MOV_L_W:
+                    Core_MOV_2(p_mem_prog,
+                               p_mem_data,
+                              &core_24f,
+                               args,
+                              &core_err);
                     break;
-                    
-                    
+                
+                
                 default:
                     found_instruction = DEF_NO;
                     break;
             }
         }
+
         
         if (found_instruction == DEF_NO) {
             core_err = CORE_ERR_OPC_NOTFOUND;
