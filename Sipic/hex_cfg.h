@@ -9,6 +9,10 @@
 #ifndef Sipic_hex_parser_cfg_h
 #define Sipic_hex_parser_cfg_h
 
+#ifdef  WIN32
+#define  HEX_CFG_FILE_PATH  "C:\\Users\\alexis01.micrium01\\Projects\\Sipic\\Sipic\\InputFiles\\main.hex"
+#else
 #define  HEX_CFG_FILE_PATH  "/Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/InputFiles/main.hex"
+#endif
 
 #endif

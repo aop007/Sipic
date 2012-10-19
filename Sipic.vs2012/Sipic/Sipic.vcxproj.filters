@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\Sipic\core_24f.c" />
+    <ClCompile Include="..\..\Sipic\core_24f_opcode.c" />
+    <ClCompile Include="..\..\Sipic\cpu.c" />
+    <ClCompile Include="..\..\Sipic\hex_parser.c" />
+    <ClCompile Include="..\..\Sipic\main.c" />
+    <ClCompile Include="..\..\Sipic\mem.c" />
+    <ClCompile Include="..\..\Sipic\ascii.c" />
+    <ClCompile Include="..\..\Sipic\coff_parser.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Sipic\core_24f.h" />
+    <ClInclude Include="..\..\Sipic\core_24f_opcode.h" />
+    <ClInclude Include="..\..\Sipic\cpu.h" />
+    <ClInclude Include="..\..\Sipic\err.h" />
+    <ClInclude Include="..\..\Sipic\hex_cfg.h" />
+    <ClInclude Include="..\..\Sipic\hex_parser.h" />
+    <ClInclude Include="..\..\Sipic\mem.h" />
+    <ClInclude Include="..\..\Sipic\mem_cfg.h" />
+    <ClInclude Include="..\..\Sipic\mem_cfg_24f3011.h" />
+    <ClInclude Include="..\..\Sipic\sipic_cfg.h" />
+    <ClInclude Include="..\..\Sipic\ascii.h" />
+    <ClInclude Include="..\..\Sipic\coff_cfg.h" />
+    <ClInclude Include="..\..\Sipic\coff_parser.h" />
+  </ItemGroup>
+</Project>

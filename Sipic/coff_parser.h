@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 Alexis Ouellet-Patenaude. All rights reserved.
 //
 
+#if 0
 #ifndef Sipic_coff_parser_h
 #define Sipic_coff_parser_h
 
@@ -378,4 +379,5 @@ void  CoffParser_ReadFile(const char       *p_file_name,
                           COFF_PARSER_ERR  *p_err);
 
 
+#endif
 #endif

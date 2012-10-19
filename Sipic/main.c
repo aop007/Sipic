@@ -28,7 +28,7 @@ int main(int argc, const char * argv[])
     MEM      *p_mem_data;
     MEM_ERR   mem_err;
     CORE_ERR  core_err;
-    
+    HEX_PARSER_ERR  hex_err;    
     
     p_mem_prog = Mem_Init(&mem_cfg_prog_dsPIC30F[0],
                     sizeof(mem_cfg_prog_dsPIC30F),
@@ -44,7 +44,7 @@ int main(int argc, const char * argv[])
     CoffParser_ReadFile(COFF_CFG_FILE_PATH,
                        &coff_err);
 #elif (SIPIC_CFG_PARSE_METHOD == SIPIC_PARSE_METHOD_HEX)
-    HEX_PARSER_ERR  hex_err;
+    
     
     HexParser_ReadFile(HEX_CFG_FILE_PATH,
                        p_mem_prog,

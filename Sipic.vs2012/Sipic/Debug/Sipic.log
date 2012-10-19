@@ -1,0 +1,20 @@
+﻿Build started 19/10/2012 4:19:34 PM.
+     1>Project "C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\Sipic\Sipic.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I.\ /I..\..\Sipic /I..\..\Sipic\InputFiles /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:prompt ..\..\Sipic\core_24f.c
+         core_24f.c
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\Debug\Sipic.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\Debug\Sipic.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\Debug\Sipic.lib" /MACHINE:X86 Debug\ascii.obj
+         Debug\coff_parser.obj
+         Debug\core_24f.obj
+         Debug\core_24f_opcode.obj
+         Debug\cpu.obj
+         Debug\hex_parser.obj
+         Debug\main.obj
+         Debug\mem.obj
+         Sipic.vcxproj -> C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\Debug\Sipic.exe
+     1>Done Building Project "C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\Sipic\Sipic.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.29

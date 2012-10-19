@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 Alexis Ouellet-Patenaude. All rights reserved.
 //
 
+#if 0
 #include <stdio.h>
 #include <coff_parser.h>
 #include <coff_cfg.h>
@@ -217,7 +218,7 @@ static  void  CoffParser_LoadSection(SECTION          *p_section,
     *p_err = COFF_PARSER_ERR_NONE;
 }
 
-
+#endif
 
 
 

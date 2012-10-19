@@ -41,7 +41,7 @@ void  Core_Run(MEM       *p_mem_prog,
                          core_24f.PC,
                         &mem_err);
 
-        printf("\r\nPC = 0x%X\tOPC = 0x%X", core_24f.PC, opcode);
+        printf("\r\nPC = 0x%X\tOPC = 0x%X\tCYCLE = %d", core_24f.PC, opcode, core_24f.CYCLE);
 #if 0
         if (core_24f.PC == 0x892) {
             printf("Here comes INVALID_MEM");
