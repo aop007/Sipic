@@ -636,7 +636,39 @@ void Core_SUB_50006 (MEM         *p_mem_prog,
             return;
     }
 
-    //Update DC, N, OV, Z, C status.
+    /* Update Status Register */
+    if (((operand1 & 0x00000080) &&                              /* DC */
+         (result   & 0x00000080))) {
+        p_core->SR |=   CORE_SR_DC;
+    } else {
+        p_core->SR &= ~(CORE_SR_DC);
+    }
+    
+    if (result < 0) {                                          /* N */
+        p_core->SR |=   CORE_SR_N;
+    } else {
+        p_core->SR &= ~(CORE_SR_N);
+    }
+    
+    if ((operand1 <  0) &&                                       /* OV */
+        (result   >= 0)) {
+        p_core->SR |=   CORE_SR_OV;
+    } else {
+        p_core->SR &= ~(CORE_SR_OV);
+    }
+    
+    if (result == 0) {                                         /* Z */
+        p_core->SR |=   CORE_SR_Z;
+    } else {
+        p_core->SR &= ~(CORE_SR_Z);
+    }
+    
+    if (((operand1 & 0x00008000) &&                              /* C */
+         (result   & 0x00008000))) {
+        p_core->SR |=   CORE_SR_C;
+    } else {
+        p_core->SR &= ~(CORE_SR_C);
+    }
 
     p_core->PC += 2;
 
