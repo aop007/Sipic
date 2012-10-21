@@ -553,6 +553,9 @@ void Core_SUB_50006 (MEM         *p_mem_prog,
     CPU_INT32U  lit_op;
     CPU_INT32S  operand1;
     CPU_INT32S  result;
+    CPU_INT32S  offset;
+    MEM_ERR     mem_err;
+
     
     base_w    = (args & 0x078000) >> 15;
     size_op   = (args & 0x004000) >> 14;
@@ -561,8 +564,11 @@ void Core_SUB_50006 (MEM         *p_mem_prog,
     lit_op    =  args & 0x00001F;
     
     if (size_op != 0) {
+        offset = 1;
         *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
         return;
+    } else {
+        offset = 2;
     }
     
     operand1 = CPU_SignExt16(p_core->W[base_w]);
@@ -571,19 +577,70 @@ void Core_SUB_50006 (MEM         *p_mem_prog,
     
     switch (addr_mode) {
         case CORE_OPC_ADDR_MODE_DIR:
-        case CORE_OPC_ADDR_MODE_IND:
-        case CORE_OPC_ADDR_MODE_IND_POS_DEC:
-        case CORE_OPC_ADDR_MODE_IND_POS_INC:
-        case CORE_OPC_ADDR_MODE_IND_PRE_DEC:
-        case CORE_OPC_ADDR_MODE_IND_PRE_INC:
+            p_core->W[dest_w] = result & 0xFFF;
             break;
-            
+
+        case CORE_OPC_ADDR_MODE_IND:
+            Mem_Set(p_mem_data, (p_core->[dest_w] & 0xFFFE), result & 0xFFFF, &mem_err);
+
+            if (mem_err != MEM_ERR_NONE) {
+                *p_err = CORE_ERR_INVALID_MEM;
+                return;
+            }
+            break;
+
+        case CORE_OPC_ADDR_MODE_IND_POS_DEC:
+            Mem_Set(p_mem_data, (p_core->[dest_w] & 0xFFFE), result & 0xFFFF, &mem_err);
+
+            if (mem_err != MEM_ERR_NONE) {
+                *p_err = CORE_ERR_INVALID_MEM;
+                return;
+            }
+
+            p_core->[dest_w] -= offset;
+            break;
+
+        case CORE_OPC_ADDR_MODE_IND_POS_INC:
+            Mem_Set(p_mem_data, (p_core->[dest_w] & 0xFFFE), result & 0xFFFF, &mem_err);
+
+            if (mem_err != MEM_ERR_NONE) {
+                *p_err = CORE_ERR_INVALID_MEM;
+                return;
+            }
+
+            p_core->[dest_w] += offset;
+            break;
+
+        case CORE_OPC_ADDR_MODE_IND_PRE_DEC:
+            p_core->[dest_w] -= offset;
+            Mem_Set(p_mem_data, (p_core->[dest_w] & 0xFFFE), result & 0xFFFF, &mem_err);
+
+            if (mem_err != MEM_ERR_NONE) {
+                *p_err = CORE_ERR_INVALID_MEM;
+                return;
+            }
+            break;
+
+        case CORE_OPC_ADDR_MODE_IND_PRE_INC:
+            p_core->[dest_w] += offset;
+            Mem_Set(p_mem_data, (p_core->[dest_w] & 0xFFFE), result & 0xFFFF, &mem_err);
+
+            if (mem_err != MEM_ERR_NONE) {
+                *p_err = CORE_ERR_INVALID_MEM;
+                return;
+            }
+            break;
+    
         default:
             *p_err = CORE_ERR_INVALID_OPC_ARG;
             return;
     }
-    
-    *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+
+    //Update DC, N, OV, Z, C status.
+
+    p_core->PC += 2;
+
+    *p_err = CORE_ERR_NONE;
 }
 
 void Core_MOV_WS_WD_78 (MEM         *p_mem_prog,
