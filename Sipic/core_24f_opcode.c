@@ -570,7 +570,17 @@ void Core_SUB_50006 (MEM         *p_mem_prog,
     result   = operand1 - lit_op;
     
     switch (addr_mode) {
+        case CORE_OPC_ADDR_MODE_DIR:
+        case CORE_OPC_ADDR_MODE_IND:
+        case CORE_OPC_ADDR_MODE_IND_POS_DEC:
+        case CORE_OPC_ADDR_MODE_IND_POS_INC:
+        case CORE_OPC_ADDR_MODE_IND_PRE_DEC:
+        case CORE_OPC_ADDR_MODE_IND_PRE_INC:
+            break;
             
+        default:
+            *p_err = CORE_ERR_INVALID_OPC_ARG;
+            return;
     }
     
     *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
