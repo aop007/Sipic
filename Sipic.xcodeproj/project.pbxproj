@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		690ADF0C161BE536001DCA06 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 690ADF0B161BE536001DCA06 /* main.c */; };
 		690ADF15161BE5DD001DCA06 /* coff_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 690ADF14161BE5DD001DCA06 /* coff_parser.c */; };
+		6923CB55163630A0007EFAD1 /* snippets.txt in Sources */ = {isa = PBXBuildFile; fileRef = 6923CB54163630A0007EFAD1 /* snippets.txt */; };
 		6958E9AE161F96E600D2B690 /* hex_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 6958E9AD161F96E600D2B690 /* hex_parser.c */; };
 		6958E9B5161F9E2200D2B690 /* ascii.c in Sources */ = {isa = PBXBuildFile; fileRef = 6958E9B4161F9E2200D2B690 /* ascii.c */; };
 		6958E9B9161FBA2A00D2B690 /* mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 6958E9B8161FBA2A00D2B690 /* mem.c */; };
@@ -45,6 +46,7 @@
 		690ADF16161BE613001DCA06 /* coff_parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = coff_parser.h; sourceTree = "<group>"; };
 		690ADF17161BEBB6001DCA06 /* cpu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cpu.h; sourceTree = "<group>"; };
 		690ADF18161BEF0F001DCA06 /* coff_cfg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = coff_cfg.h; sourceTree = "<group>"; };
+		6923CB54163630A0007EFAD1 /* snippets.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = snippets.txt; sourceTree = "<group>"; };
 		6958E9AC161F96D900D2B690 /* hex_parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hex_parser.h; sourceTree = "<group>"; };
 		6958E9AD161F96E600D2B690 /* hex_parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hex_parser.c; sourceTree = "<group>"; };
 		6958E9AF161F96FC00D2B690 /* hex_cfg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hex_cfg.h; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 				6958E9B1161F9A4800D2B690 /* sipic_cfg.h */,
 				6958E9C21620C49900D2B690 /* err.h */,
 				69E367CC1624DEE900A38020 /* mem_cfg_24f3011.h */,
+				6923CB54163630A0007EFAD1 /* snippets.txt */,
 			);
 			path = Sipic;
 			sourceTree = "<group>";
@@ -242,6 +245,7 @@
 				6958E9B9161FBA2A00D2B690 /* mem.c in Sources */,
 				6958E9BD161FC03C00D2B690 /* core_24f.c in Sources */,
 				6958E9C0161FEC5100D2B690 /* core_24f_opcode.c in Sources */,
+				6923CB55163630A0007EFAD1 /* snippets.txt in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

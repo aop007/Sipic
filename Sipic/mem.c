@@ -108,6 +108,8 @@ void  Mem_Set (MEM         *p_mem,
                 printf("\r\nCorrupting Memory!!!");
             }
 #endif
+            printf("\r\nMemSet @%004x <= %004x\r\n",addr, val);
+            
             mem_loc_found = DEF_YES;
             break;
             

@@ -32,15 +32,19 @@
 #define  CORE_OPC_BRA_EXPR   0x370000
 
 #define  CORE_OPC_ADD_WB_WS  0x400000
+#define  CORE_OPC_ADDC_WB_WS_WD  0x480000
+#define  CORE_OPC_ADDC_WB_LIT_WD 0x480060
 #define  CORE_OPC_SUB_WB_WS  0x500000
 #define  CORE_OPC_LIT_WB     0x500060
 
 #define  CORE_OPC_BSET_W     0xA00000
+#define  CORE_OPC_BTSC_W     0xA70000
 #define  CORE_OPC_BSET_M     0xA80000
 #define  CORE_OPC_BCLR_M     0xA90000
 
 #define  CORE_OPC_BTSC       0xAF0000
 
+#define  CORE_OPC_MUL_UU_LIT 0xB80060
 #define  CORE_OPC_MUL_SS     0xB98000
 
 #define  CORE_OPC_MOV_8BL_WN 0xB3C000
@@ -54,10 +58,12 @@
 #define  CORE_OPC_MOV_M_W    0x800000
 #define  CORE_OPC_MOV_W_M    0x880000
 
+#define  CORE_OPC_SUB_WN_LIT 0xB10000
 #define  CORE_OPC_ADD_B40    0xB40000
 
 #define  CORE_OPC_SETM_WS    0xEB8000
 #define  CORE_OPC_INC_EC0    0xEC0000
+#define  CORE_OPC_CLR_WD     0xEB0000
 #define  CORE_OPC_CLR_M_W0   0xEF0000
 #define  CORE_OPC_SETM_M_W0  0xEF8000
 
@@ -121,6 +127,18 @@ void Core_MATH_WS_WD   (MEM           *p_mem_prog,
                         CORE_MATH_OP   math_op,
                         CORE_ERR      *p_err);
 
+void Core_ADDC_48 (MEM         *p_mem_prog,
+                   MEM         *p_mem_data,
+                   CORE_24F    *p_core,
+                   CPU_INT32U   args,
+                   CORE_ERR    *p_err);
+
+void Core_ADDC_48006 (MEM         *p_mem_prog,
+                      MEM         *p_mem_data,
+                      CORE_24F    *p_core,
+                      CPU_INT32U   args,
+                      CORE_ERR    *p_err);
+
 void Core_SUB_50006 (MEM         *p_mem_prog,
                      MEM         *p_mem_data,
                      CORE_24F    *p_core,
@@ -163,6 +181,12 @@ void Core_BCLR_M_A9    (MEM         *p_mem_prog,
                         CPU_INT32U   args,
                         CORE_ERR    *p_err);
 
+void  Core_BTSC_W (MEM         *p_mem_prog,
+                   MEM         *p_mem_data,
+                   CORE_24F    *p_core,
+                   CPU_INT32U   args,
+                   CORE_ERR    *p_err);
+
 void  Core_BTSC_AF (MEM         *p_mem_prog,
                     MEM         *p_mem_data,
                     CORE_24F    *p_core,
@@ -181,11 +205,23 @@ void Core_SETM_MOV_8BL_WN_B7A (MEM         *p_mem_prog,
                                CPU_INT32U   args,
                                CORE_ERR    *p_err);
 
+void Core_SUB_B10 (MEM         *p_mem_prog,
+                   MEM         *p_mem_data,
+                   CORE_24F    *p_core,
+                   CPU_INT32U   args,
+                   CORE_ERR    *p_err);
+
 void Core_ADD_B40     (MEM         *p_mem_prog,
                        MEM         *p_mem_data,
                        CORE_24F    *p_core,
                        CPU_INT32U   args,
                        CORE_ERR    *p_err);
+
+void Core_MUL_UU_B8006 (MEM         *p_mem_prog,
+                        MEM         *p_mem_data,
+                        CORE_24F    *p_core,
+                        CPU_INT32U   args,
+                        CORE_ERR    *p_err);
 
 void Core_MUL_SS_B98 (MEM         *p_mem_prog,
                       MEM         *p_mem_data,
@@ -210,6 +246,12 @@ void Core_INC_EC0      (MEM         *p_mem_prog,
                         CORE_24F    *p_core,
                         CPU_INT32U   args,
                         CORE_ERR    *p_err);
+
+void Core_CLR_WD_EB0000 (MEM         *p_mem_prog,
+                         MEM         *p_mem_data,
+                         CORE_24F    *p_core,
+                         CPU_INT32U   args,
+                         CORE_ERR    *p_err);
 
 void Core_SETM_M_W0_EF8 (MEM         *p_mem_prog,
                          MEM         *p_mem_data,

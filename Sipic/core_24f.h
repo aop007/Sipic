@@ -100,6 +100,8 @@ void        Core_Run (MEM         *p_mem_prog,
                       MEM         *p_mem_data,
                       CORE_ERR    *p_err);
 
+CPU_INT08U  Core_GetCarry (CORE_24F  *p_core);
+
 /* 2                    opcode      mask
  CALL EXPR           0x020000 /  0xFF0001
  DO   #lit14, Expr   0x080000 /  0xFFC000

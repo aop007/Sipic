@@ -1,0 +1,30 @@
+mem_err = MEM_ERR_NONE;
+
+switch (addr_mode) {
+    case CORE_OPC_ADDR_MODE_DIR:
+        break;
+        
+    case CORE_OPC_ADDR_MODE_IND:
+        break;
+        
+    case CORE_OPC_ADDR_MODE_IND_POS_DEC:
+        break;
+        
+    case CORE_OPC_ADDR_MODE_IND_POS_INC:
+        break;
+        
+    case CORE_OPC_ADDR_MODE_IND_PRE_DEC:
+        break;
+        
+    case CORE_OPC_ADDR_MODE_IND_PRE_INC:
+        break;
+        
+    default:
+        *p_err = CORE_ERR_INVALID_OPC_ARG;
+        return;
+}
+
+if (mem_err != MEM_ERR_NONE) {
+    *p_err = CORE_ERR_INVALID_MEM;
+    return;
+}

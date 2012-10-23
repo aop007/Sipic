@@ -25,10 +25,12 @@ void  Core_Run(MEM       *p_mem_prog,
                CORE_ERR  *p_err)
 {
     CPU_BOOLEAN  found_instruction;
+    CPU_BOOLEAN  is_call;
     CORE_24F     core_24f;
     OPCODE       opcode;
     OPCODE       instruction;
     OPCODE       args;
+    CPU_INT32U   ix;
     MEM_ERR      mem_err;
     CORE_ERR     core_err;
     
@@ -41,13 +43,15 @@ void  Core_Run(MEM       *p_mem_prog,
                          core_24f.PC,
                         &mem_err);
 
-        printf("\r\nPC = 0x%X\tOPC = 0x%X\tCYCLE = %d", core_24f.PC, opcode, core_24f.CYCLE);
-#if 0
-        if (core_24f.PC == 0x892) {
+        printf("\r\nPC = %004x\tOPC = %006x\tCYCLE = %d |", core_24f.PC, opcode, (CPU_INT32U)core_24f.CYCLE);
+        
+#if 1
+        if (core_24f.PC == 0x0966) {
             printf("Here comes INVALID_MEM");
         }
 #endif
         found_instruction = DEF_NO;
+        is_call           = DEF_NO;
         
         if (found_instruction == DEF_NO) {
             instruction = opcode & 0xFFFFFF;
@@ -66,6 +70,44 @@ void  Core_Run(MEM       *p_mem_prog,
             }
         }
         
+        
+        
+        if (found_instruction == DEF_NO) {
+            instruction = opcode & 0xFF807F;
+            args        = opcode & 0x007F80;
+            found_instruction = DEF_YES;
+            
+            switch (instruction) {
+                case CORE_OPC_CLR_WD:
+                    Core_CLR_WD_EB0000(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
+                    
+                    
+                default:
+                    found_instruction = DEF_NO;
+                    break;
+            }
+        }
+        
+        if (found_instruction == DEF_NO) {
+            instruction = opcode & 0xFF8060;
+            args        = opcode & 0x007F9F;
+            found_instruction = DEF_YES;
+            
+            switch (instruction) {
+                case CORE_OPC_MUL_UU_LIT:
+                    Core_MUL_UU_B8006(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
+                    
+                    
+                default:
+                    found_instruction = DEF_NO;
+                    break;
+            }
+        }
+        
+        
+        
         if (found_instruction == DEF_NO) {
             instruction = opcode & 0xF80060;
             args        = opcode & 0x07FF9F;
@@ -74,6 +116,27 @@ void  Core_Run(MEM       *p_mem_prog,
             switch (instruction) {
                 case CORE_OPC_LIT_WB:
                     Core_SUB_50006(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
+                    
+                    
+                case CORE_OPC_ADDC_WB_LIT_WD:
+                    Core_ADDC_48006(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
+                    
+                default:
+                    found_instruction = DEF_NO;
+                    break;
+            }
+        }
+        
+        if (found_instruction == DEF_NO) {
+            instruction = opcode & 0xFF0F80;
+            args        = opcode & 0x00F07F;
+            found_instruction = DEF_YES;
+            
+            switch (instruction) {
+                case CORE_OPC_BTSC_W:
+                    Core_BTSC_W(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
                     
                     
@@ -123,6 +186,10 @@ void  Core_Run(MEM       *p_mem_prog,
             found_instruction = DEF_YES;
             
             switch (instruction) {
+                case CORE_OPC_SUB_WN_LIT:
+                    Core_SUB_B10(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
+                    
                 case CORE_OPC_ADD_B40:
                     Core_ADD_B40(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
@@ -193,6 +260,7 @@ void  Core_Run(MEM       *p_mem_prog,
                     
                 case CORE_OPC_CALL:
                     Core_CALL_02(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    is_call = DEF_YES;
                     break;
                     
                     
@@ -292,6 +360,10 @@ void  Core_Run(MEM       *p_mem_prog,
                                     &core_err);
                     break;
                     
+                case CORE_OPC_ADDC_WB_WS_WD:
+                    Core_ADDC_48(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
+                    
                 default:
                     found_instruction = DEF_NO;
                     break;
@@ -327,6 +399,13 @@ void  Core_Run(MEM       *p_mem_prog,
             break;
         }
         
+        for (ix = 0; ix < 16 ; ix++) {
+            printf("\t%004x", core_24f.W[ix]);
+        }
+        
+        if (is_call) {
+            printf("\r\n");
+        }
         
         if (core_err != CORE_ERR_NONE) {
             break;
@@ -391,7 +470,14 @@ CPU_INT32U  Core_OPC_Words (OPCODE  opc)
     }
 }
 
-
+CPU_INT08U  Core_GetCarry (CORE_24F  *p_core)
+{
+    if ((p_core->SR & CORE_SR_C) == 0) {
+        return (0);
+    } else {
+        return (1);
+    }
+}
 
 
 
