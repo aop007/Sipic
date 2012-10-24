@@ -47,13 +47,16 @@
 #define  CORE_OPC_MOV_W_M    0x880000
 
 #define  CORE_OPC_BSET_W     0xA00000
+#define  CORE_OPC_BTSS_W     0xA60000
 #define  CORE_OPC_BTSC_W     0xA70000
 #define  CORE_OPC_BSET_M     0xA80000
 #define  CORE_OPC_BCLR_M     0xA90000
 #define  CORE_OPC_BTSC       0xAF0000
 
+#define  CORE_OPC_ADDC_LIT_W 0xB08000
 #define  CORE_OPC_SUB_WN_LIT 0xB10000
 #define  CORE_OPC_ADDC_M_W   0xB48000
+#define  CORE_OPC_MUL_UU     0xB80000
 #define  CORE_OPC_MUL_UU_LIT 0xB80060
 #define  CORE_OPC_MUL_US     0xB88000
 #define  CORE_OPC_MUL_SS     0xB98000
@@ -206,6 +209,12 @@ void Core_BCLR_M_A9    (MEM         *p_mem_prog,
                         CPU_INT32U   args,
                         CORE_ERR    *p_err);
 
+void  Core_BTSS_W (MEM         *p_mem_prog,
+                   MEM         *p_mem_data,
+                   CORE_24F    *p_core,
+                   CPU_INT32U   args,
+                   CORE_ERR    *p_err);
+
 void  Core_BTSC_W (MEM         *p_mem_prog,
                    MEM         *p_mem_data,
                    CORE_24F    *p_core,
@@ -213,6 +222,12 @@ void  Core_BTSC_W (MEM         *p_mem_prog,
                    CORE_ERR    *p_err);
 
 void  Core_BTSC_AF (MEM         *p_mem_prog,
+                    MEM         *p_mem_data,
+                    CORE_24F    *p_core,
+                    CPU_INT32U   args,
+                    CORE_ERR    *p_err);
+
+void Core_ADDC_B08 (MEM         *p_mem_prog,
                     MEM         *p_mem_data,
                     CORE_24F    *p_core,
                     CPU_INT32U   args,
@@ -253,6 +268,12 @@ void Core_MUL_UU_B8006 (MEM         *p_mem_prog,
                         CORE_24F    *p_core,
                         CPU_INT32U   args,
                         CORE_ERR    *p_err);
+
+void Core_MUL_UU_B80 (MEM         *p_mem_prog,
+                      MEM         *p_mem_data,
+                      CORE_24F    *p_core,
+                      CPU_INT32U   args,
+                      CORE_ERR    *p_err);
 
 void Core_MUL_SS_B88 (MEM         *p_mem_prog,
                       MEM         *p_mem_data,

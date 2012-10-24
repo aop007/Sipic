@@ -14,7 +14,7 @@
 #include "mem.h"
 #include "cpu.h"
 
-#define NO_VERBOSE 1u
+//#define NO_VERBOSE 1u
 
 static  void  Core_Init(CORE_24F  *p_core)
 {
@@ -64,9 +64,9 @@ void  Core_Run(MEM       *p_mem_prog,
 #ifndef  NO_VERBOSE
         printf("\r\nPC = %004x\tOPC = %006x\tCYCLE = %d |", core_24f.PC, opcode, (CPU_INT32U)core_24f.CYCLE);
 #endif
-#if 0
-        if (core_24f.PC == 0x0966) {
-            printf("Here comes INVALID_MEM");
+#if 1
+        if (core_24f.PC == 0x301E) {
+            printf("Here comes Main Loop");
         }
 #endif
         found_instruction = DEF_NO;
@@ -173,6 +173,9 @@ void  Core_Run(MEM       *p_mem_prog,
                     Core_BTSC_W(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
                     
+                case CORE_OPC_BTSS_W:
+                    Core_BTSS_W(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
                     
                 default:
                     found_instruction = DEF_NO;
@@ -282,6 +285,10 @@ void  Core_Run(MEM       *p_mem_prog,
                     Core_ADD_B40(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
                     
+                case CORE_OPC_MUL_UU:
+                    Core_MUL_UU_B80(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
+
                 case CORE_OPC_MUL_US:
                     Core_MUL_SS_B88(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
@@ -313,6 +320,10 @@ void  Core_Run(MEM       *p_mem_prog,
                     
                 case CORE_OPC_ADDC_M_W:
                     Core_ADDC_B48(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
+
+                case CORE_OPC_ADDC_LIT_W:
+                    Core_ADDC_B08(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
                     
                 default:
@@ -494,7 +505,7 @@ void  Core_Run(MEM       *p_mem_prog,
 
         
         if (found_instruction == DEF_NO) {
-#if 0
+#if 1
             core_err = CORE_ERR_OPC_NOTFOUND;
             printf("\r\nINSTRUCTION NOT FOUND. %X at %X", opcode, core_24f.PC);
             break;
