@@ -14,7 +14,19 @@
 #include "mem.h"
 #include "cpu.h"
 
-//#define NO_VERBOSE 1u
+#define CORE_TRACE_LEVEL 1
+
+#if (CORE_TRACE_LEVEL > 0)
+#define CORE_TRACE_INFO(x) printf x
+#else
+#define CORE_TRACE_INFO(x) 
+#endif
+
+#if (CORE_TRACE_LEVEL > 1)
+#define CORE_TRACE_DEBUG(x) printf x
+#else
+#define CORE_TRACE_DEBUG(x) 
+#endif
 
 static  void  Core_Init(CORE_24F  *p_core)
 {
@@ -49,7 +61,7 @@ void  Core_Run(MEM       *p_mem_prog,
                         &mem_err);
 
         if (opcode == 0) {
-            printf("\r\nNULL OPC \t %d", uncaught_instructions);
+            CORE_TRACE_DEBUG(("\r\nNULL OPC \t %d", uncaught_instructions));
             
         }
 
@@ -61,12 +73,12 @@ void  Core_Run(MEM       *p_mem_prog,
                 core_24f.PC -= 2;
             }
         }
-#ifndef  NO_VERBOSE
-        printf("\r\nPC = %004x\tOPC = %006x\tCYCLE = %d |", core_24f.PC, opcode, (CPU_INT32U)core_24f.CYCLE);
-#endif
-#if 1
+
+        CORE_TRACE_DEBUG(("\r\nPC = %004x\tOPC = %006x\tCYCLE = %d |", core_24f.PC, opcode, (CPU_INT32U)core_24f.CYCLE));
+
+#if 0
         if (core_24f.PC == 0x301E) {
-            printf("Here comes Main Loop");
+            CORE_TRACE("Here comes Main Loop");
         }
 #endif
         found_instruction = DEF_NO;
@@ -359,6 +371,14 @@ void  Core_Run(MEM       *p_mem_prog,
                     Core_NOP_00(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
                     
+                case CORE_OPC_CALL:
+                    Core_CALL_02(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    is_call = DEF_YES;
+                    break;
+
+                case CORE_OPC_GOTO:
+                    Core_GOTO_04(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    break;
 
                 case CORE_OPC_BRA_LE_EXPR:
                     Core_BRA_34(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
@@ -368,17 +388,9 @@ void  Core_Run(MEM       *p_mem_prog,
                     Core_BRA_3A(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
 
-                    
-                case CORE_OPC_CALL:
-                    Core_CALL_02(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
-                    is_call = DEF_YES;
+                case CORE_OPC_BRA_NN_EXPR:
+                    Core_BRA_3D(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
                     break;
-                    
-                    
-                case CORE_OPC_GOTO:
-                    Core_GOTO_04(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
-                    break;
-                    
                     
                 case CORE_OPC_BRA_EXPR:
                     Core_BRA_37(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
@@ -505,27 +517,19 @@ void  Core_Run(MEM       *p_mem_prog,
 
         
         if (found_instruction == DEF_NO) {
-#if 1
             core_err = CORE_ERR_OPC_NOTFOUND;
-            printf("\r\nINSTRUCTION NOT FOUND. %X at %X", opcode, core_24f.PC);
+            CORE_TRACE_INFO(("\r\nINSTRUCTION NOT FOUND. %X at %X \t@%d cycles.", opcode, core_24f.PC, core_24f.CYCLE));
             break;
-#else
-            uncaught_instructions++;
-            core_24f.PC += 2;
-            core_err = CORE_ERR_NONE;
-            printf("\r\nPC = %004x\tOPC = %006x\tCYCLE = %d |", core_24f.PC, opcode, (CPU_INT32U)core_24f.CYCLE);
-#endif
-            
         }
-#ifndef  NO_VERBOSE
+
         for (ix = 0; ix < 16 ; ix++) {
-            printf("\t%004x", core_24f.W[ix]);
+            CORE_TRACE_DEBUG(("\t%004x", core_24f.W[ix]));
         }
         
         if (is_call) {
-            printf("\r\n");
+            CORE_TRACE_DEBUG("\r\n");
         }
-#endif
+
         if (core_err != CORE_ERR_NONE) {
             break;
         }
@@ -535,7 +539,7 @@ void  Core_Run(MEM       *p_mem_prog,
 #endif
     }
     
-    printf("\r\nFATAL CORE ERROR: %d", core_err);
+    CORE_TRACE_INFO(("\r\nFATAL CORE ERROR: %d", (CPU_INT32U)core_err));
 }
 
 void  Core_Push(CPU_INT32U   val,

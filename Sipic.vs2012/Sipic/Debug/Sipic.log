@@ -1,4 +1,4 @@
-﻿Build started 19/10/2012 4:19:34 PM.
+﻿Build started 24/10/2012 5:32:45 PM.
      1>Project "C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\Sipic\Sipic.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I.\ /I..\..\Sipic /I..\..\Sipic\InputFiles /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:prompt ..\..\Sipic\core_24f.c
@@ -17,4 +17,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.29
+Time Elapsed 00:00:00.36

@@ -2,6 +2,12 @@
 *.slo
 *.lo
 *.o
+*.obj
+*.exe
+*.pdb
+*.tlog
+*.ilk
+*.idb
 
 # Compiled Dynamic libraries
 *.so
@@ -10,3 +16,6 @@
 *.lai
 *.la
 *.a
+
+Sipic.vs2012/
+Sipic.vs2012/Debug/

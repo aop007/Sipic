@@ -270,6 +270,34 @@ void Core_BRA_3A (MEM         *p_mem_prog,
     *p_err = CORE_ERR_NONE;
 }
 
+void Core_BRA_3D (MEM         *p_mem_prog,
+                  MEM         *p_mem_data,
+                  CORE_24F    *p_core,
+                  CPU_INT32U   args,
+                  CORE_ERR    *p_err)
+{
+    CPU_INT16U     slit;
+    CPU_INT16S  *p_slit;
+    CPU_INT32U   addr;
+    CPU_BOOLEAN  condition;
+    
+    slit = args;
+    
+    p_slit = (CPU_INT16S *)&slit;
+    
+    addr   = p_core->PC + 2 + 2 * (*p_slit);
+    
+    condition = !Core_GetN(p_core);
+    
+    if (condition) {
+        p_core->PC  = addr;
+    } else {
+        p_core->PC += 2;
+    }
+    
+    *p_err = CORE_ERR_NONE;
+}
+
 void Core_MATH_WS_WD   (MEM          *p_mem_prog,
                         MEM          *p_mem_data,
                         CORE_24F     *p_core,

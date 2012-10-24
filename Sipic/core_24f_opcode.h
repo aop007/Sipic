@@ -33,9 +33,12 @@
 #define  CORE_OPC_BRA_LE_EXPR    0x340000
 #define  CORE_OPC_BRA_EXPR       0x370000
 #define  CORE_OPC_BRA_NZ_EXPR    0x3A0000
+#define  CORE_OPC_BRA_NN_EXPR    0x3D0000
+
 #define  CORE_OPC_ADD_WB_WS      0x400000
 #define  CORE_OPC_ADDC_WB_WS_WD  0x480000
 #define  CORE_OPC_ADDC_WB_LIT_WD 0x480060
+
 #define  CORE_OPC_SUB_WB_WS  0x500000
 #define  CORE_OPC_LIT_WB     0x500060
 
@@ -143,6 +146,12 @@ void Core_BRA_37       (MEM         *p_mem_prog,
                         CORE_ERR    *p_err);
 
 void Core_BRA_3A (MEM         *p_mem_prog,
+                  MEM         *p_mem_data,
+                  CORE_24F    *p_core,
+                  CPU_INT32U   args,
+                  CORE_ERR    *p_err);
+
+void Core_BRA_3D (MEM         *p_mem_prog,
                   MEM         *p_mem_data,
                   CORE_24F    *p_core,
                   CPU_INT32U   args,
