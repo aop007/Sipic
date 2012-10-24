@@ -101,6 +101,9 @@ void        Core_Run (MEM         *p_mem_prog,
                       CORE_ERR    *p_err);
 
 CPU_INT08U  Core_GetCarry (CORE_24F  *p_core);
+CPU_INT08U  Core_GetZ     (CORE_24F  *p_core);
+CPU_INT08U  Core_GetOV    (CORE_24F  *p_core);
+CPU_INT08U  Core_GetN     (CORE_24F  *p_core);
 
 /* 2                    opcode      mask
  CALL EXPR           0x020000 /  0xFF0001
