@@ -62,20 +62,25 @@ typedef struct core_24f {
     
     CPU_INT16U  SPLIM;
     
-    CPU_INT64U  ACCA;
-    CPU_INT64U  ACCB;
+    CPU_INT16U  ACCA[3];
+    CPU_INT16U  ACCB[3];
     
-    CPU_INT32U  PC;
+    CPU_INT08U  PC[4];
     
     CPU_INT08U  TBLPAG;
     
+    CPU_INT08U  Reserved0;
+    
     CPU_INT08U  PSVPAG;
     
+    CPU_INT08U  Reserved1;
+    
     CPU_INT16U  RCOUNT;
+    CPU_INT16U  DCOUNT;
     
-    CPU_INT32U  DOSTART;
+    CPU_INT08U  DOSTART[4];
     
-    CPU_INT32U  DOEND;
+    CPU_INT08U  DOEND[4];
     
     CPU_INT16U SR;
     
@@ -104,6 +109,14 @@ CPU_INT08U  Core_GetCarry (CORE_24F  *p_core);
 CPU_INT08U  Core_GetZ     (CORE_24F  *p_core);
 CPU_INT08U  Core_GetOV    (CORE_24F  *p_core);
 CPU_INT08U  Core_GetN     (CORE_24F  *p_core);
+
+void        Core_PC_Slide (CORE_24F    *p_core,
+                           CPU_INT32S   slide);
+
+void        Core_PC_Set   (CORE_24F    *p_core,
+                           CPU_INT32U   value);
+
+CPU_INT32U  Core_PC_Get   (CORE_24F    *p_core);
 
 /* 2                    opcode      mask
  CALL EXPR           0x020000 /  0xFF0001

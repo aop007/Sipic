@@ -77,10 +77,10 @@ void HexParser_ReadFile(const char      *p_file_name,
                     
                     for (ix = 0 ; ix < (byte_count / 4) ; ix++) {
                         
-                        Mem_Set(p_mem,
-                                (address + ix * 4) / 2,
-                                block[ix],
-                               &mem_err);
+                        Mem_Set24(p_mem,
+                                  (address + ix * 4) / 2,
+                                  block[ix],
+                                 &mem_err);
                         
                         if (mem_err != MEM_ERR_NONE) {
                             printf("\r\nMEM_Set() Error at %x", address + ix * 4);

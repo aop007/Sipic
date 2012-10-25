@@ -14,7 +14,7 @@
 #include "mem.h"
 #include "cpu.h"
 
-#define CORE_TRACE_LEVEL 1
+#define CORE_TRACE_LEVEL 2
 
 #if (CORE_TRACE_LEVEL > 0)
 #define CORE_TRACE_INFO(x) printf x
@@ -28,36 +28,63 @@
 #define CORE_TRACE_DEBUG(x) 
 #endif
 
-static  void  Core_Init(CORE_24F  *p_core)
+static  CORE_24F * Core_Init(MEM         *p_mem_data,
+                             CPU_INT32U   addr,
+                             CORE_ERR    *p_err)
 {
+    CORE_24F  *p_core;
+    MEM_ERR    mem_err;
+#if 1
+    CPU_INT64U  offset;
+#endif
+    
+    
+    p_core = Mem_GetAddr(p_mem_data, addr, &mem_err);
+    
+    if (mem_err != MEM_ERR_NONE) {
+        *p_err = CORE_ERR_INVALID_MEM;
+        return (NULL);
+    }
+    
+    
     p_core->W[15] = 0x0800;
     p_core->CYCLE = 0;
+    
+    offset = (CPU_INT64U)&p_core->SPLIM - (CPU_INT64U)p_core;
+    offset = (CPU_INT64U)&p_core->ACCA - (CPU_INT64U)p_core;
+    offset = (CPU_INT64U)&p_core->ACCB - (CPU_INT64U)p_core;
+    offset = (CPU_INT64U)&p_core->PC - (CPU_INT64U)p_core;
+    offset = (CPU_INT64U)&p_core->RCOUNT - (CPU_INT64U)p_core;
+    offset = (CPU_INT64U)&p_core->DCOUNT - (CPU_INT64U)p_core;
+    offset = (CPU_INT64U)&p_core->SR - (CPU_INT64U)p_core;
+    
+    return (p_core);
 }
 
 void  Core_Run(MEM       *p_mem_prog,
                MEM       *p_mem_data,
                CORE_ERR  *p_err)
 {
-    CPU_BOOLEAN  found_instruction;
-    CPU_BOOLEAN  is_call;
-    CORE_24F     core_24f;
-    OPCODE       opcode;
-    OPCODE       instruction;
-    OPCODE       args;
-    CPU_INT32U   ix;
-    CPU_INT32U   uncaught_instructions;
-    MEM_ERR      mem_err;
-    CORE_ERR     core_err;
+    CPU_BOOLEAN   found_instruction;
+    CPU_BOOLEAN   is_call;
+    CORE_24F     *p_core_24f;
+    OPCODE        opcode;
+    OPCODE        instruction;
+    OPCODE        args;
+    CPU_INT32U    ix;
+    CPU_INT32U    uncaught_instructions;
+    MEM_ERR       mem_err;
+    CORE_ERR      core_err;
     
     
     uncaught_instructions = 0;
-    memset(&core_24f, 0, sizeof(core_24f));
+    //memset(p_core_24f, 0, sizeof(CORE_24F));
     
-    Core_Init(&core_24f);
+    p_core_24f = Core_Init(p_mem_data, 0x0000, &core_err);
     
     while (1) {
         opcode = Mem_Get(p_mem_prog,
-                         core_24f.PC,
+                         Core_PC_Get(p_core_24f),
                         &mem_err);
 
         if (opcode == 0) {
@@ -65,20 +92,24 @@ void  Core_Run(MEM       *p_mem_prog,
             
         }
 
-        if ((core_24f.SR & CORE_SR_RA) == CORE_SR_RA) {
-            core_24f.RCOUNT--;
-            if (core_24f.RCOUNT == 0) {
-                core_24f.SR &= ~(CORE_SR_RA);
+        if ((p_core_24f->SR & CORE_SR_RA) == CORE_SR_RA) {
+            p_core_24f->RCOUNT--;
+            if (p_core_24f->RCOUNT == 0) {
+                p_core_24f->SR &= ~(CORE_SR_RA);
             } else {
-                core_24f.PC -= 2;
+                Core_PC_Slide(p_core_24f, -2);
             }
         }
 
-        CORE_TRACE_DEBUG(("\r\nPC = %004x\tOPC = %006x\tCYCLE = %d |", core_24f.PC, opcode, (CPU_INT32U)core_24f.CYCLE));
+        CORE_TRACE_DEBUG(("\r\nPC = %004x\tOPC = %006x\tCYCLE = %d |", Core_PC_Get(p_core_24f), opcode, (CPU_INT32U)p_core_24f->CYCLE));
 
-#if 0
-        if (core_24f.PC == 0x301E) {
-            CORE_TRACE("Here comes Main Loop");
+#if 1
+        if (Core_PC_Get(p_core_24f) == 0x534) {
+            CORE_TRACE_DEBUG((""));
+        }
+        
+        if (p_core_24f->W[15] == 0) {
+            CORE_TRACE_DEBUG((""));
         }
 #endif
         found_instruction = DEF_NO;
@@ -91,7 +122,7 @@ void  Core_Run(MEM       *p_mem_prog,
             
             switch (instruction) {
                 case CORE_OPC_RETURN:
-                    Core_RETURN_060(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_RETURN_060(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                     
@@ -108,7 +139,7 @@ void  Core_Run(MEM       *p_mem_prog,
             
             switch (instruction) {
                 case CORE_OPC_CP0_WN_SF:
-                    Core_CP0_E0000(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_CP0_E0000(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                     
@@ -125,7 +156,7 @@ void  Core_Run(MEM       *p_mem_prog,
             
             switch (instruction) {
                 case CORE_OPC_CLR_WD:
-                    Core_CLR_WD_EB0000(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_CLR_WD_EB0000(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                     
@@ -142,7 +173,7 @@ void  Core_Run(MEM       *p_mem_prog,
             
             switch (instruction) {
                 case CORE_OPC_MUL_UU_LIT:
-                    Core_MUL_UU_B8006(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_MUL_UU_B8006(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                     
@@ -161,12 +192,12 @@ void  Core_Run(MEM       *p_mem_prog,
             
             switch (instruction) {
                 case CORE_OPC_LIT_WB:
-                    Core_SUB_50006(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_SUB_50006(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                     
                 case CORE_OPC_ADDC_WB_LIT_WD:
-                    Core_ADDC_48006(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_ADDC_48006(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                 default:
@@ -182,11 +213,11 @@ void  Core_Run(MEM       *p_mem_prog,
             
             switch (instruction) {
                 case CORE_OPC_BTSC_W:
-                    Core_BTSC_W(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_BTSC_W(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                 case CORE_OPC_BTSS_W:
-                    Core_BTSS_W(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_BTSS_W(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                 default:
@@ -203,7 +234,7 @@ void  Core_Run(MEM       *p_mem_prog,
             
             switch (instruction) {
                 case CORE_OPC_CP_W_LIT:
-                    Core_CP_E1006(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_CP_E1006(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                     
@@ -220,7 +251,7 @@ void  Core_Run(MEM       *p_mem_prog,
             
             switch (instruction) {
                 case CORE_OPC_SE:
-                    Core_SE_FB00(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_SE_FB00(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                     
@@ -237,7 +268,7 @@ void  Core_Run(MEM       *p_mem_prog,
             
             switch (instruction) {
                 case CORE_OPC_MOV_8BL_WN:
-                    Core_SETM_MOV_8BL_WN_B3C(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_SETM_MOV_8BL_WN_B3C(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                     
@@ -256,7 +287,7 @@ void  Core_Run(MEM       *p_mem_prog,
             
             switch (instruction) {
                 case CORE_OPC_REPEAT:
-                    Core_REPEAT_LIT14(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_REPEAT_LIT14(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                     
@@ -273,7 +304,7 @@ void  Core_Run(MEM       *p_mem_prog,
             
             switch (instruction) {
                 case CORE_OPC_DIV_S:
-                    Core_DIV_S_D8000(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_DIV_S_D8000(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                     
@@ -290,52 +321,56 @@ void  Core_Run(MEM       *p_mem_prog,
             
             switch (instruction) {
                 case CORE_OPC_SUB_WN_LIT:
-                    Core_SUB_B10(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_SUB_B10(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                 case CORE_OPC_ADD_B40:
-                    Core_ADD_B40(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_ADD_B40(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                 case CORE_OPC_MUL_UU:
-                    Core_MUL_UU_B80(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_MUL_UU_B80(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
 
                 case CORE_OPC_MUL_US:
-                    Core_MUL_SS_B88(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_MUL_SS_B88(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                 case CORE_OPC_MUL_SS:
-                    Core_MUL_SS_B98(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_MUL_SS_B98(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                 case CORE_OPC_MOV_M_WM:
-                    Core_MOV_BF8(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_MOV_BF8(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                 case CORE_OPC_SETM_WS:
-                    Core_SETM_WS_EB8(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_SETM_WS_EB8(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                 
                 case CORE_OPC_INC_EC0:
-                    Core_INC_EC0(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_INC_EC0(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                 case CORE_OPC_SETM_M_W0:
-                    Core_SETM_M_W0_EF8(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_SETM_M_W0_EF8(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                     
                 case CORE_OPC_CLR_M_W0:
-                    Core_CLR_M_W0_EF0(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_CLR_M_W0_EF0(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                 case CORE_OPC_ADDC_M_W:
-                    Core_ADDC_B48(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_ADDC_B48(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
 
                 case CORE_OPC_ADDC_LIT_W:
-                    Core_ADDC_B08(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_ADDC_B08(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
+                    break;
+                    
+                case CORE_OPC_DEC_WS_WD:
+                    Core_DEC_E90(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                 default:
@@ -351,7 +386,7 @@ void  Core_Run(MEM       *p_mem_prog,
             
             switch (instruction) {
                 case CORE_OPC_MOV_WN_M:
-                    Core_SETM_MOV_8BL_WN_B7A(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_SETM_MOV_8BL_WN_B7A(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                     
@@ -368,60 +403,60 @@ void  Core_Run(MEM       *p_mem_prog,
             
             switch (instruction) {
                 case CORE_OPC_NOP:
-                    Core_NOP_00(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_NOP_00(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                 case CORE_OPC_CALL:
-                    Core_CALL_02(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_CALL_02(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     is_call = DEF_YES;
                     break;
 
                 case CORE_OPC_GOTO:
-                    Core_GOTO_04(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_GOTO_04(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
 
                 case CORE_OPC_BRA_LE_EXPR:
-                    Core_BRA_34(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_BRA_34(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                 case CORE_OPC_BRA_NZ_EXPR:
-                    Core_BRA_3A(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_BRA_3A(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
 
                 case CORE_OPC_BRA_NN_EXPR:
-                    Core_BRA_3D(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_BRA_3D(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                 case CORE_OPC_BRA_EXPR:
-                    Core_BRA_37(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_BRA_37(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                     
                 case CORE_OPC_BSET_W:
-                    Core_BSET_W_A0(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_BSET_W_A0(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                     
                 case CORE_OPC_BSET_M:
-                    Core_BSET_M_A8(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_BSET_M_A8(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                     
                 case CORE_OPC_BCLR_M:
-                    Core_BCLR_M_A9(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_BCLR_M_A9(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                     
                 case CORE_OPC_BTSC:
-                    Core_BTSC_AF(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_BTSC_AF(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                 case CORE_OPC_PUSH_F8:
-                    Core_PUSH_F8(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_PUSH_F8(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                 case CORE_OPC_POP_F9:
-                    Core_POP_F9(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_POP_F9(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                     
@@ -442,7 +477,7 @@ void  Core_Run(MEM       *p_mem_prog,
                 case CORE_OPC_ADD_WB_WS:
                     Core_MATH_WS_WD(p_mem_prog,
                                     p_mem_data,
-                                    &core_24f,
+                                    p_core_24f,
                                     args,
                                     CORE_MATH_OP_ADD,
                                     &core_err);
@@ -451,7 +486,7 @@ void  Core_Run(MEM       *p_mem_prog,
                 case CORE_OPC_SUB_WB_WS:
                     Core_MATH_WS_WD(p_mem_prog,
                                     p_mem_data,
-                                    &core_24f,
+                                    p_core_24f,
                                     args,
                                     CORE_MATH_OP_SUB,
                                     &core_err);
@@ -460,7 +495,7 @@ void  Core_Run(MEM       *p_mem_prog,
                 case CORE_OPC_MOV_WS_WD:
                     Core_MOV_WS_WD_78(p_mem_prog,
                                       p_mem_data,
-                                      &core_24f,
+                                      p_core_24f,
                                       args,
                                       &core_err);
                     break;
@@ -469,7 +504,7 @@ void  Core_Run(MEM       *p_mem_prog,
                 case CORE_OPC_MOV_M_W:
                     Core_MOV_M_W_80(p_mem_prog,
                                     p_mem_data,
-                                    &core_24f,
+                                    p_core_24f,
                                     args,
                                     &core_err);
                     break;
@@ -478,13 +513,13 @@ void  Core_Run(MEM       *p_mem_prog,
                 case CORE_OPC_MOV_W_M:
                     Core_MOV_W_M_88(p_mem_prog,
                                     p_mem_data,
-                                    &core_24f,
+                                    p_core_24f,
                                     args,
                                     &core_err);
                     break;
                     
                 case CORE_OPC_ADDC_WB_WS_WD:
-                    Core_ADDC_48(p_mem_prog, p_mem_data, &core_24f, args, &core_err);
+                    Core_ADDC_48(p_mem_prog, p_mem_data, p_core_24f, args, &core_err);
                     break;
                     
                 default:
@@ -503,7 +538,7 @@ void  Core_Run(MEM       *p_mem_prog,
                 case CORE_OPC_MOV_L_W:
                     Core_MOV_2(p_mem_prog,
                                p_mem_data,
-                              &core_24f,
+                               p_core_24f,
                                args,
                               &core_err);
                     break;
@@ -518,16 +553,16 @@ void  Core_Run(MEM       *p_mem_prog,
         
         if (found_instruction == DEF_NO) {
             core_err = CORE_ERR_OPC_NOTFOUND;
-            CORE_TRACE_INFO(("\r\nINSTRUCTION NOT FOUND. %X at %X \t@%d cycles.", opcode, core_24f.PC, core_24f.CYCLE));
+            CORE_TRACE_INFO(("\r\nINSTRUCTION NOT FOUND. %X at %X \t@%ld cycles.", opcode, Core_PC_Get(p_core_24f), p_core_24f->CYCLE));
             break;
         }
 
         for (ix = 0; ix < 16 ; ix++) {
-            CORE_TRACE_DEBUG(("\t%004x", core_24f.W[ix]));
+            CORE_TRACE_DEBUG(("\t%004x", p_core_24f->W[ix]));
         }
         
         if (is_call) {
-            CORE_TRACE_DEBUG("\r\n");
+            CORE_TRACE_DEBUG(("\r\n"));
         }
 
         if (core_err != CORE_ERR_NONE) {
@@ -535,7 +570,7 @@ void  Core_Run(MEM       *p_mem_prog,
         }
 
 #ifdef  CORE_CFG_CYCLE_CNTR
-        core_24f.CYCLE++;
+        p_core_24f->CYCLE++;
 #endif
     }
     
@@ -629,7 +664,38 @@ CPU_INT08U  Core_GetN (CORE_24F  *p_core)
     }
 }
 
+void  Core_PC_Slide (CORE_24F    *p_core,
+                     CPU_INT32S   slide)
+{
+    CPU_INT32U  PC;
+    
+    memcpy(&PC, &p_core->PC[0], sizeof(PC));
+    
+    PC += slide;
+    
+    memcpy(&p_core->PC[0], &PC, sizeof(PC));
+}
 
+void  Core_PC_Set (CORE_24F    *p_core,
+                   CPU_INT32U   value)
+{
+    CPU_INT32U  PC;
+    
+    memcpy(&PC, &p_core->PC[0], sizeof(PC));
+    
+    PC = value;
+    
+    memcpy(&p_core->PC[0], &PC, sizeof(PC));
+}
+
+CPU_INT32U  Core_PC_Get (CORE_24F    *p_core)
+{
+    CPU_INT32U  PC;
+    
+    memcpy(&PC, &p_core->PC[0], sizeof(PC));
+    
+    return (PC);
+}
 
 
 

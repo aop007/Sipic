@@ -73,6 +73,7 @@
 
 #define  CORE_OPC_CP0_WN_SF  0xE00000
 #define  CORE_OPC_CP_W_LIT   0xE10060
+#define  CORE_OPC_DEC_WS_WD  0xE90000
 #define  CORE_OPC_SETM_WS    0xEB8000
 #define  CORE_OPC_INC_EC0    0xEC0000
 #define  CORE_OPC_CLR_WD     0xEB0000
@@ -307,6 +308,12 @@ void Core_DIV_S_D8000 (MEM         *p_mem_prog,
                        CORE_24F    *p_core,
                        CPU_INT32U   args,
                        CORE_ERR    *p_err);
+
+void Core_DEC_E90 (MEM         *p_mem_prog,
+                   MEM         *p_mem_data,
+                   CORE_24F    *p_core,
+                   CPU_INT32U   args,
+                   CORE_ERR    *p_err);
 
 void Core_CP0_E0000 (MEM         *p_mem_prog,
                      MEM         *p_mem_data,

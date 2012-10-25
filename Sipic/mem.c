@@ -76,10 +76,10 @@ MEM * Mem_Init(const  MEM_CFG     *p_cfg,
     return p_mem_head;
 }
 
-void  Mem_Set (MEM         *p_mem,
-               CPU_INT32U   addr,
-               CPU_INT32U   val,
-               MEM_ERR     *p_err)
+void  Mem_Set24 (MEM         *p_mem,
+                 CPU_INT32U   addr,
+                 CPU_INT32U   val,
+                 MEM_ERR     *p_err)
 {
     MEM         *p_mem_current;
     MEM_HDR     *p_mem_hdr;
@@ -98,11 +98,11 @@ void  Mem_Set (MEM         *p_mem,
         
         if ((addr >= p_mem_hdr->Start) &&
             (addr <= p_mem_hdr->End)) {
-
+            
 #if 0
             if (p_mem_current->Ptr[(addr - p_mem_hdr->Start) / 2] == 0u) {
 #endif
-            p_mem_current->Ptr[(addr - p_mem_hdr->Start) / 2] = val;
+                p_mem_current->Ptr[(addr - p_mem_hdr->Start) / 2] = val;
 #if 0
             } else {
                 printf("\r\nCorrupting Memory!!!");
@@ -126,7 +126,57 @@ void  Mem_Set (MEM         *p_mem,
     }
 }
 
-CPU_INT32U  Mem_Get(MEM         *p_mem,
+void  Mem_Set   (MEM         *p_mem,
+                 CPU_INT32U   addr,
+                 CPU_INT16U   val,
+                 MEM_ERR     *p_err)
+{
+    MEM         *p_mem_current;
+    MEM_HDR     *p_mem_hdr;
+    CPU_INT16U   seg_cnt;
+    CPU_INT16U   ix;
+    CPU_BOOLEAN  mem_loc_found;
+    
+    
+    mem_loc_found =  DEF_NO;
+    p_mem_hdr     = &p_mem->Hdr.Prev->Hdr;
+    seg_cnt       =  p_mem_hdr->Index + 1;
+    p_mem_current =  p_mem;
+    
+    for (ix = 0 ; ix < seg_cnt ; ix++) {
+        p_mem_hdr = &p_mem_current->Hdr;
+        
+        if ((addr >= p_mem_hdr->Start) &&
+            (addr <= p_mem_hdr->End)) {
+            
+#if 0
+            if (p_mem_current->Ptr[(addr - p_mem_hdr->Start) / 2] == 0u) {
+#endif
+                p_mem_current->Ptr[(addr - p_mem_hdr->Start) / 2] = val;
+#if 0
+            } else {
+                printf("\r\nCorrupting Memory!!!");
+            }
+#endif
+#ifdef  NO_VERBOSE
+            printf("\r\nMemSet @%004x <= %004x\r\n",addr, val);
+#endif
+            mem_loc_found = DEF_YES;
+            break;
+            
+        } else {
+            p_mem_current = p_mem_hdr->Next;
+        }
+    }
+    
+    if (mem_loc_found == DEF_NO) {
+        *p_err = MEM_ERR_INVALID_LOC;
+    } else {
+        *p_err = MEM_ERR_NONE;
+    }
+}
+
+CPU_INT16U  Mem_Get(MEM         *p_mem,
                     CPU_INT32U   addr,
                     MEM_ERR     *p_err)
 {
@@ -177,4 +227,43 @@ CPU_INT32U  Mem_Get(MEM         *p_mem,
 CPU_INT32U  Mem_GetSegSize(const MEM_CFG *p_cfg)
 {
     return ((p_cfg->End - p_cfg->Start + 2) / 2);
+}
+
+void       *Mem_GetAddr(MEM        *p_mem,
+                        CPU_INT32U  addr,
+                        MEM_ERR    *p_err)
+{
+    MEM         *p_mem_current;
+    MEM_HDR     *p_mem_hdr;
+    CPU_INT16U   seg_cnt;
+    CPU_INT16U   ix;
+    CPU_BOOLEAN  mem_loc_found;
+    
+    
+    mem_loc_found =  DEF_NO;
+    p_mem_hdr     = &p_mem->Hdr.Prev->Hdr;
+    seg_cnt       =  p_mem_hdr->Index + 1;
+    p_mem_current =  p_mem;
+    
+    for (ix = 0 ; ix < seg_cnt ; ix++) {
+        p_mem_hdr = &p_mem_current->Hdr;
+        
+        if ((addr >= p_mem_hdr->Start) &&
+            (addr <= p_mem_hdr->End)) {
+
+            *p_err = MEM_ERR_NONE;
+            return (&p_mem_current->Ptr[(addr - p_mem_hdr->Start) / 2]);
+            
+        } else {
+            p_mem_current = p_mem_hdr->Next;
+        }
+    }
+    
+    if (mem_loc_found == DEF_NO) {
+        *p_err = MEM_ERR_INVALID_LOC;
+    } else {
+        *p_err = MEM_ERR_NONE;
+    }
+    
+    return (0u);
 }

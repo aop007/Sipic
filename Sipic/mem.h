@@ -31,7 +31,7 @@ typedef  struct  MEM_HDR {
 
 typedef  struct  mem {
     MEM_HDR      Hdr;
-    CPU_INT32U * Ptr;
+    CPU_INT16U * Ptr;
 } MEM;
 
 typedef  struct  mem_cfg {
@@ -49,11 +49,24 @@ MEM        *Mem_Init (const  MEM_CFG     *p_cfg,
 
 void        Mem_Set  (MEM         *p_mem,
                       CPU_INT32U   addr,
-                      CPU_INT32U   val,
+                      CPU_INT16U   val,
                       MEM_ERR     *p_err);
 
-CPU_INT32U  Mem_Get  (MEM         *p_mem,
+void  Mem_Set24 (MEM         *p_mem,
+                 CPU_INT32U   addr,
+                 CPU_INT32U   val,
+                 MEM_ERR     *p_err);
+
+CPU_INT16U  Mem_Get  (MEM         *p_mem,
                       CPU_INT32U   addr,
                       MEM_ERR     *p_err);
+
+CPU_INT32U  Mem_Get24(MEM         *p_mem,
+                      CPU_INT32U   addr,
+                      MEM_ERR     *p_err);
+
+void       *Mem_GetAddr(MEM         *p_mem_data,
+                        CPU_INT32U   addr,
+                        MEM_ERR     *p_err);
 
 #endif
