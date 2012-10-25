@@ -101,7 +101,7 @@ CPU_INT32U  Core_Pop (CORE_24F    *p_core,
                       MEM         *p_mem,
                       CORE_ERR    *p_err);
 
-void        Core_Run (MEM         *p_mem_prog,
+void        Core_Run (MEM_24         *p_mem_prog,
                       MEM         *p_mem_data,
                       CORE_ERR    *p_err);
 

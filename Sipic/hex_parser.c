@@ -14,12 +14,12 @@
 #include "mem.h"
 #include "sipic_cfg.h"
 
-void HexParser_ReadFile(const char      *p_file_name,
-                         MEM             *p_mem,
+void HexParser_ReadFile(const char       *p_file_name,
+                         MEM_24          *p_mem,
                          HEX_PARSER_ERR  *p_err)
 {
     FILE        *p_file;
-    MEM_HDR     *p_mem_hdr;
+    MEM_HDR_24  *p_mem_hdr;
     CPU_CHAR     sol;
     CPU_INT08U   byte_count;
     CPU_INT16U   address_lo;

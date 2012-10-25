@@ -34,7 +34,7 @@
  */
 
 void  HexParser_ReadFile(const  char            *p_file_name,
-                                MEM             *p_mem,
+                                MEM_24          *p_mem,
                                 HEX_PARSER_ERR  *p_err);
 
 #endif

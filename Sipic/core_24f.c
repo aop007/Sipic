@@ -61,7 +61,7 @@ static  CORE_24F * Core_Init(MEM         *p_mem_data,
     return (p_core);
 }
 
-void  Core_Run(MEM       *p_mem_prog,
+void  Core_Run(MEM_24    *p_mem_prog,
                MEM       *p_mem_data,
                CORE_ERR  *p_err)
 {
@@ -83,9 +83,9 @@ void  Core_Run(MEM       *p_mem_prog,
     p_core_24f = Core_Init(p_mem_data, 0x0000, &core_err);
     
     while (1) {
-        opcode = Mem_Get(p_mem_prog,
-                         Core_PC_Get(p_core_24f),
-                        &mem_err);
+        opcode = Mem_Get24(p_mem_prog,
+                           Core_PC_Get(p_core_24f),
+                          &mem_err);
 
         if (opcode == 0) {
             CORE_TRACE_DEBUG(("\r\nNULL OPC \t %d", uncaught_instructions));
@@ -104,7 +104,7 @@ void  Core_Run(MEM       *p_mem_prog,
         CORE_TRACE_DEBUG(("\r\nPC = %004x\tOPC = %006x\tCYCLE = %d |", Core_PC_Get(p_core_24f), opcode, (CPU_INT32U)p_core_24f->CYCLE));
 
 #if 1
-        if (Core_PC_Get(p_core_24f) == 0x534) {
+        if (Core_PC_Get(p_core_24f) == 0x852) {
             CORE_TRACE_DEBUG((""));
         }
         

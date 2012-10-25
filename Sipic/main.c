@@ -24,15 +24,15 @@
 
 int main(int argc, const char * argv[])
 {
-    MEM      *p_mem_prog;
+    MEM_24   *p_mem_prog;
     MEM      *p_mem_data;
     MEM_ERR   mem_err;
     CORE_ERR  core_err;
     HEX_PARSER_ERR  hex_err;    
     
-    p_mem_prog = Mem_Init(&mem_cfg_prog_dsPIC30F[0],
-                    sizeof(mem_cfg_prog_dsPIC30F),
-                          &mem_err);
+    p_mem_prog = Mem_Init24(&mem_cfg_prog_dsPIC30F[0],
+                      sizeof(mem_cfg_prog_dsPIC30F),
+                            &mem_err);
     
     p_mem_data = Mem_Init(&mem_cfg_data_dsPIC30F[0],
                     sizeof(mem_cfg_data_dsPIC30F),
