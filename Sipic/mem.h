@@ -43,6 +43,7 @@ typedef  struct  MEM_HDR_24 {
 typedef  struct  mem {
     MEM_HDR      Hdr;
     CPU_INT16U * Ptr;
+    CPU_INT16U * WrPtr;
 } MEM;
 
 typedef  struct  mem_24 {
@@ -88,5 +89,10 @@ CPU_INT32U  Mem_Get24(MEM_24      *p_mem,
 void       *Mem_GetAddr(MEM         *p_mem_data,
                         CPU_INT32U   addr,
                         MEM_ERR     *p_err);
+
+void        Mem_SetAccess(MEM         *p_mem_data,
+                          CPU_INT32U   addr,
+                          CPU_INT16U   write_mask,
+                          MEM_ERR     *p_err);
 
 #endif

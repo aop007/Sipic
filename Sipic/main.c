@@ -12,6 +12,7 @@
 #include "core_24f.h"
 #include "core_24f_opcode.h"
 #include "mem_cfg_24f3011.h"
+#include "sim.h"
 
 #if    (SIPIC_CFG_PARSE_METHOD == SIPIC_PARSE_METHOD_COFF)
 #include <coff_parser.h>
@@ -24,11 +25,14 @@
 
 int main(int argc, const char * argv[])
 {
+    SIM       sim_struct;
+    CORE_24F *p_core;
     MEM_24   *p_mem_prog;
     MEM      *p_mem_data;
     MEM_ERR   mem_err;
     CORE_ERR  core_err;
     HEX_PARSER_ERR  hex_err;    
+    
     
     p_mem_prog = Mem_Init24(&mem_cfg_prog_dsPIC30F[0],
                       sizeof(mem_cfg_prog_dsPIC30F),
@@ -58,9 +62,14 @@ int main(int argc, const char * argv[])
     Core_OPC_Stats(p_mem);
 #endif
     
-    Core_Run(p_mem_prog,
-             p_mem_data,
-            &core_err);
+    p_core = Core_Init(p_mem_data, 0x0000, &core_err);
+    
+    sim_struct.p_core     = p_core;
+    sim_struct.p_mem_data = p_mem_data;
+    sim_struct.p_mem_prog = p_mem_prog;
+    
+    Sim_Run(&sim_struct);
+
 #endif
     return 0;
 }

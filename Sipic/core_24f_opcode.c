@@ -3200,8 +3200,11 @@ void Core_CLR_M_W0_EF0 (MEM_24      *p_mem_prog,
         p_core->W[0] &= ~(val);
     } else {
         if ((DEF_FIELD_IS_SET(addr,    0x000001)  &&
-             DEF_FIELD_IS_SET(size_op, 0x004000))) {
+             DEF_FIELD_IS_CLR(size_op, 0x004000))) {
             
+            /* Provoque an address error trap isr */
+            *p_err = CORE_ERR_ADDR_ERROR_TRAP;
+            return;
         }
         
         reg_val = Mem_Get(p_mem_data, (addr & 0x001FFE), &mem_err);

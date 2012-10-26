@@ -51,6 +51,15 @@ MEM * Mem_Init(const  MEM_CFG     *p_cfg,
             return (MEM *)0;
         }
         
+        p_mem->WrPtr = malloc(seg_size * 4);
+        
+        if (p_mem == NULL) {
+            *p_err = MEM_ERR_ALLOC_FAIL;
+            return (MEM *)0;
+        }
+        
+        memset(p_mem->WrPtr, 0xFF, (seg_size * 4));
+        
         p_mem_hdr->Start = p_cfg->Start;
         p_mem_hdr->End   = p_cfg->End;
         p_mem_hdr->Size  = seg_size;
@@ -197,6 +206,7 @@ void  Mem_Set   (MEM         *p_mem,
     MEM_HDR     *p_mem_hdr;
     CPU_INT16U   seg_cnt;
     CPU_INT16U   ix;
+    CPU_INT16U   write_mask;
     CPU_BOOLEAN  mem_loc_found;
     
     
@@ -211,7 +221,10 @@ void  Mem_Set   (MEM         *p_mem,
         if ((addr >= p_mem_hdr->Start) &&
             (addr <= p_mem_hdr->End)) {
             
-            p_mem_current->Ptr[(addr - p_mem_hdr->Start) / 2] = val;
+            write_mask = p_mem_current->WrPtr[(addr - p_mem_hdr->Start) / 2];
+            
+            p_mem_current->Ptr[(addr - p_mem_hdr->Start) / 2] &=  write_mask;
+            p_mem_current->Ptr[(addr - p_mem_hdr->Start) / 2] |= (write_mask & val);
 
 #ifdef  NO_VERBOSE
             printf("\r\nMemSet @%004x <= %004x\r\n",addr, val);
@@ -360,4 +373,45 @@ void       *Mem_GetAddr(MEM        *p_mem,
     }
     
     return (0u);
+}
+
+void        Mem_SetAccess(MEM         *p_mem,
+                          CPU_INT32U   addr,
+                          CPU_INT16U   write_mask,
+                          MEM_ERR     *p_err)
+{
+    MEM         *p_mem_current;
+    MEM_HDR     *p_mem_hdr;
+    CPU_INT16U   seg_cnt;
+    CPU_INT16U   ix;
+    CPU_BOOLEAN  mem_loc_found;
+    
+    
+    mem_loc_found =  DEF_NO;
+    p_mem_hdr     = &p_mem->Hdr.Prev->Hdr;
+    seg_cnt       =  p_mem_hdr->Index + 1;
+    p_mem_current =  p_mem;
+    
+    for (ix = 0 ; ix < seg_cnt ; ix++) {
+        p_mem_hdr = &p_mem_current->Hdr;
+        
+        if ((addr >= p_mem_hdr->Start) &&
+            (addr <= p_mem_hdr->End)) {
+            
+            p_mem_current->WrPtr[(addr - p_mem_hdr->Start) / 2] = write_mask;
+            *p_err = MEM_ERR_NONE;
+            return;
+            
+        } else {
+            p_mem_current = p_mem_hdr->Next;
+        }
+    }
+    
+    if (mem_loc_found == DEF_NO) {
+        *p_err = MEM_ERR_INVALID_LOC;
+    } else {
+        *p_err = MEM_ERR_NONE;
+    }
+    
+    *p_err = MEM_ERR_INVALID_LOC;
 }

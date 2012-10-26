@@ -92,6 +92,10 @@ typedef struct core_24f {
 
 typedef  CPU_INT16U  CORE_MATH_OP;
 
+CORE_24F * Core_Init(MEM         *p_mem_data,
+                     CPU_INT32U   addr,
+                     CORE_ERR    *p_err);
+
 void        Core_Push(CPU_INT32U   val,
                       CORE_24F    *p_core,
                       MEM         *p_mem,
@@ -101,7 +105,8 @@ CPU_INT32U  Core_Pop (CORE_24F    *p_core,
                       MEM         *p_mem,
                       CORE_ERR    *p_err);
 
-void        Core_Run (MEM_24         *p_mem_prog,
+void        Core_Run (CORE_24F    *p_core,
+                      MEM_24      *p_mem_prog,
                       MEM         *p_mem_data,
                       CORE_ERR    *p_err);
 
