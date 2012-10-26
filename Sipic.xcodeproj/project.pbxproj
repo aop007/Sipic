@@ -12,6 +12,7 @@
 		690FDEBD1639F1C5008EBC43 /* sim.c in Sources */ = {isa = PBXBuildFile; fileRef = 690FDEBC1639F1C5008EBC43 /* sim.c */; };
 		690FDEBF1639F449008EBC43 /* peripheral.c in Sources */ = {isa = PBXBuildFile; fileRef = 690FDEBE1639F449008EBC43 /* peripheral.c */; };
 		690FDEC11639F892008EBC43 /* peri_isr.c in Sources */ = {isa = PBXBuildFile; fileRef = 690FDEC01639F892008EBC43 /* peri_isr.c */; };
+		690FDEC3163A442E008EBC43 /* main.txt in Sources */ = {isa = PBXBuildFile; fileRef = 690FDEC2163A442E008EBC43 /* main.txt */; };
 		6923CB55163630A0007EFAD1 /* snippets.txt in Sources */ = {isa = PBXBuildFile; fileRef = 6923CB54163630A0007EFAD1 /* snippets.txt */; };
 		6958E9AE161F96E600D2B690 /* hex_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 6958E9AD161F96E600D2B690 /* hex_parser.c */; };
 		6958E9B5161F9E2200D2B690 /* ascii.c in Sources */ = {isa = PBXBuildFile; fileRef = 6958E9B4161F9E2200D2B690 /* ascii.c */; };
@@ -55,6 +56,7 @@
 		690FDEBC1639F1C5008EBC43 /* sim.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sim.c; sourceTree = "<group>"; };
 		690FDEBE1639F449008EBC43 /* peripheral.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = peripheral.c; sourceTree = "<group>"; };
 		690FDEC01639F892008EBC43 /* peri_isr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = peri_isr.c; sourceTree = "<group>"; };
+		690FDEC2163A442E008EBC43 /* main.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = main.txt; path = InputFiles/main.txt; sourceTree = "<group>"; };
 		6923CB54163630A0007EFAD1 /* snippets.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = snippets.txt; sourceTree = "<group>"; };
 		6958E9AC161F96D900D2B690 /* hex_parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hex_parser.h; sourceTree = "<group>"; };
 		6958E9AD161F96E600D2B690 /* hex_parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hex_parser.c; sourceTree = "<group>"; };
@@ -88,6 +90,7 @@
 		6907C7191627AAD8000A513F /* Input Files */ = {
 			isa = PBXGroup;
 			children = (
+				690FDEC2163A442E008EBC43 /* main.txt */,
 				6907C71B1627AB80000A513F /* main.cof */,
 				6907C71C1627AB80000A513F /* main.err */,
 				6907C71D1627AB80000A513F /* main.esym */,
@@ -120,10 +123,10 @@
 		690ADF0A161BE536001DCA06 /* Sipic */ = {
 			isa = PBXGroup;
 			children = (
+				6907C7191627AAD8000A513F /* Input Files */,
 				690FDEB91639F02E008EBC43 /* Hardware */,
 				690FDEB81639F026008EBC43 /* Simulation */,
 				690FDEB51639EF9A008EBC43 /* Peripherals */,
-				6907C7191627AAD8000A513F /* Input Files */,
 				6958E9BA161FC01400D2B690 /* 24FCore */,
 				6958E9B6161FBA0F00D2B690 /* Mem */,
 				6958E9B2161F9E0600D2B690 /* ASCII */,
@@ -288,6 +291,7 @@
 				690FDEBD1639F1C5008EBC43 /* sim.c in Sources */,
 				690FDEBF1639F449008EBC43 /* peripheral.c in Sources */,
 				690FDEC11639F892008EBC43 /* peri_isr.c in Sources */,
+				690FDEC3163A442E008EBC43 /* main.txt in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

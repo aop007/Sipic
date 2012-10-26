@@ -31,6 +31,8 @@
 #define  CORE_SR_OB    0x4000
 #define  CORE_SR_OA    0x8000
 
+#define  CORE_CORECON_IPL3 0x0008
+
 #define  CORE_MATH_OP_ADD  0x0001
 #define  CORE_MATH_OP_SUB  0x0002
 #define  CORE_MATH_OP_MUL  0x0003
@@ -38,25 +40,6 @@
 
 
 typedef struct core_24f {
-    
-#if 0
-    CPU_INT16U  W0;
-    CPU_INT16U  W1;
-    CPU_INT16U  W2;
-    CPU_INT16U  W3;
-    CPU_INT16U  W4;
-    CPU_INT16U  W5;
-    CPU_INT16U  W6;
-    CPU_INT16U  W7;
-    CPU_INT16U  W8;
-    CPU_INT16U  W9;
-    CPU_INT16U  W10;
-    CPU_INT16U  W11;
-    CPU_INT16U  W12;
-    CPU_INT16U  W13;
-    CPU_INT16U  W14;
-    CPU_INT16U  W15;
-#endif
     
     CPU_INT16U  W[16];
     
@@ -82,7 +65,10 @@ typedef struct core_24f {
     
     CPU_INT08U  DOEND[4];
     
-    CPU_INT16U SR;
+    CPU_INT16U  SR;
+    
+    CPU_INT16U  CORCON;
+    CPU_INT16U  MODCON;
     
 #ifdef  CORE_CFG_CYCLE_CNTR
     CPU_INT64U CYCLE;
@@ -135,5 +121,7 @@ CPU_INT32U  Core_PC_Get   (CORE_24F    *p_core);
  */
 
 CPU_INT32U  Core_OPC_Words (OPCODE  opc);
+
+extern  CPU_INT32S  Call_Depth;
 
 #endif

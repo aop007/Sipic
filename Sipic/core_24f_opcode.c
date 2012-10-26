@@ -11,7 +11,7 @@
 #include <string.h>
 #include "core_24f_opcode.h"
 
-
+CPU_INT32S  Call_Depth = 0;
 
 void  Core_OPC_Stats (MEM_24  *p_mem)
 {
@@ -102,6 +102,8 @@ void  Core_CALL_02            (MEM_24      *p_mem_prog,
     Core_PC_Set(p_core, (next_word & 0x00007F) << 16 |
                         (args      & 0x00FFFE));
     
+    Call_Depth++;
+    
     *p_err = CORE_ERR_NONE;
 }
 
@@ -151,6 +153,47 @@ void Core_RETURN_060  (MEM_24      *p_mem_prog,
     }
     
     Core_PC_Set(p_core, word1 << 16 | word2);
+    
+    Call_Depth--;
+    
+    *p_err = CORE_ERR_NONE;
+}
+
+void Core_RETFIE_064 (MEM_24      *p_mem_prog,
+                      MEM         *p_mem_data,
+                      CORE_24F    *p_core,
+                      CPU_INT32U   args,
+                      CORE_ERR    *p_err)
+{
+    CPU_INT08U  SRL;
+    CPU_INT08U  IPL3;
+    CPU_INT32U  word1;
+    CPU_INT32U  word2;
+    
+    word1 = Core_Pop(p_core, p_mem_data, p_err);
+    
+    if (*p_err != CORE_ERR_NONE) {
+        return;
+    }
+    
+    word2 = Core_Pop(p_core, p_mem_data, p_err);
+    
+    if (*p_err != CORE_ERR_NONE) {
+        return;
+    }
+    
+    Core_PC_Set(p_core, (word1 & 0x00FF) << 16 | word2);
+    
+    SRL  = (word1 & 0xFF00) >> 8;
+    IPL3 =  word1 & 0x00FF;
+    
+    p_core->SR     &= 0xFF00;
+    p_core->SR     |= SRL;
+    
+    p_core->CORCON &= ~(CORE_CORECON_IPL3);
+    p_core->CORCON |=   IPL3;
+    
+    Call_Depth--;
     
     *p_err = CORE_ERR_NONE;
 }

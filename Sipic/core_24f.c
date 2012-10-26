@@ -48,8 +48,11 @@ CORE_24F * Core_Init(MEM         *p_mem_data,
     
     
     p_core->W[15] = 0x0800;
+#ifdef  CORE_CFG_CYCLE_CNTR
     p_core->CYCLE = 0;
+#endif
     
+#if 1
     offset = (CPU_INT64U)&p_core->SPLIM - (CPU_INT64U)p_core;
     offset = (CPU_INT64U)&p_core->ACCA - (CPU_INT64U)p_core;
     offset = (CPU_INT64U)&p_core->ACCB - (CPU_INT64U)p_core;
@@ -57,7 +60,7 @@ CORE_24F * Core_Init(MEM         *p_mem_data,
     offset = (CPU_INT64U)&p_core->RCOUNT - (CPU_INT64U)p_core;
     offset = (CPU_INT64U)&p_core->DCOUNT - (CPU_INT64U)p_core;
     offset = (CPU_INT64U)&p_core->SR - (CPU_INT64U)p_core;
-    
+#endif
     /* Write protection */
     
     Mem_SetAccess(p_mem_data, 0x0042, 0x01EF, &mem_err);        /* Protect SR SRF */
@@ -106,11 +109,17 @@ void  Core_Run(CORE_24F  *p_core_24f,
                 Core_PC_Slide(p_core_24f, -2);
             }
         }
-
+#ifdef  CORE_CFG_CYCLE_CNTR
         CORE_TRACE_DEBUG(("\r\nPC = %004x\tOPC = %006x\tCYCLE = %d |", Core_PC_Get(p_core_24f), opcode, (CPU_INT32U)p_core_24f->CYCLE));
-
+#else
+        CORE_TRACE_DEBUG(("\r\n"));
+        for (ix = 0 ; ix < Call_Depth ; ix++) {
+            CORE_TRACE_DEBUG(("-"));
+        }
+        CORE_TRACE_DEBUG(("PC = %004x\tOPC = %006x\t |", Core_PC_Get(p_core_24f), opcode));
+#endif
 #if 1
-        if (Core_PC_Get(p_core_24f) == 0x2FE2) {
+        if (Core_PC_Get(p_core_24f) == 0x03FA) {
             CORE_TRACE_DEBUG((""));
         }
         
@@ -129,6 +138,10 @@ void  Core_Run(CORE_24F  *p_core_24f,
             switch (instruction) {
                 case CORE_OPC_RETURN:
                     Core_RETURN_060(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
+                    break;
+                    
+                case CORE_OPC_RETFIE:
+                    Core_RETFIE_064(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
                     break;
                     
                     
@@ -559,18 +572,24 @@ void  Core_Run(CORE_24F  *p_core_24f,
         
         if (found_instruction == DEF_NO) {
             *p_err = CORE_ERR_OPC_NOTFOUND;
+#ifdef  CORE_CFG_CYCLE_CNTR
             CORE_TRACE_INFO(("\r\nINSTRUCTION NOT FOUND. %X at %X \t@%ld cycles.", opcode, Core_PC_Get(p_core_24f), p_core_24f->CYCLE));
+#else
+            CORE_TRACE_INFO(("\r\nINSTRUCTION NOT FOUND. %X at %X.", opcode, Core_PC_Get(p_core_24f)));
+#endif
             return;
         }
         
         for (ix = 0; ix < 16 ; ix++) {
             CORE_TRACE_DEBUG(("\t%004x", p_core_24f->W[ix]));
         }
-        
+ 
+#if 0
         if (is_call) {
             CORE_TRACE_DEBUG(("\r\n"));
         }
-
+#endif
+        
         if (*p_err != CORE_ERR_NONE) {
             return;
         }

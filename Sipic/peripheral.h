@@ -39,10 +39,12 @@ void Peripheral_Run(const  CORE_ERR  *p_core_err,
                            CORE_24F  *p_core,
                            PERI_ERR  *p_err);
 
-void Peri_ISR(ISR_VECT_NUM   isr_prio_num,
+void Peri_ISR(ISR_VECT_NUM   isr_vect_num,
               MEM_24        *p_mem_prog,
               MEM           *p_mem_data,
               CORE_24F      *p_core,
               PERI_ERR      *p_err);
+
+extern CPU_INT32S  Call_Depth;
 
 #endif

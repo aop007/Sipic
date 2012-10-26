@@ -19,6 +19,7 @@
 #define  CORE_OPC_GOTO       0x040000
 #define  CORE_OPC_RETLW      0x050000
 #define  CORE_OPC_RETURN     0x060000
+#define  CORE_OPC_RETFIE     0x064000
 #define  CORE_OPC_RCALL      0x070000
 #define  CORE_OPC_DO         0x080000
 #define  CORE_OPC_REPEAT     0x090000
@@ -116,6 +117,12 @@ void Core_GOTO_04      (MEM_24      *p_mem_prog,
                         CORE_ERR    *p_err);
 
 void Core_RETURN_060  (MEM_24      *p_mem_prog,
+                       MEM         *p_mem_data,
+                       CORE_24F    *p_core,
+                       CPU_INT32U   args,
+                       CORE_ERR    *p_err);
+
+void Core_RETFIE_064  (MEM_24      *p_mem_prog,
                        MEM         *p_mem_data,
                        CORE_24F    *p_core,
                        CPU_INT32U   args,
