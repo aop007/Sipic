@@ -20,12 +20,18 @@ extern "C" {
 #include <hex_parser.h>
 #include <hex_cfg.h>
 #endif
-
+    
+#ifdef   __DLL__
+#define  DLL_API __declspec(dllexport)
+#else
+#define  DLL_API    
+#endif
+    
 SIM  sim_struct;
 
 int  main (int argc, const char * argv[]);
-void __declspec(dllexport) init (void);
-void __declspec(dllexport) run  (void);
+void DLL_API init (void);
+void DLL_API run  (void);
 
 #ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
 }

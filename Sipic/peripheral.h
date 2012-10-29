@@ -50,6 +50,10 @@ void Peri_ISR(ISR_VECT_NUM   isr_vect_num,
               CORE_24F      *p_core,
               PERI_ERR      *p_err);
 
-extern CPU_INT32S  Call_Depth;
+CPU_INT32U  CallDepth;
+    
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+}
+#endif
 
 #endif
