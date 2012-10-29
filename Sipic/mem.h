@@ -9,6 +9,10 @@
 #ifndef Sipic_mem_h
 #define Sipic_mem_h
 
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+extern "C" {
+#endif
+
 #include "cpu.h"
 #include "mem_cfg.h"
 #include "err.h"
@@ -94,5 +98,9 @@ void        Mem_SetAccess(MEM         *p_mem_data,
                           CPU_INT32U   addr,
                           CPU_INT16U   write_mask,
                           MEM_ERR     *p_err);
+
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+}
+#endif
 
 #endif

@@ -9,6 +9,10 @@
 #ifndef Sipic_sim_h
 #define Sipic_sim_h
 
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+extern "C" {
+#endif
+
 #include <core_24f.h>
 #include <peripheral.h>
 
@@ -22,5 +26,9 @@ typedef  struct  sim {
 void Sim_Init();
 
 void Sim_Run(SIM  *p_sim);
+
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+}
+#endif
 
 #endif

@@ -9,6 +9,10 @@
 #ifndef Sipic_core_24f_h
 #define Sipic_core_24f_h
 
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+extern "C" {
+#endif
+
 #include "cpu.h"
 #include "mem.h"
 #include "err.h"

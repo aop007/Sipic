@@ -8,6 +8,11 @@
 
 #ifndef Sipic_peripheral_h
 #define Sipic_peripheral_h
+
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+extern "C" {
+#endif
+
 #include "mem.h"
 #include "core_24f.h"
 #include "err.h"
