@@ -8,6 +8,11 @@
 
 #ifndef Sipic_peripheral_h
 #define Sipic_peripheral_h
+
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+extern "C" {
+#endif
+
 #include "mem.h"
 #include "core_24f.h"
 #include "err.h"
@@ -44,5 +49,9 @@ void Peri_ISR(ISR_VECT_NUM   isr_prio_num,
               MEM           *p_mem_data,
               CORE_24F      *p_core,
               PERI_ERR      *p_err);
+
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+}
+#endif
 
 #endif

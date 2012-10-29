@@ -9,6 +9,10 @@
 #ifndef Sipic_err_h
 #define Sipic_err_h
 
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+extern "C" {
+#endif
+
 /*
  * COFF PARSER ERRORS
  */
@@ -80,5 +84,9 @@ enum peri_err {
 };
 
 typedef enum peri_err PERI_ERR;
+
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+}
+#endif
 
 #endif

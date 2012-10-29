@@ -9,6 +9,10 @@
 #ifndef Sipic_cpu_h
 #define Sipic_cpu_h
 
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+extern "C" {
+#endif
+
 #include "err.h"
 
 #define  DEF_NO     0u
@@ -49,5 +53,9 @@ CPU_INT32U  CPU_Swap32 (CPU_INT32U  val);
 
 CPU_INT32S  CPU_SignExt08 (CPU_INT32U);
 CPU_INT32S  CPU_SignExt16 (CPU_INT32U);
+
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+}
+#endif
 
 #endif

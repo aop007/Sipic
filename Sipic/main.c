@@ -6,26 +6,24 @@
 //  Copyright (c) 2012 Alexis Ouellet-Patenaude. All rights reserved.
 //
 
-#include <stdio.h>
-#include "sipic_cfg.h"
-#include "mem.h"
-#include "core_24f.h"
-#include "core_24f_opcode.h"
-#include "mem_cfg_24f3011.h"
-#include "sim.h"
-
-#if    (SIPIC_CFG_PARSE_METHOD == SIPIC_PARSE_METHOD_COFF)
-#include <coff_parser.h>
-#include <coff_cfg.h>
-#elif  (SIPIC_CFG_PARSE_METHOD == SIPIC_PARSE_METHOD_HEX)
-#include <hex_parser.h>
-#include <hex_cfg.h>
-#endif
-
+#include "main.h"
 
 int main(int argc, const char * argv[])
 {
-    SIM       sim_struct;
+    init();
+
+    Sim_Run(&sim_struct);
+}
+
+void run ()
+{
+    Sim_Run(&sim_struct);
+}
+
+void init()
+{
+    SIM      *p_sim;
+    //SIM       sim_struct;
     CORE_24F *p_core;
     MEM_24   *p_mem_prog;
     MEM      *p_mem_data;
@@ -33,6 +31,7 @@ int main(int argc, const char * argv[])
     CORE_ERR  core_err;
     HEX_PARSER_ERR  hex_err;    
     
+    p_sim = &sim_struct;
     
     p_mem_prog = Mem_Init24(&mem_cfg_prog_dsPIC30F[0],
                       sizeof(mem_cfg_prog_dsPIC30F),
@@ -56,7 +55,7 @@ int main(int argc, const char * argv[])
     
     if (hex_err != HEX_PARSER_ERR_NONE) {
         printf("\r\nError in HexParser_ReadFile().");
-        return -1;
+        return;
     }
 #ifdef  CORE_STAT_EN
     Core_OPC_Stats(p_mem);
@@ -64,13 +63,13 @@ int main(int argc, const char * argv[])
     
     p_core = Core_Init(p_mem_data, 0x0000, &core_err);
     
-    sim_struct.p_core     = p_core;
-    sim_struct.p_mem_data = p_mem_data;
-    sim_struct.p_mem_prog = p_mem_prog;
+    p_sim->p_core     = p_core;
+    p_sim->p_mem_data = p_mem_data;
+    p_sim->p_mem_prog = p_mem_prog;
     
-    Sim_Run(&sim_struct);
+    //Sim_Run(&sim_struct);
 
 #endif
-    return 0;
+    return;
 }
 

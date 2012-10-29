@@ -9,6 +9,12 @@
 #ifndef Sipic_hardware_h
 #define Sipic_hardware_h
 
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+extern "C" {
+#endif
 
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+}
+#endif
 
 #endif

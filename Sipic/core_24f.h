@@ -9,6 +9,10 @@
 #ifndef Sipic_core_24f_h
 #define Sipic_core_24f_h
 
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+extern "C" {
+#endif
+
 #include "cpu.h"
 #include "mem.h"
 #include "err.h"
@@ -135,5 +139,10 @@ CPU_INT32U  Core_PC_Get   (CORE_24F    *p_core);
  */
 
 CPU_INT32U  Core_OPC_Words (OPCODE  opc);
+
+
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+}
+#endif
 
 #endif

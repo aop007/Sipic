@@ -14,7 +14,7 @@
 #include <coff_cfg.h>
 #include "err.h"
 
-#ifdef __cplusplus
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
 extern "C" {
 #endif
     
@@ -341,10 +341,6 @@ typedef struct external_scnhdr {
     
 #ifndef __dj_ENFORCE_FUNCTION_CALLS
 #endif /* !__dj_ENFORCE_FUNCTION_CALLS */
-    
-#ifdef __cplusplus
-}
-#endif
 
 /*
  ************* ERROR TYPE ***********
@@ -380,4 +376,9 @@ void  CoffParser_ReadFile(const char       *p_file_name,
 
 
 #endif
+
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+extern "C" {
+#endif
+
 #endif

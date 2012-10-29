@@ -17,5 +17,5 @@
 *.la
 *.a
 
-Sipic.vs2012/
+#Sipic.vs2012/
 Sipic.vs2012/Debug/

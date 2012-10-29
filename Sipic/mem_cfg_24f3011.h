@@ -9,6 +9,10 @@
 #ifndef Sipic_mem_cfg_24f3011_h
 #define Sipic_mem_cfg_24f3011_h
 
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+extern "C" {
+#endif
+
 #include "mem.h"
 
 const MEM_CFG mem_cfg_prog_dsPIC30F[7] = {
@@ -29,5 +33,9 @@ const MEM_CFG mem_cfg_data_dsPIC30F[3] = {
     {"X Data RAM",              0x0800,   0x09FE},
     {"Y Data RAM",              0x0A00,   0x0BFE}
 };
+
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+}
+#endif
 
 #endif

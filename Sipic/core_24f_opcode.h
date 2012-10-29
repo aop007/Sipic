@@ -9,6 +9,10 @@
 #ifndef Sipic_core_24f_opcode_h
 #define Sipic_core_24f_opcode_h
 
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+extern "C" {
+#endif
+
 #include "core_24f.h"
 #include "mem.h"
 
@@ -380,5 +384,9 @@ void Core_SE_FB00       (MEM_24      *p_mem_prog,
                          CORE_24F    *p_core,
                          CPU_INT32U   args,
                          CORE_ERR    *p_err);
+
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+}
+#endif
 
 #endif
