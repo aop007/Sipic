@@ -10,11 +10,6 @@ namespace SipicWindows
     static class Program
     {
 
-        [DllImport(@"C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\Debug\Sipic.dll", EntryPoint = "init")]
-        public static extern void init();
-
-        [DllImport(@"C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\Debug\Sipic.dll", EntryPoint = "run")]
-        public static extern void run();
 
         /// <summary>
         /// The main entry point for the application.
@@ -24,11 +19,7 @@ namespace SipicWindows
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            
-#if true
-            init();
-            run();
-#endif
+
             
             Application.Run(new Form1());
         }

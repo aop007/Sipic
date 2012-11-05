@@ -10,6 +10,7 @@
 #include "sim.h"
 #include "core_24f.h"
 #include "core_24f_opcode.h"
+#include "main.h"
 
 void Sim_Run(SIM  *p_sim)
 {
@@ -37,4 +38,40 @@ void Sim_Run(SIM  *p_sim)
                 &core_err);
         
     }
+}
+
+void Sim_Step()
+{
+    SIM        *p_sim;
+
+    p_sim = &sim_struct;
+    
+        /* Process HW */
+        
+        /* Process Peripherals */
+        Peripheral_Run(&core_static_err,
+                       p_sim->p_mem_prog,
+                       p_sim->p_mem_data,
+                       p_sim->p_core,
+                       &peri_static_err);
+        
+        /* Process Core */
+        Core_Run(p_sim->p_core,
+                 p_sim->p_mem_prog,
+                 p_sim->p_mem_data,
+                &core_static_err);
+}
+
+unsigned short __declspec(dllexport) __stdcall Sim_GetValueFromDataMem(unsigned short addr)
+{
+    MEM_ERR  mem_err;
+
+    return (Mem_Get(sim_struct.p_mem_data, addr, &mem_err));
+}
+
+unsigned int  __declspec(dllexport) __stdcall Sim_GetOPCFromProgMem(unsigned int addr)
+{
+    MEM_ERR  mem_err;
+
+    return (Mem_Get24(sim_struct.p_mem_prog, addr, &mem_err));
 }

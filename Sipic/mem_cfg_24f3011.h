@@ -15,7 +15,7 @@ extern "C" {
 
 #include "mem.h"
 
-const MEM_CFG mem_cfg_prog_dsPIC30F[7] = {
+static const MEM_CFG mem_cfg_prog_dsPIC30F[7] = {
     /* See http://ww1.microchip.com/downloads/en/DeviceDoc/70157C.pdf Figure 6-3 */
     
     {"Main Vector Table",  0x000000, 0x00007E},
@@ -28,7 +28,7 @@ const MEM_CFG mem_cfg_prog_dsPIC30F[7] = {
     {"DEVID",              0xFF0000, 0xFFFFFE}
 };
 
-const MEM_CFG mem_cfg_data_dsPIC30F[3] = {
+static const MEM_CFG mem_cfg_data_dsPIC30F[3] = {
     {"SFR Space",               0x0000,   0x07FE},
     {"X Data RAM",              0x0800,   0x09FE},
     {"Y Data RAM",              0x0A00,   0x0BFE}

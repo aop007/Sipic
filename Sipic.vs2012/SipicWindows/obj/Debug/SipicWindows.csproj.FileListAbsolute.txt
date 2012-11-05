@@ -6,3 +6,4 @@ C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\SipicWindows\obj\Debug\S
 C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\SipicWindows\obj\Debug\SipicWindows.csproj.GenerateResource.Cache
 C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\SipicWindows\obj\Debug\SipicWindows.exe
 C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\SipicWindows\obj\Debug\SipicWindows.pdb
+C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\SipicWindows\obj\Debug\SipicWindows.Form1.resources

@@ -32,6 +32,8 @@ void init()
     HEX_PARSER_ERR  hex_err;    
     
     p_sim = &sim_struct;
+    core_static_err = CORE_ERR_NONE;
+    peri_static_err = PERI_ERR_NONE;
     
     p_mem_prog = Mem_Init24(&mem_cfg_prog_dsPIC30F[0],
                       sizeof(mem_cfg_prog_dsPIC30F),

@@ -34,7 +34,7 @@ MEM * Mem_Init(const  MEM_CFG     *p_cfg,
     
     for (ix = 0 ; ix < mem_seg_cnt ; ix++) {
         
-        p_mem = malloc(sizeof(MEM));
+        p_mem = (MEM *)malloc(sizeof(MEM));
         
         if (p_mem == NULL) {
             *p_err = MEM_ERR_ALLOC_FAIL;
@@ -44,14 +44,16 @@ MEM * Mem_Init(const  MEM_CFG     *p_cfg,
         p_mem_hdr = &p_mem->Hdr;
         
         seg_size   = Mem_GetSegSize(p_cfg);
-        p_mem->Ptr = malloc(seg_size * 4);
+        p_mem->Ptr = (CPU_INT16U *)malloc(seg_size * 4);
         
         if (p_mem == NULL) {
             *p_err = MEM_ERR_ALLOC_FAIL;
             return (MEM *)0;
         }
         
-        p_mem->WrPtr = malloc(seg_size * 4);
+        memset(p_mem->Ptr, 0x00, (seg_size * 4));
+
+        p_mem->WrPtr = (CPU_INT16U *)malloc(seg_size * 4);
         
         if (p_mem == NULL) {
             *p_err = MEM_ERR_ALLOC_FAIL;
@@ -104,7 +106,7 @@ MEM_24 * Mem_Init24(const  MEM_CFG     *p_cfg,
     
     for (ix = 0 ; ix < mem_seg_cnt ; ix++) {
         
-        p_mem = malloc(sizeof(MEM_24));
+        p_mem = (MEM_24 *)malloc(sizeof(MEM_24));
         
         if (p_mem == NULL) {
             *p_err = MEM_ERR_ALLOC_FAIL;
@@ -114,7 +116,7 @@ MEM_24 * Mem_Init24(const  MEM_CFG     *p_cfg,
         p_mem_hdr = &p_mem->Hdr;
         
         seg_size   = Mem_GetSegSize(p_cfg);
-        p_mem->Ptr = malloc(seg_size * 4);
+        p_mem->Ptr = (CPU_INT32U *)malloc(seg_size * 4);
         
         if (p_mem == NULL) {
             *p_err = MEM_ERR_ALLOC_FAIL;
@@ -180,7 +182,7 @@ void  Mem_Set24 (MEM_24      *p_mem,
             }
 #endif
 #ifdef  NO_VERBOSE
-            printf("\r\nMemSet @%004x <= %004x\r\n",addr, val);
+            printf("\r\nMemSet @%004x <= %004x",addr, val);
 #endif
             mem_loc_found = DEF_YES;
             break;
@@ -223,12 +225,11 @@ void  Mem_Set   (MEM         *p_mem,
             
             write_mask = p_mem_current->WrPtr[(addr - p_mem_hdr->Start) / 2];
             
-            p_mem_current->Ptr[(addr - p_mem_hdr->Start) / 2] &=  write_mask;
-            p_mem_current->Ptr[(addr - p_mem_hdr->Start) / 2] |= (write_mask & val);
+            p_mem_current->Ptr[(addr - p_mem_hdr->Start) / 2] &=  ~(write_mask);
+            p_mem_current->Ptr[(addr - p_mem_hdr->Start) / 2] |=   (write_mask & val);
 
-#ifdef  NO_VERBOSE
-            printf("\r\nMemSet @%004x <= %004x\r\n",addr, val);
-#endif
+            printf("\r\nMemSet @%004x <= %004x",addr, val);
+
             mem_loc_found = DEF_YES;
             break;
             

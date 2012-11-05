@@ -28,6 +28,8 @@ extern "C" {
 #endif
     
 SIM  sim_struct;
+PERI_ERR    peri_static_err;
+CORE_ERR    core_static_err;
 
 int  main (int argc, const char * argv[]);
 void DLL_API init (void);

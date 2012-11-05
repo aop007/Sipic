@@ -39,13 +39,14 @@ CORE_24F * Core_Init(MEM         *p_mem_data,
 #endif
     
     
-    p_core = Mem_GetAddr(p_mem_data, addr, &mem_err);
+    p_core = (CORE_24F *)Mem_GetAddr(p_mem_data, addr, &mem_err);
     
     if (mem_err != MEM_ERR_NONE) {
         *p_err = CORE_ERR_INVALID_MEM;
         return (NULL);
     }
     
+    memset(p_core, 0, sizeof(CORE_24F));
     
     p_core->W[15] = 0x0800;
 #ifdef  CORE_CFG_CYCLE_CNTR
@@ -81,6 +82,7 @@ void  Core_Run(CORE_24F  *p_core_24f,
     OPCODE        args;
     CPU_INT32U    ix;
     CPU_INT32U    uncaught_instructions;
+    CPU_INT32U    pc;
     MEM_ERR       mem_err;
     //CORE_ERR      core_err;
     
@@ -92,9 +94,15 @@ void  Core_Run(CORE_24F  *p_core_24f,
 #if 0
     while (1) {
 #endif
+        pc     = Core_PC_Get(p_core_24f);
         opcode = Mem_Get24(p_mem_prog,
-                           Core_PC_Get(p_core_24f),
+                           pc,
                           &mem_err);
+
+        if (mem_err != MEM_ERR_NONE) {
+            *p_err = CORE_ERR_ADDR_ERROR_TRAP;
+            return;
+        }
 
         if (opcode == 0) {
             CORE_TRACE_DEBUG(("\r\nNULL OPC \t %d", uncaught_instructions));
@@ -119,7 +127,7 @@ void  Core_Run(CORE_24F  *p_core_24f,
         CORE_TRACE_DEBUG(("PC = %004x\tOPC = %006x\t |", Core_PC_Get(p_core_24f), opcode));
 #endif
 #if 1
-        if (Core_PC_Get(p_core_24f) == 0x03FA) {
+        if (Core_PC_Get(p_core_24f) == 0x0A5E) {
             CORE_TRACE_DEBUG((""));
         }
         
@@ -635,6 +643,7 @@ CPU_INT32U  Core_Pop (CORE_24F    *p_core,
     
     if (mem_err != MEM_ERR_NONE) {
         *p_err = CORE_ERR_INVALID_MEM;
+        return (0xFFFFFFFF);
     }
     
     *p_err = CORE_ERR_NONE;

@@ -73,8 +73,9 @@ void  Core_CALL_02            (MEM_24      *p_mem_prog,
                                CPU_INT32U   args,
                                CORE_ERR    *p_err)
 {
-    OPCODE   next_word;
-    MEM_ERR  mem_err;
+    CPU_INT32U  pc;
+    OPCODE      next_word;
+    MEM_ERR     mem_err;
     
     Core_PC_Slide(p_core, 2);
     
@@ -86,14 +87,16 @@ void  Core_CALL_02            (MEM_24      *p_mem_prog,
     }
     
     Core_PC_Slide(p_core, 2);
+
+    pc = Core_PC_Get(p_core);
     
-    Core_Push( Core_PC_Get(p_core) & 0x00FFFF, p_core, p_mem_data, p_err);
+    Core_Push((pc  & 0x00FFFF), p_core, p_mem_data, p_err);
     
     if (*p_err != CORE_ERR_NONE) {
         return;
     }
     
-    Core_Push((Core_PC_Get(p_core) & 0xFF0000) >> 16, p_core, p_mem_data, p_err);
+    Core_Push(((pc & 0xFF0000) >> 16), p_core, p_mem_data, p_err);
 
     if (*p_err != CORE_ERR_NONE) {
         return;
