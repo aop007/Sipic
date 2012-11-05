@@ -26,7 +26,21 @@ extern "C" {
 #else
 #define  DLL_API    
 #endif
-    
+
+#define CORE_TRACE_LEVEL 0
+
+#if (CORE_TRACE_LEVEL > 0)
+#define CORE_TRACE_INFO(x) printf x
+#else
+#define CORE_TRACE_INFO(x) 
+#endif
+
+#if (CORE_TRACE_LEVEL > 1)
+#define CORE_TRACE_DEBUG(x) printf x
+#else
+#define CORE_TRACE_DEBUG(x) 
+#endif
+
 SIM  sim_struct;
 PERI_ERR    peri_static_err;
 CORE_ERR    core_static_err;

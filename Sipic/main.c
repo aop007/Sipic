@@ -56,7 +56,7 @@ void init()
                       &hex_err);
     
     if (hex_err != HEX_PARSER_ERR_NONE) {
-        printf("\r\nError in HexParser_ReadFile().");
+        CORE_TRACE_DEBUG("\r\nError in HexParser_ReadFile().");
         return;
     }
 #ifdef  CORE_STAT_EN

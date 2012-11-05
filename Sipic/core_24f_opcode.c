@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "core_24f_opcode.h"
+#include "main.h"
 
 CPU_INT32S  Call_Depth = 0;
 
@@ -42,16 +43,16 @@ void  Core_OPC_Stats (MEM_24  *p_mem)
         p_mem_hdr = &p_mem->Hdr;
     }
     
-    printf("\r\nOPC STATS:");
+    CORE_TRACE_DEBUG("\r\nOPC STATS:");
     
     for (ix = 0 ; ix < sizeof(opc_ctr) / sizeof (CPU_INT16U) ; ix++) {
         if (ix % 16 == 0) {
-            printf("\r\n");
+            CORE_TRACE_DEBUG("\r\n");
         }
 #if 0
-        printf("\r\n%#x = %d", ix, opc_ctr[ix]);
+        CORE_TRACE_DEBUG("\r\n%#x = %d", ix, opc_ctr[ix]);
 #else
-        printf("%d\t", opc_ctr[ix]);
+        CORE_TRACE_DEBUG(("%d\t", opc_ctr[ix]));
 #endif
     }
 }
@@ -1536,7 +1537,7 @@ void  Core_BSET_W_A0 (MEM_24      *p_mem_prog,
                       CPU_INT32U   args,
                       CORE_ERR    *p_err)
 {
-    printf("\r\nCore_BSET_W_A0 Unimplemented");
+    CORE_TRACE_DEBUG("\r\nCore_BSET_W_A0 Unimplemented");
     *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
 }
 

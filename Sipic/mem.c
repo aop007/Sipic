@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "mem.h"
+#include "main.h"
 
 static  CPU_INT32U  Mem_GetSegSize(const MEM_CFG  *p_cfg);
 
@@ -178,12 +179,12 @@ void  Mem_Set24 (MEM_24      *p_mem,
                 p_mem_current->Ptr[(addr - p_mem_hdr->Start) / 2] = val;
 #if 0
             } else {
-                printf("\r\nCorrupting Memory!!!");
+                CORE_TRACE_DEBUG("\r\nCorrupting Memory!!!");
             }
 #endif
-#ifdef  NO_VERBOSE
-            printf("\r\nMemSet @%004x <= %004x",addr, val);
-#endif
+
+            CORE_TRACE_DEBUG("\r\nMemSet @%004x <= %004x",addr, val);
+
             mem_loc_found = DEF_YES;
             break;
             
@@ -228,7 +229,7 @@ void  Mem_Set   (MEM         *p_mem,
             p_mem_current->Ptr[(addr - p_mem_hdr->Start) / 2] &=  ~(write_mask);
             p_mem_current->Ptr[(addr - p_mem_hdr->Start) / 2] |=   (write_mask & val);
 
-            printf("\r\nMemSet @%004x <= %004x",addr, val);
+            CORE_TRACE_DEBUG("\r\nMemSet @%004x <= %004x",addr, val);
 
             mem_loc_found = DEF_YES;
             break;
@@ -270,7 +271,7 @@ CPU_INT16U  Mem_Get(MEM         *p_mem,
             if (p_mem_current->Ptr[(addr - p_mem_hdr->Start) / 2] == 0u) {
                 p_mem_current->Ptr[(addr - p_mem_hdr->Start) / 2] = val;
             } else {
-                printf("\r\nCorrupting Memory!!!");
+                CORE_TRACE_DEBUG("\r\nCorrupting Memory!!!");
             }
 #else
             *p_err = MEM_ERR_NONE;

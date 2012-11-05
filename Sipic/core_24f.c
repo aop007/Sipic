@@ -13,20 +13,7 @@
 #include "core_24f_opcode.h"
 #include "mem.h"
 #include "cpu.h"
-
-#define CORE_TRACE_LEVEL 2
-
-#if (CORE_TRACE_LEVEL > 0)
-#define CORE_TRACE_INFO(x) printf x
-#else
-#define CORE_TRACE_INFO(x) 
-#endif
-
-#if (CORE_TRACE_LEVEL > 1)
-#define CORE_TRACE_DEBUG(x) printf x
-#else
-#define CORE_TRACE_DEBUG(x) 
-#endif
+#include "main.h"
 
 CORE_24F * Core_Init(MEM         *p_mem_data,
                              CPU_INT32U   addr,

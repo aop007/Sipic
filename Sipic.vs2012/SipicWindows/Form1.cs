@@ -222,10 +222,14 @@ namespace SipicWindows
             }
             catch {
                 Console.WriteLine("Addr " + GetPC() + " is Unavailable");
-                exception = true;
+                //exception = true;
             }
-            if (al != null) {
+            if (al != null)
+            {
                 SetCodeLineInvoke(al.Line);
+            }
+            else {
+                SetCodeLineInvoke(0);
             }
         }
 
@@ -244,7 +248,8 @@ namespace SipicWindows
                 runThread.Start();
             }
             else {
-                runThread.Abort();
+                exception = true;
+                runThread.Join();
                 this.Run.Text = "Run";
             }
         }
