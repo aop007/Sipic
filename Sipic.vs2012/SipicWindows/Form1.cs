@@ -47,7 +47,7 @@ namespace SipicWindows
            
             InitMemoryTable();
 
-            RefreshMemoryTable();
+            RefreshMemoryTable(false);
 
             InitCodeTable();
 #if false
@@ -125,7 +125,7 @@ namespace SipicWindows
                 this.memoryView2.Rows.Add(testBlock1.GetRowFromOffset(i));
             }
 
-            testBlock1.Update();
+            testBlock1.Update(false);
         }
 
         private void LowLight(DataGridViewRow dgvr)
@@ -150,29 +150,32 @@ namespace SipicWindows
             }
         }
 
-        private void RefreshMemoryTable()
+        private void RefreshMemoryTable(bool silent)
         {
-            ushort stackPtr = testBlock1.GetMemoryAtAddr(30);
-
-            for (int i = 0; i < testBlock1.Word_Size; i++)
+            if (!silent)
             {
-                if (testBlock1.MemoryHasChangedAtOffset(i))
-                {
-                    DataGridViewCellCollection dgvrc = this.memoryView1.Rows[i].Cells;
-                    dgvrc[1].Value = ((testBlock1.GetRowFromOffset(i))[1]);
+                ushort stackPtr = testBlock1.GetMemoryAtAddr(30);
 
-                    dgvrc = this.memoryView2.Rows[i].Cells;
-                    dgvrc[1].Value = ((testBlock1.GetRowFromOffset(i))[1]);
+                for (int i = 0; i < testBlock1.Word_Size; i++)
+                {
+                    if (testBlock1.MemoryHasChangedAtOffset(i))
+                    {
+                        DataGridViewCellCollection dgvrc = this.memoryView1.Rows[i].Cells;
+                        dgvrc[1].Value = ((testBlock1.GetRowFromOffset(i))[1]);
+
+                        dgvrc = this.memoryView2.Rows[i].Cells;
+                        dgvrc[1].Value = ((testBlock1.GetRowFromOffset(i))[1]);
+                    }
+
+                    LowLight(this.memoryView1.Rows[i]);
+                    LowLight(this.memoryView2.Rows[i]);
                 }
 
-                LowLight(this.memoryView1.Rows[i]);
-                LowLight(this.memoryView2.Rows[i]);
+
+                HighLight(this.memoryView1.Rows[stackPtr / 2]);
+
+                HighLight(this.memoryView2.Rows[stackPtr / 2]);
             }
-
-
-            HighLight(this.memoryView1.Rows[stackPtr / 2]);
-
-            HighLight(this.memoryView2.Rows[stackPtr / 2]);
         }
 
         private int GetPC()
@@ -192,50 +195,66 @@ namespace SipicWindows
             return (int)OPC;
         }
 
-        private void UpdatePC()
+        private void UpdatePC(bool silent)
         {
-            SetPCInvoke(GetPC());
+            if (!silent)
+            {
+                SetPCInvoke(GetPC());
+            }
         }
 
-        private void UpdateOPC()
+        private void UpdateOPC(bool silent)
         {
-            SetOPCInvoke(GetOPC());
+            if (!silent)
+            {
+                SetOPCInvoke(GetOPC());
+            }
         }
 
-        private void IteratePC()
+        private void IteratePC(bool silent)
         {
-            testBlock1.Flush();
+            testBlock1.Flush(silent);
             sim_step();
-            testBlock1.Update();
-            RefreshMemoryTable();
-            UpdatePC();
-            UpdateOPC();
-            UpdateCodeView();
+            SynchonizeUI(silent);
         }
 
-        private void UpdateCodeView()
+        private void SynchonizeUI(bool silent)
         {
-            AssemblyLine al = null;
-            try
+            testBlock1.Update(silent);
+            RefreshMemoryTable(silent);
+            UpdatePC(silent);
+            UpdateOPC(silent);
+            UpdateCodeView(silent);
+        }
+
+        private void UpdateCodeView(bool silent)
+        {
+            if (!silent)
             {
-                al = addrMap[GetPC()];
-            }
-            catch {
-                Console.WriteLine("Addr " + GetPC() + " is Unavailable");
-                //exception = true;
-            }
-            if (al != null)
-            {
-                SetCodeLineInvoke(al.Line);
-            }
-            else {
-                SetCodeLineInvoke(0);
+                AssemblyLine al = null;
+                try
+                {
+                    al = addrMap[GetPC()];
+                }
+                catch
+                {
+                    Console.WriteLine("Addr " + GetPC() + " is Unavailable");
+                    //exception = true;
+                }
+                if (al != null)
+                {
+                    SetCodeLineInvoke(al.Line);
+                }
+                else
+                {
+                    SetCodeLineInvoke(0);
+                }
             }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            IteratePC();
+            IteratePC(false);
         }
 
         private void Run_Click(object sender, EventArgs e)
@@ -257,9 +276,10 @@ namespace SipicWindows
         private void RunPC()
         {
             while ((GetPC() != BPupdown.Value) && (exception == false)) {
-                IteratePC();
+                IteratePC(true);
                 //Thread.Sleep(1);
             }
+            SynchonizeUI(false);
         }
 
         private void InitCodeTable()
@@ -348,19 +368,30 @@ public class MemoryBlock
         this.mem_shadow = new ushort[word_size];
     }
 
-    public void Update()
+    public void Update(bool silent)
     {
-        for (int i = 0; i < word_size; i++)
+        if (silent)
         {
-            mem[i] = Sim_GetValueFromDataMem((UInt16)(i * 2 + start));
+            mem[46/2] = Sim_GetValueFromDataMem((UInt16)(46 + start));
+            mem[48/2] = Sim_GetValueFromDataMem((UInt16)(48 + start));
+        }
+        else
+        {
+            for (int i = 0; i < word_size; i++)
+            {
+                mem[i] = Sim_GetValueFromDataMem((UInt16)(i * 2 + start));
+            }
         }
     }
 
-    public void Flush()
+    public void Flush(bool silent)
     {
-        for (int i = 0; i < word_size; i++)
+        if (!silent)
         {
-            mem[i] = mem_shadow[i];
+            for (int i = 0; i < word_size; i++)
+            {
+                mem[i] = mem_shadow[i];
+            }
         }
     }
 
