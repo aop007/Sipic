@@ -8,12 +8,14 @@
 
 #include "main.h"
 
+#ifndef OBJ_C
 int main(int argc, const char * argv[])
 {
     init();
 
     Sim_Run(&sim_struct);
 }
+#endif
 
 void run ()
 {
