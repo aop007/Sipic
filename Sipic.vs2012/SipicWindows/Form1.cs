@@ -15,7 +15,7 @@ namespace SipicWindows
 {
     public partial class Form1 : Form
     {
-        [DllImport(@"C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\Debug\Sipic.dll", EntryPoint = "init")]
+        [DllImport(@"C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\Debug\Sipic.dll", EntryPoint = "init_sipic")]
         public static extern void init();
 
         [DllImport(@"C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\Debug\Sipic.dll", EntryPoint = "Sim_Step")]

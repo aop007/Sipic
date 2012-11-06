@@ -31,7 +31,7 @@ void                                Sim_Run(SIM  *p_sim);
 
 void            DLL_API             Sim_Step();
 
-unsigned short  DLL_API             Sim_GetValueFromDataMem(unsigned short addr);
+unsigned short  DLL_API C_STD_CALL  Sim_GetValueFromDataMem(unsigned short addr);
 
 unsigned int    DLL_API C_STD_CALL  Sim_GetOPCFromProgMem(unsigned int addr);
 

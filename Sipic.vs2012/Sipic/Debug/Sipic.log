@@ -1,10 +1,8 @@
-﻿Build started 05/11/2012 6:21:15 PM.
+﻿Build started 06/11/2012 10:29:07 AM.
      1>Project "C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\Sipic\Sipic.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I.\ /I..\..\Sipic /I..\..\Sipic\InputFiles /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _WINDLL /D _UNICODE /D UNICODE /D __DLL__ /Gm /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:prompt ..\..\Sipic\hex_parser.c
-         hex_parser.c
-     1>c:\users\alexis01.micrium01\projects\sipic\sipic\hex_parser.c(40): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdio.h(218) : see declaration of 'fopen'
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I.\ /I..\..\Sipic /I..\..\Sipic\InputFiles /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _WINDLL /D _UNICODE /D UNICODE /D __DLL__ /D __STD_C__ /Gm /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:prompt ..\..\Sipic\main.c
+         main.c
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\Debug\Sipic.dll" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\Debug\Sipic.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\Debug\Sipic.lib" /MACHINE:X86 /DLL Debug\ascii.obj
          Debug\coff_parser.obj
@@ -17,9 +15,10 @@
          Debug\peripheral.obj
          Debug\peri_isr.obj
          Debug\sim.obj
+            Creating library C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\Debug\Sipic.lib and object C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\Debug\Sipic.exp
          Sipic.vcxproj -> C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\Debug\Sipic.dll
      1>Done Building Project "C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\Sipic\Sipic.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.42
+Time Elapsed 00:00:00.56

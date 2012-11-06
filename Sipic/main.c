@@ -17,12 +17,12 @@ int mainX(int argc, const char * argv[])
 }
 #endif
 
-void run ()
+void DLL_API C_STD_CALL run ()
 {
     Sim_Run(&sim_struct);
 }
 
-void init_sipic(void)
+void DLL_API C_STD_CALL init_sipic(void)
 {
     SIM      *p_sim;
     //SIM       sim_struct;

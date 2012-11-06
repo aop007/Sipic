@@ -44,7 +44,7 @@ int  main (int argc, const char * argv[]);
 #endif
     
 //void DLL_API C_STD_CALL init (void);
-void init_sipic(void);
+void DLL_API C_STD_CALL init_sipic(void);
 void DLL_API C_STD_CALL run  (void);
 
 #ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
