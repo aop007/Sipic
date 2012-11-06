@@ -36,4 +36,9 @@
     return @"The Window Title";
 }
 
+- (IBAction)sim_step:(id)sender
+{
+    Sim_Step();
+}
+
 @end

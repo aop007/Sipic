@@ -16,8 +16,6 @@
 		690D64861648D038008CB35B /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 690D645E1648D037008CB35B /* MainMenu.xib */; };
 		690D64871648D038008CB35B /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 690D645F1648D037008CB35B /* MainWindow.xib */; };
 		690D648C1648D038008CB35B /* SimulationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 690D646A1648D038008CB35B /* SimulationController.m */; };
-		690D648E1648D038008CB35B /* SipicUI-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 690D646D1648D038008CB35B /* SipicUI-Info.plist */; };
-		690D64901648D038008CB35B /* start_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 690D64701648D038008CB35B /* start_main.m */; };
 		690D64911648D038008CB35B /* WindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 690D64721648D038008CB35B /* WindowController.m */; };
 		690D64921648D038008CB35B /* WindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 690D64731648D038008CB35B /* WindowController.xib */; };
 		690D64B01648D0F9008CB35B /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D64941648D0F9008CB35B /* main.c */; };
@@ -51,9 +49,6 @@
 		690D645F1648D037008CB35B /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		690D64691648D038008CB35B /* SimulationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimulationController.h; sourceTree = "<group>"; };
 		690D646A1648D038008CB35B /* SimulationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimulationController.m; sourceTree = "<group>"; };
-		690D646D1648D038008CB35B /* SipicUI-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "SipicUI-Info.plist"; sourceTree = "<group>"; };
-		690D646E1648D038008CB35B /* SipicUI-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SipicUI-Prefix.pch"; sourceTree = "<group>"; };
-		690D64701648D038008CB35B /* start_main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = start_main.m; sourceTree = "<group>"; };
 		690D64711648D038008CB35B /* WindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
 		690D64721648D038008CB35B /* WindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WindowController.m; sourceTree = "<group>"; };
 		690D64731648D038008CB35B /* WindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WindowController.xib; sourceTree = "<group>"; };
@@ -156,9 +151,6 @@
 				690D645F1648D037008CB35B /* MainWindow.xib */,
 				690D64691648D038008CB35B /* SimulationController.h */,
 				690D646A1648D038008CB35B /* SimulationController.m */,
-				690D646D1648D038008CB35B /* SipicUI-Info.plist */,
-				690D646E1648D038008CB35B /* SipicUI-Prefix.pch */,
-				690D64701648D038008CB35B /* start_main.m */,
 				690D64711648D038008CB35B /* WindowController.h */,
 				690D64721648D038008CB35B /* WindowController.m */,
 				690D64731648D038008CB35B /* WindowController.xib */,
@@ -298,7 +290,6 @@
 				690D642F1648AA43008CB35B /* Sipic in Resources */,
 				690D64861648D038008CB35B /* MainMenu.xib in Resources */,
 				690D64871648D038008CB35B /* MainWindow.xib in Resources */,
-				690D648E1648D038008CB35B /* SipicUI-Info.plist in Resources */,
 				690D64921648D038008CB35B /* WindowController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -313,7 +304,6 @@
 				690D63BE1648A9EC008CB35B /* start_main.m in Sources */,
 				690D64741648D038008CB35B /* AppDelegate.m in Sources */,
 				690D648C1648D038008CB35B /* SimulationController.m in Sources */,
-				690D64901648D038008CB35B /* start_main.m in Sources */,
 				690D64911648D038008CB35B /* WindowController.m in Sources */,
 				690D64B01648D0F9008CB35B /* main.c in Sources */,
 				690D64B11648D0F9008CB35B /* sim.c in Sources */,
@@ -470,6 +460,7 @@
 				690D63CD1648A9EC008CB35B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
