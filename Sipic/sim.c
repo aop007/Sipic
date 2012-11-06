@@ -37,6 +37,8 @@ void Sim_Run(SIM  *p_sim)
                  p_sim->p_mem_data,
                 &core_err);
         
+        printf("\r\n%004x", Core_PC_Get(p_sim->p_core));
+        
     }
 }
 
