@@ -8,7 +8,7 @@
 
 #include "main.h"
 
-#ifndef OBJ_C
+#ifndef __OBJC__
 int main(int argc, const char * argv[])
 {
     init();

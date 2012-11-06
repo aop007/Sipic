@@ -11,8 +11,6 @@
 		690D63BC1648A9EC008CB35B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 690D63BA1648A9EC008CB35B /* InfoPlist.strings */; };
 		690D63BE1648A9EC008CB35B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 690D63BD1648A9EC008CB35B /* main.m */; };
 		690D63C21648A9EC008CB35B /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 690D63C01648A9EC008CB35B /* Credits.rtf */; };
-		690D63C51648A9EC008CB35B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 690D63C41648A9EC008CB35B /* AppDelegate.m */; };
-		690D63C81648A9EC008CB35B /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 690D63C61648A9EC008CB35B /* MainMenu.xib */; };
 		690D64081648AA43008CB35B /* main.txt in Resources */ = {isa = PBXBuildFile; fileRef = 690D63D41648AA43008CB35B /* main.txt */; };
 		690D64091648AA43008CB35B /* main.cof in Resources */ = {isa = PBXBuildFile; fileRef = 690D63D51648AA43008CB35B /* main.cof */; };
 		690D640A1648AA43008CB35B /* main.err in Resources */ = {isa = PBXBuildFile; fileRef = 690D63D61648AA43008CB35B /* main.err */; };
@@ -66,9 +64,6 @@
 		690D63BD1648A9EC008CB35B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		690D63BF1648A9EC008CB35B /* SipicUI-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SipicUI-Prefix.pch"; sourceTree = "<group>"; };
 		690D63C11648A9EC008CB35B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
-		690D63C31648A9EC008CB35B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		690D63C41648A9EC008CB35B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		690D63C71648A9EC008CB35B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		690D63D41648AA43008CB35B /* main.txt */ = {isa = PBXFileReference; lastKnownFileType = file; name = main.txt; path = InputFiles/main.txt; sourceTree = "<group>"; };
 		690D63D51648AA43008CB35B /* main.cof */ = {isa = PBXFileReference; lastKnownFileType = file; name = main.cof; path = InputFiles/main.cof; sourceTree = "<group>"; };
 		690D63D61648AA43008CB35B /* main.err */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; name = main.err; path = InputFiles/main.err; sourceTree = "<group>"; };
@@ -109,6 +104,9 @@
 		690D64031648AA43008CB35B /* mem_cfg_24f3011.h */ = {isa = PBXFileReference; lastKnownFileType = file; path = mem_cfg_24f3011.h; sourceTree = "<group>"; };
 		690D64041648AA43008CB35B /* snippets.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; path = snippets.txt; sourceTree = "<group>"; };
 		690D64061648AA43008CB35B /* Sipic */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; name = Sipic; path = "/Users/aop007/Library/Developer/Xcode/DerivedData/Sipic-bkdytcqsvwxwaqhkqjyhctvuzpny/Build/Products/Debug/Sipic"; sourceTree = "<absolute>"; };
+		690D64301648B4BC008CB35B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../../Sipic/AppDelegate.h; sourceTree = "<group>"; };
+		690D64311648B4BC008CB35B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = ../../Sipic/AppDelegate.m; sourceTree = "<group>"; };
+		690D64321648B4BC008CB35B /* MainMenu.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MainMenu.xib; path = ../../Sipic/MainMenu.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -164,9 +162,9 @@
 		690D63B71648A9EC008CB35B /* SipicUI */ = {
 			isa = PBXGroup;
 			children = (
-				690D63C31648A9EC008CB35B /* AppDelegate.h */,
-				690D63C41648A9EC008CB35B /* AppDelegate.m */,
-				690D63C61648A9EC008CB35B /* MainMenu.xib */,
+				690D64301648B4BC008CB35B /* AppDelegate.h */,
+				690D64311648B4BC008CB35B /* AppDelegate.m */,
+				690D64321648B4BC008CB35B /* MainMenu.xib */,
 				690D63B81648A9EC008CB35B /* Supporting Files */,
 			);
 			path = SipicUI;
@@ -373,7 +371,6 @@
 			files = (
 				690D63BC1648A9EC008CB35B /* InfoPlist.strings in Resources */,
 				690D63C21648A9EC008CB35B /* Credits.rtf in Resources */,
-				690D63C81648A9EC008CB35B /* MainMenu.xib in Resources */,
 				690D64081648AA43008CB35B /* main.txt in Resources */,
 				690D64091648AA43008CB35B /* main.cof in Resources */,
 				690D640A1648AA43008CB35B /* main.err in Resources */,
@@ -425,7 +422,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				690D63BE1648A9EC008CB35B /* main.m in Sources */,
-				690D63C51648A9EC008CB35B /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -448,21 +444,13 @@
 			name = Credits.rtf;
 			sourceTree = "<group>";
 		};
-		690D63C61648A9EC008CB35B /* MainMenu.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				690D63C71648A9EC008CB35B /* en */,
-			);
-			name = MainMenu.xib;
-			sourceTree = "<group>";
-		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		690D63C91648A9EC008CB35B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -486,13 +474,14 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				"USER_HEADER_SEARCH_PATHS[arch=*]" = "../../Sipic/** ./** ../../../../** ../**";
 			};
 			name = Debug;
 		};
 		690D63CA1648A9EC008CB35B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -514,11 +503,18 @@
 		690D63CC1648A9EC008CB35B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SipicUI/SipicUI-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"./**",
+					"../**",
+					"../../Sipic/**",
+				);
 				INFOPLIST_FILE = "SipicUI/SipicUI-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "./** ../** ../../Sipic/**";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -526,6 +522,7 @@
 		690D63CD1648A9EC008CB35B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SipicUI/SipicUI-Prefix.pch";

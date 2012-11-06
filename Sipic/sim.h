@@ -13,8 +13,8 @@
 extern "C" {
 #endif
 
-#include <core_24f.h>
-#include <peripheral.h>
+#include "core_24f.h"
+#include "peripheral.h"
 #include "cpu.h"
 #include "sipic_cfg.h"
 
