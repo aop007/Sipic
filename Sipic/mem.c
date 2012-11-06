@@ -183,7 +183,7 @@ void  Mem_Set24 (MEM_24      *p_mem,
             }
 #endif
 
-            CORE_TRACE_DEBUG("\r\nMemSet @%004x <= %004x",addr, val);
+            CORE_TRACE_DEBUG(("\r\nMemSet @%004x <= %004x",addr, val));
 
             mem_loc_found = DEF_YES;
             break;
@@ -229,7 +229,7 @@ void  Mem_Set   (MEM         *p_mem,
             p_mem_current->Ptr[(addr - p_mem_hdr->Start) / 2] &=  ~(write_mask);
             p_mem_current->Ptr[(addr - p_mem_hdr->Start) / 2] |=   (write_mask & val);
 
-            CORE_TRACE_DEBUG("\r\nMemSet @%004x <= %004x",addr, val);
+            CORE_TRACE_DEBUG(("\r\nMemSet @%004x <= %004x",addr, val));
 
             mem_loc_found = DEF_YES;
             break;

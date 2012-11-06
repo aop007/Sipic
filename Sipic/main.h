@@ -17,14 +17,8 @@ extern "C" {
 #include <coff_parser.h>
 #include <coff_cfg.h>
 #elif  (SIPIC_CFG_PARSE_METHOD == SIPIC_PARSE_METHOD_HEX)
-#include <hex_parser.h>
-#include <hex_cfg.h>
-#endif
-    
-#ifdef   __DLL__
-#define  DLL_API __declspec(dllexport)
-#else
-#define  DLL_API    
+#include "hex_parser.h"
+#include "hex_cfg.h"
 #endif
 
 #define CORE_TRACE_LEVEL 0
@@ -45,9 +39,13 @@ SIM  sim_struct;
 PERI_ERR    peri_static_err;
 CORE_ERR    core_static_err;
 
+#if 0
 int  main (int argc, const char * argv[]);
-void DLL_API init (void);
-void DLL_API run  (void);
+#endif
+    
+//void DLL_API C_STD_CALL init (void);
+void init_sipic(void);
+void DLL_API C_STD_CALL run  (void);
 
 #ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
 }

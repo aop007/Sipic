@@ -1,0 +1,468 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		690D63B21648A9EC008CB35B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 690D63B11648A9EC008CB35B /* Cocoa.framework */; };
+		690D63BC1648A9EC008CB35B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 690D63BA1648A9EC008CB35B /* InfoPlist.strings */; };
+		690D63BE1648A9EC008CB35B /* start_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 690D63BD1648A9EC008CB35B /* start_main.m */; };
+		690D63C21648A9EC008CB35B /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 690D63C01648A9EC008CB35B /* Credits.rtf */; };
+		690D642F1648AA43008CB35B /* Sipic in Resources */ = {isa = PBXBuildFile; fileRef = 690D64061648AA43008CB35B /* Sipic */; };
+		690D64741648D038008CB35B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 690D64401648D037008CB35B /* AppDelegate.m */; };
+		690D64861648D038008CB35B /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 690D645E1648D037008CB35B /* MainMenu.xib */; };
+		690D64871648D038008CB35B /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 690D645F1648D037008CB35B /* MainWindow.xib */; };
+		690D648C1648D038008CB35B /* SimulationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 690D646A1648D038008CB35B /* SimulationController.m */; };
+		690D64911648D038008CB35B /* WindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 690D64721648D038008CB35B /* WindowController.m */; };
+		690D64921648D038008CB35B /* WindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 690D64731648D038008CB35B /* WindowController.xib */; };
+		690D64B01648D0F9008CB35B /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D64941648D0F9008CB35B /* main.c */; };
+		690D64B11648D0F9008CB35B /* sim.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D64971648D0F9008CB35B /* sim.c */; };
+		690D64B21648D0FA008CB35B /* core_24f_opcode.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D649B1648D0F9008CB35B /* core_24f_opcode.c */; };
+		690D64B31648D0FA008CB35B /* core_24f.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D649D1648D0F9008CB35B /* core_24f.c */; };
+		690D64B41648D0FA008CB35B /* cpu.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D649F1648D0F9008CB35B /* cpu.c */; };
+		690D64B51648D0FA008CB35B /* hex_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D64A41648D0F9008CB35B /* hex_parser.c */; };
+		690D64B61648D0FA008CB35B /* mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D64A81648D0F9008CB35B /* mem.c */; };
+		690D64B71648D0FA008CB35B /* peri_isr.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D64AA1648D0F9008CB35B /* peri_isr.c */; };
+		690D64B81648D0FA008CB35B /* peripheral.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D64AB1648D0F9008CB35B /* peripheral.c */; };
+		690D64B91648D0FA008CB35B /* coff_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D64AE1648D0F9008CB35B /* coff_parser.c */; };
+		690D64BA1648D0FA008CB35B /* ascii.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D64AF1648D0F9008CB35B /* ascii.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		690D63AD1648A9EC008CB35B /* SipicUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SipicUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		690D63B11648A9EC008CB35B /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		690D63B41648A9EC008CB35B /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		690D63B51648A9EC008CB35B /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		690D63B61648A9EC008CB35B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		690D63B91648A9EC008CB35B /* SipicUI-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SipicUI-Info.plist"; sourceTree = "<group>"; };
+		690D63BB1648A9EC008CB35B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		690D63BD1648A9EC008CB35B /* start_main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = start_main.m; sourceTree = "<group>"; };
+		690D63BF1648A9EC008CB35B /* SipicUI-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SipicUI-Prefix.pch"; sourceTree = "<group>"; };
+		690D63C11648A9EC008CB35B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		690D64061648AA43008CB35B /* Sipic */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; name = Sipic; path = "/Users/aop007/Library/Developer/Xcode/DerivedData/Sipic-bkdytcqsvwxwaqhkqjyhctvuzpny/Build/Products/Debug/Sipic"; sourceTree = "<absolute>"; };
+		690D643F1648D037008CB35B /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		690D64401648D037008CB35B /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		690D645E1648D037008CB35B /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
+		690D645F1648D037008CB35B /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
+		690D64691648D038008CB35B /* SimulationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimulationController.h; sourceTree = "<group>"; };
+		690D646A1648D038008CB35B /* SimulationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimulationController.m; sourceTree = "<group>"; };
+		690D64711648D038008CB35B /* WindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
+		690D64721648D038008CB35B /* WindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WindowController.m; sourceTree = "<group>"; };
+		690D64731648D038008CB35B /* WindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WindowController.xib; sourceTree = "<group>"; };
+		690D64941648D0F9008CB35B /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main.c; path = ../Sipic/main.c; sourceTree = "<group>"; };
+		690D64951648D0F9008CB35B /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = main.h; path = ../Sipic/main.h; sourceTree = "<group>"; };
+		690D64961648D0F9008CB35B /* sim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sim.h; path = ../Sipic/sim.h; sourceTree = "<group>"; };
+		690D64971648D0F9008CB35B /* sim.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sim.c; path = ../Sipic/sim.c; sourceTree = "<group>"; };
+		690D64981648D0F9008CB35B /* ascii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ascii.h; path = ../Sipic/ascii.h; sourceTree = "<group>"; };
+		690D64991648D0F9008CB35B /* coff_cfg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = coff_cfg.h; path = ../Sipic/coff_cfg.h; sourceTree = "<group>"; };
+		690D649A1648D0F9008CB35B /* coff_parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = coff_parser.h; path = ../Sipic/coff_parser.h; sourceTree = "<group>"; };
+		690D649B1648D0F9008CB35B /* core_24f_opcode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = core_24f_opcode.c; path = ../Sipic/core_24f_opcode.c; sourceTree = "<group>"; };
+		690D649C1648D0F9008CB35B /* core_24f_opcode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = core_24f_opcode.h; path = ../Sipic/core_24f_opcode.h; sourceTree = "<group>"; };
+		690D649D1648D0F9008CB35B /* core_24f.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = core_24f.c; path = ../Sipic/core_24f.c; sourceTree = "<group>"; };
+		690D649E1648D0F9008CB35B /* core_24f.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = core_24f.h; path = ../Sipic/core_24f.h; sourceTree = "<group>"; };
+		690D649F1648D0F9008CB35B /* cpu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = cpu.c; path = ../Sipic/cpu.c; sourceTree = "<group>"; };
+		690D64A01648D0F9008CB35B /* cpu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cpu.h; path = ../Sipic/cpu.h; sourceTree = "<group>"; };
+		690D64A11648D0F9008CB35B /* err.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = err.h; path = ../Sipic/err.h; sourceTree = "<group>"; };
+		690D64A21648D0F9008CB35B /* hardware.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = hardware.h; path = ../Sipic/hardware.h; sourceTree = "<group>"; };
+		690D64A31648D0F9008CB35B /* hex_cfg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = hex_cfg.h; path = ../Sipic/hex_cfg.h; sourceTree = "<group>"; };
+		690D64A41648D0F9008CB35B /* hex_parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = hex_parser.c; path = ../Sipic/hex_parser.c; sourceTree = "<group>"; };
+		690D64A51648D0F9008CB35B /* hex_parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = hex_parser.h; path = ../Sipic/hex_parser.h; sourceTree = "<group>"; };
+		690D64A61648D0F9008CB35B /* mem_cfg_24f3011.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mem_cfg_24f3011.h; path = ../Sipic/mem_cfg_24f3011.h; sourceTree = "<group>"; };
+		690D64A71648D0F9008CB35B /* mem_cfg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mem_cfg.h; path = ../Sipic/mem_cfg.h; sourceTree = "<group>"; };
+		690D64A81648D0F9008CB35B /* mem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mem.c; path = ../Sipic/mem.c; sourceTree = "<group>"; };
+		690D64A91648D0F9008CB35B /* mem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mem.h; path = ../Sipic/mem.h; sourceTree = "<group>"; };
+		690D64AA1648D0F9008CB35B /* peri_isr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = peri_isr.c; path = ../Sipic/peri_isr.c; sourceTree = "<group>"; };
+		690D64AB1648D0F9008CB35B /* peripheral.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = peripheral.c; path = ../Sipic/peripheral.c; sourceTree = "<group>"; };
+		690D64AC1648D0F9008CB35B /* peripheral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = peripheral.h; path = ../Sipic/peripheral.h; sourceTree = "<group>"; };
+		690D64AD1648D0F9008CB35B /* sipic_cfg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sipic_cfg.h; path = ../Sipic/sipic_cfg.h; sourceTree = "<group>"; };
+		690D64AE1648D0F9008CB35B /* coff_parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = coff_parser.c; path = ../Sipic/coff_parser.c; sourceTree = "<group>"; };
+		690D64AF1648D0F9008CB35B /* ascii.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ascii.c; path = ../Sipic/ascii.c; sourceTree = "<group>"; };
+		690D64BC1648D105008CB35B /* main.cof */ = {isa = PBXFileReference; lastKnownFileType = file; path = main.cof; sourceTree = "<group>"; };
+		690D64BD1648D105008CB35B /* main.err */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.err; sourceTree = "<group>"; };
+		690D64BE1648D105008CB35B /* main.esym */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.esym; sourceTree = "<group>"; };
+		690D64BF1648D105008CB35B /* main.exe */ = {isa = PBXFileReference; lastKnownFileType = file; path = main.exe; sourceTree = "<group>"; };
+		690D64C01648D105008CB35B /* main.hex */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.hex; sourceTree = "<group>"; };
+		690D64C11648D105008CB35B /* main.lst */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.lst; sourceTree = "<group>"; };
+		690D64C21648D105008CB35B /* main.sta */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.sta; sourceTree = "<group>"; };
+		690D64C31648D105008CB35B /* main.sym */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.sym; sourceTree = "<group>"; };
+		690D64C41648D105008CB35B /* main.tre */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.tre; sourceTree = "<group>"; };
+		690D64C51648D105008CB35B /* main.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.txt; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		690D63AA1648A9EC008CB35B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				690D63B21648A9EC008CB35B /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		690D63A21648A9EC008CB35B = {
+			isa = PBXGroup;
+			children = (
+				690D64931648D0E5008CB35B /* Core */,
+				690D64071648AA43008CB35B /* Products */,
+				690D63B71648A9EC008CB35B /* SipicUI */,
+				690D63B01648A9EC008CB35B /* Frameworks */,
+				690D63AE1648A9EC008CB35B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		690D63AE1648A9EC008CB35B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				690D63AD1648A9EC008CB35B /* SipicUI.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		690D63B01648A9EC008CB35B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				690D63B11648A9EC008CB35B /* Cocoa.framework */,
+				690D63B31648A9EC008CB35B /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		690D63B31648A9EC008CB35B /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				690D63B41648A9EC008CB35B /* AppKit.framework */,
+				690D63B51648A9EC008CB35B /* CoreData.framework */,
+				690D63B61648A9EC008CB35B /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		690D63B71648A9EC008CB35B /* SipicUI */ = {
+			isa = PBXGroup;
+			children = (
+				690D643F1648D037008CB35B /* AppDelegate.h */,
+				690D64401648D037008CB35B /* AppDelegate.m */,
+				690D645E1648D037008CB35B /* MainMenu.xib */,
+				690D645F1648D037008CB35B /* MainWindow.xib */,
+				690D64691648D038008CB35B /* SimulationController.h */,
+				690D646A1648D038008CB35B /* SimulationController.m */,
+				690D64711648D038008CB35B /* WindowController.h */,
+				690D64721648D038008CB35B /* WindowController.m */,
+				690D64731648D038008CB35B /* WindowController.xib */,
+				690D63B81648A9EC008CB35B /* Supporting Files */,
+			);
+			path = SipicUI;
+			sourceTree = "<group>";
+		};
+		690D63B81648A9EC008CB35B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				690D63B91648A9EC008CB35B /* SipicUI-Info.plist */,
+				690D63BA1648A9EC008CB35B /* InfoPlist.strings */,
+				690D63BD1648A9EC008CB35B /* start_main.m */,
+				690D63BF1648A9EC008CB35B /* SipicUI-Prefix.pch */,
+				690D63C01648A9EC008CB35B /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		690D64071648AA43008CB35B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				690D64061648AA43008CB35B /* Sipic */,
+			);
+			name = Products;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		690D64931648D0E5008CB35B /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				690D64BB1648D105008CB35B /* InputFiles */,
+				690D64941648D0F9008CB35B /* main.c */,
+				690D64951648D0F9008CB35B /* main.h */,
+				690D64961648D0F9008CB35B /* sim.h */,
+				690D64971648D0F9008CB35B /* sim.c */,
+				690D64981648D0F9008CB35B /* ascii.h */,
+				690D64991648D0F9008CB35B /* coff_cfg.h */,
+				690D649A1648D0F9008CB35B /* coff_parser.h */,
+				690D649B1648D0F9008CB35B /* core_24f_opcode.c */,
+				690D649C1648D0F9008CB35B /* core_24f_opcode.h */,
+				690D649D1648D0F9008CB35B /* core_24f.c */,
+				690D649E1648D0F9008CB35B /* core_24f.h */,
+				690D649F1648D0F9008CB35B /* cpu.c */,
+				690D64A01648D0F9008CB35B /* cpu.h */,
+				690D64A11648D0F9008CB35B /* err.h */,
+				690D64A21648D0F9008CB35B /* hardware.h */,
+				690D64A31648D0F9008CB35B /* hex_cfg.h */,
+				690D64A41648D0F9008CB35B /* hex_parser.c */,
+				690D64A51648D0F9008CB35B /* hex_parser.h */,
+				690D64A61648D0F9008CB35B /* mem_cfg_24f3011.h */,
+				690D64A71648D0F9008CB35B /* mem_cfg.h */,
+				690D64A81648D0F9008CB35B /* mem.c */,
+				690D64A91648D0F9008CB35B /* mem.h */,
+				690D64AA1648D0F9008CB35B /* peri_isr.c */,
+				690D64AB1648D0F9008CB35B /* peripheral.c */,
+				690D64AC1648D0F9008CB35B /* peripheral.h */,
+				690D64AD1648D0F9008CB35B /* sipic_cfg.h */,
+				690D64AE1648D0F9008CB35B /* coff_parser.c */,
+				690D64AF1648D0F9008CB35B /* ascii.c */,
+			);
+			name = Core;
+			sourceTree = "<group>";
+		};
+		690D64BB1648D105008CB35B /* InputFiles */ = {
+			isa = PBXGroup;
+			children = (
+				690D64BC1648D105008CB35B /* main.cof */,
+				690D64BD1648D105008CB35B /* main.err */,
+				690D64BE1648D105008CB35B /* main.esym */,
+				690D64BF1648D105008CB35B /* main.exe */,
+				690D64C01648D105008CB35B /* main.hex */,
+				690D64C11648D105008CB35B /* main.lst */,
+				690D64C21648D105008CB35B /* main.sta */,
+				690D64C31648D105008CB35B /* main.sym */,
+				690D64C41648D105008CB35B /* main.tre */,
+				690D64C51648D105008CB35B /* main.txt */,
+			);
+			name = InputFiles;
+			path = ../Sipic/InputFiles;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		690D63AC1648A9EC008CB35B /* SipicUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 690D63CB1648A9EC008CB35B /* Build configuration list for PBXNativeTarget "SipicUI" */;
+			buildPhases = (
+				690D63A91648A9EC008CB35B /* Sources */,
+				690D63AA1648A9EC008CB35B /* Frameworks */,
+				690D63AB1648A9EC008CB35B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SipicUI;
+			productName = SipicUI;
+			productReference = 690D63AD1648A9EC008CB35B /* SipicUI.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		690D63A41648A9EC008CB35B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+				ORGANIZATIONNAME = "Alexis Ouellet-Patenaude";
+			};
+			buildConfigurationList = 690D63A71648A9EC008CB35B /* Build configuration list for PBXProject "SipicUI" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 690D63A21648A9EC008CB35B;
+			productRefGroup = 690D63AE1648A9EC008CB35B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				690D63AC1648A9EC008CB35B /* SipicUI */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		690D63AB1648A9EC008CB35B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				690D63BC1648A9EC008CB35B /* InfoPlist.strings in Resources */,
+				690D63C21648A9EC008CB35B /* Credits.rtf in Resources */,
+				690D642F1648AA43008CB35B /* Sipic in Resources */,
+				690D64861648D038008CB35B /* MainMenu.xib in Resources */,
+				690D64871648D038008CB35B /* MainWindow.xib in Resources */,
+				690D64921648D038008CB35B /* WindowController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		690D63A91648A9EC008CB35B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				690D63BE1648A9EC008CB35B /* start_main.m in Sources */,
+				690D64741648D038008CB35B /* AppDelegate.m in Sources */,
+				690D648C1648D038008CB35B /* SimulationController.m in Sources */,
+				690D64911648D038008CB35B /* WindowController.m in Sources */,
+				690D64B01648D0F9008CB35B /* main.c in Sources */,
+				690D64B11648D0F9008CB35B /* sim.c in Sources */,
+				690D64B21648D0FA008CB35B /* core_24f_opcode.c in Sources */,
+				690D64B31648D0FA008CB35B /* core_24f.c in Sources */,
+				690D64B41648D0FA008CB35B /* cpu.c in Sources */,
+				690D64B51648D0FA008CB35B /* hex_parser.c in Sources */,
+				690D64B61648D0FA008CB35B /* mem.c in Sources */,
+				690D64B71648D0FA008CB35B /* peri_isr.c in Sources */,
+				690D64B81648D0FA008CB35B /* peripheral.c in Sources */,
+				690D64B91648D0FA008CB35B /* coff_parser.c in Sources */,
+				690D64BA1648D0FA008CB35B /* ascii.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		690D63BA1648A9EC008CB35B /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				690D63BB1648A9EC008CB35B /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		690D63C01648A9EC008CB35B /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				690D63C11648A9EC008CB35B /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		690D63C91648A9EC008CB35B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					OBJ_C,
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"../../Sipic/**",
+					"./**",
+					"../**",
+					"Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/**",
+				);
+				LD_RUNPATH_SEARCH_PATHS = "\"../../Sipic\" \"..\" \".\" Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				PUBLIC_HEADERS_FOLDER_PATH = Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/;
+				SDKROOT = macosx;
+				"USER_HEADER_SEARCH_PATHS[arch=*]" = "../../Sipic/** ./** ../../../../** ../** Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/**";
+			};
+			name = Debug;
+		};
+		690D63CA1648A9EC008CB35B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"../../Sipic/**",
+					"./**",
+					"../**",
+					"Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/**",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PUBLIC_HEADERS_FOLDER_PATH = Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		690D63CC1648A9EC008CB35B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "SipicUI/SipicUI-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"./**",
+					"../**",
+					"../../Sipic/**",
+				);
+				INFOPLIST_FILE = "SipicUI/SipicUI-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "./** ../** ../../Sipic/**";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		690D63CD1648A9EC008CB35B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "SipicUI/SipicUI-Prefix.pch";
+				INFOPLIST_FILE = "SipicUI/SipicUI-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		690D63A71648A9EC008CB35B /* Build configuration list for PBXProject "SipicUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				690D63C91648A9EC008CB35B /* Debug */,
+				690D63CA1648A9EC008CB35B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		690D63CB1648A9EC008CB35B /* Build configuration list for PBXNativeTarget "SipicUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				690D63CC1648A9EC008CB35B /* Debug */,
+				690D63CD1648A9EC008CB35B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 690D63A41648A9EC008CB35B /* Project object */;
+}
