@@ -9,48 +9,28 @@
 /* Begin PBXBuildFile section */
 		690D63B21648A9EC008CB35B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 690D63B11648A9EC008CB35B /* Cocoa.framework */; };
 		690D63BC1648A9EC008CB35B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 690D63BA1648A9EC008CB35B /* InfoPlist.strings */; };
-		690D63BE1648A9EC008CB35B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 690D63BD1648A9EC008CB35B /* main.m */; };
+		690D63BE1648A9EC008CB35B /* start_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 690D63BD1648A9EC008CB35B /* start_main.m */; };
 		690D63C21648A9EC008CB35B /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 690D63C01648A9EC008CB35B /* Credits.rtf */; };
-		690D64081648AA43008CB35B /* main.txt in Resources */ = {isa = PBXBuildFile; fileRef = 690D63D41648AA43008CB35B /* main.txt */; };
-		690D64091648AA43008CB35B /* main.cof in Resources */ = {isa = PBXBuildFile; fileRef = 690D63D51648AA43008CB35B /* main.cof */; };
-		690D640A1648AA43008CB35B /* main.err in Resources */ = {isa = PBXBuildFile; fileRef = 690D63D61648AA43008CB35B /* main.err */; };
-		690D640B1648AA43008CB35B /* main.esym in Resources */ = {isa = PBXBuildFile; fileRef = 690D63D71648AA43008CB35B /* main.esym */; };
-		690D640C1648AA43008CB35B /* main.exe in Resources */ = {isa = PBXBuildFile; fileRef = 690D63D81648AA43008CB35B /* main.exe */; };
-		690D640D1648AA43008CB35B /* main.hex in Resources */ = {isa = PBXBuildFile; fileRef = 690D63D91648AA43008CB35B /* main.hex */; };
-		690D640E1648AA43008CB35B /* main.lst in Resources */ = {isa = PBXBuildFile; fileRef = 690D63DA1648AA43008CB35B /* main.lst */; };
-		690D640F1648AA43008CB35B /* main.sta in Resources */ = {isa = PBXBuildFile; fileRef = 690D63DB1648AA43008CB35B /* main.sta */; };
-		690D64101648AA43008CB35B /* main.sym in Resources */ = {isa = PBXBuildFile; fileRef = 690D63DC1648AA43008CB35B /* main.sym */; };
-		690D64111648AA43008CB35B /* main.tre in Resources */ = {isa = PBXBuildFile; fileRef = 690D63DD1648AA43008CB35B /* main.tre */; };
-		690D64121648AA43008CB35B /* hardware.h in Resources */ = {isa = PBXBuildFile; fileRef = 690D63DF1648AA43008CB35B /* hardware.h */; };
-		690D64131648AA43008CB35B /* sim.h in Resources */ = {isa = PBXBuildFile; fileRef = 690D63E11648AA43008CB35B /* sim.h */; };
-		690D64141648AA43008CB35B /* sim.c in Resources */ = {isa = PBXBuildFile; fileRef = 690D63E21648AA43008CB35B /* sim.c */; };
-		690D64151648AA43008CB35B /* peripheral.h in Resources */ = {isa = PBXBuildFile; fileRef = 690D63E41648AA43008CB35B /* peripheral.h */; };
-		690D64161648AA43008CB35B /* peripheral.c in Resources */ = {isa = PBXBuildFile; fileRef = 690D63E51648AA43008CB35B /* peripheral.c */; };
-		690D64171648AA43008CB35B /* peri_isr.c in Resources */ = {isa = PBXBuildFile; fileRef = 690D63E61648AA43008CB35B /* peri_isr.c */; };
-		690D64181648AA43008CB35B /* core_24f.c in Resources */ = {isa = PBXBuildFile; fileRef = 690D63E81648AA43008CB35B /* core_24f.c */; };
-		690D64191648AA43008CB35B /* core_24f.h in Resources */ = {isa = PBXBuildFile; fileRef = 690D63E91648AA43008CB35B /* core_24f.h */; };
-		690D641A1648AA43008CB35B /* core_24f_opcode.c in Resources */ = {isa = PBXBuildFile; fileRef = 690D63EA1648AA43008CB35B /* core_24f_opcode.c */; };
-		690D641B1648AA43008CB35B /* core_24f_opcode.h in Resources */ = {isa = PBXBuildFile; fileRef = 690D63EB1648AA43008CB35B /* core_24f_opcode.h */; };
-		690D641C1648AA43008CB35B /* mem.c in Resources */ = {isa = PBXBuildFile; fileRef = 690D63ED1648AA43008CB35B /* mem.c */; };
-		690D641D1648AA43008CB35B /* mem.h in Resources */ = {isa = PBXBuildFile; fileRef = 690D63EE1648AA43008CB35B /* mem.h */; };
-		690D641E1648AA43008CB35B /* mem_cfg.h in Resources */ = {isa = PBXBuildFile; fileRef = 690D63EF1648AA43008CB35B /* mem_cfg.h */; };
-		690D641F1648AA43008CB35B /* ascii.h in Resources */ = {isa = PBXBuildFile; fileRef = 690D63F11648AA43008CB35B /* ascii.h */; };
-		690D64201648AA43008CB35B /* ascii.c in Resources */ = {isa = PBXBuildFile; fileRef = 690D63F21648AA43008CB35B /* ascii.c */; };
-		690D64211648AA43008CB35B /* coff_parser.c in Resources */ = {isa = PBXBuildFile; fileRef = 690D63F41648AA43008CB35B /* coff_parser.c */; };
-		690D64221648AA43008CB35B /* coff_parser.h in Resources */ = {isa = PBXBuildFile; fileRef = 690D63F51648AA43008CB35B /* coff_parser.h */; };
-		690D64231648AA43008CB35B /* coff_cfg.h in Resources */ = {isa = PBXBuildFile; fileRef = 690D63F61648AA43008CB35B /* coff_cfg.h */; };
-		690D64241648AA43008CB35B /* cpu.h in Resources */ = {isa = PBXBuildFile; fileRef = 690D63F81648AA43008CB35B /* cpu.h */; };
-		690D64251648AA43008CB35B /* cpu.c in Resources */ = {isa = PBXBuildFile; fileRef = 690D63F91648AA43008CB35B /* cpu.c */; };
-		690D64261648AA43008CB35B /* hex_parser.c in Resources */ = {isa = PBXBuildFile; fileRef = 690D63FB1648AA43008CB35B /* hex_parser.c */; };
-		690D64271648AA43008CB35B /* hex_parser.h in Resources */ = {isa = PBXBuildFile; fileRef = 690D63FC1648AA43008CB35B /* hex_parser.h */; };
-		690D64281648AA43008CB35B /* hex_cfg.h in Resources */ = {isa = PBXBuildFile; fileRef = 690D63FD1648AA43008CB35B /* hex_cfg.h */; };
-		690D64291648AA43008CB35B /* main.c in Resources */ = {isa = PBXBuildFile; fileRef = 690D63FF1648AA43008CB35B /* main.c */; };
-		690D642A1648AA43008CB35B /* main.h in Resources */ = {isa = PBXBuildFile; fileRef = 690D64001648AA43008CB35B /* main.h */; };
-		690D642B1648AA43008CB35B /* sipic_cfg.h in Resources */ = {isa = PBXBuildFile; fileRef = 690D64011648AA43008CB35B /* sipic_cfg.h */; };
-		690D642C1648AA43008CB35B /* err.h in Resources */ = {isa = PBXBuildFile; fileRef = 690D64021648AA43008CB35B /* err.h */; };
-		690D642D1648AA43008CB35B /* mem_cfg_24f3011.h in Resources */ = {isa = PBXBuildFile; fileRef = 690D64031648AA43008CB35B /* mem_cfg_24f3011.h */; };
-		690D642E1648AA43008CB35B /* snippets.txt in Resources */ = {isa = PBXBuildFile; fileRef = 690D64041648AA43008CB35B /* snippets.txt */; };
 		690D642F1648AA43008CB35B /* Sipic in Resources */ = {isa = PBXBuildFile; fileRef = 690D64061648AA43008CB35B /* Sipic */; };
+		690D64741648D038008CB35B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 690D64401648D037008CB35B /* AppDelegate.m */; };
+		690D64861648D038008CB35B /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 690D645E1648D037008CB35B /* MainMenu.xib */; };
+		690D64871648D038008CB35B /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 690D645F1648D037008CB35B /* MainWindow.xib */; };
+		690D648C1648D038008CB35B /* SimulationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 690D646A1648D038008CB35B /* SimulationController.m */; };
+		690D648E1648D038008CB35B /* SipicUI-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 690D646D1648D038008CB35B /* SipicUI-Info.plist */; };
+		690D64901648D038008CB35B /* start_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 690D64701648D038008CB35B /* start_main.m */; };
+		690D64911648D038008CB35B /* WindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 690D64721648D038008CB35B /* WindowController.m */; };
+		690D64921648D038008CB35B /* WindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 690D64731648D038008CB35B /* WindowController.xib */; };
+		690D64B01648D0F9008CB35B /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D64941648D0F9008CB35B /* main.c */; };
+		690D64B11648D0F9008CB35B /* sim.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D64971648D0F9008CB35B /* sim.c */; };
+		690D64B21648D0FA008CB35B /* core_24f_opcode.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D649B1648D0F9008CB35B /* core_24f_opcode.c */; };
+		690D64B31648D0FA008CB35B /* core_24f.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D649D1648D0F9008CB35B /* core_24f.c */; };
+		690D64B41648D0FA008CB35B /* cpu.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D649F1648D0F9008CB35B /* cpu.c */; };
+		690D64B51648D0FA008CB35B /* hex_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D64A41648D0F9008CB35B /* hex_parser.c */; };
+		690D64B61648D0FA008CB35B /* mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D64A81648D0F9008CB35B /* mem.c */; };
+		690D64B71648D0FA008CB35B /* peri_isr.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D64AA1648D0F9008CB35B /* peri_isr.c */; };
+		690D64B81648D0FA008CB35B /* peripheral.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D64AB1648D0F9008CB35B /* peripheral.c */; };
+		690D64B91648D0FA008CB35B /* coff_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D64AE1648D0F9008CB35B /* coff_parser.c */; };
+		690D64BA1648D0FA008CB35B /* ascii.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D64AF1648D0F9008CB35B /* ascii.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,52 +41,60 @@
 		690D63B61648A9EC008CB35B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		690D63B91648A9EC008CB35B /* SipicUI-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SipicUI-Info.plist"; sourceTree = "<group>"; };
 		690D63BB1648A9EC008CB35B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		690D63BD1648A9EC008CB35B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		690D63BD1648A9EC008CB35B /* start_main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = start_main.m; sourceTree = "<group>"; };
 		690D63BF1648A9EC008CB35B /* SipicUI-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SipicUI-Prefix.pch"; sourceTree = "<group>"; };
 		690D63C11648A9EC008CB35B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
-		690D63D41648AA43008CB35B /* main.txt */ = {isa = PBXFileReference; lastKnownFileType = file; name = main.txt; path = InputFiles/main.txt; sourceTree = "<group>"; };
-		690D63D51648AA43008CB35B /* main.cof */ = {isa = PBXFileReference; lastKnownFileType = file; name = main.cof; path = InputFiles/main.cof; sourceTree = "<group>"; };
-		690D63D61648AA43008CB35B /* main.err */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; name = main.err; path = InputFiles/main.err; sourceTree = "<group>"; };
-		690D63D71648AA43008CB35B /* main.esym */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; name = main.esym; path = InputFiles/main.esym; sourceTree = "<group>"; };
-		690D63D81648AA43008CB35B /* main.exe */ = {isa = PBXFileReference; lastKnownFileType = file; name = main.exe; path = InputFiles/main.exe; sourceTree = "<group>"; };
-		690D63D91648AA43008CB35B /* main.hex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; name = main.hex; path = InputFiles/main.hex; sourceTree = "<group>"; };
-		690D63DA1648AA43008CB35B /* main.lst */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; name = main.lst; path = InputFiles/main.lst; sourceTree = "<group>"; };
-		690D63DB1648AA43008CB35B /* main.sta */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; name = main.sta; path = InputFiles/main.sta; sourceTree = "<group>"; };
-		690D63DC1648AA43008CB35B /* main.sym */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; name = main.sym; path = InputFiles/main.sym; sourceTree = "<group>"; };
-		690D63DD1648AA43008CB35B /* main.tre */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; name = main.tre; path = InputFiles/main.tre; sourceTree = "<group>"; };
-		690D63DF1648AA43008CB35B /* hardware.h */ = {isa = PBXFileReference; lastKnownFileType = file; path = hardware.h; sourceTree = "<group>"; };
-		690D63E11648AA43008CB35B /* sim.h */ = {isa = PBXFileReference; lastKnownFileType = file; path = sim.h; sourceTree = "<group>"; };
-		690D63E21648AA43008CB35B /* sim.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; path = sim.c; sourceTree = "<group>"; };
-		690D63E41648AA43008CB35B /* peripheral.h */ = {isa = PBXFileReference; lastKnownFileType = file; path = peripheral.h; sourceTree = "<group>"; };
-		690D63E51648AA43008CB35B /* peripheral.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; path = peripheral.c; sourceTree = "<group>"; };
-		690D63E61648AA43008CB35B /* peri_isr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; path = peri_isr.c; sourceTree = "<group>"; };
-		690D63E81648AA43008CB35B /* core_24f.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; path = core_24f.c; sourceTree = "<group>"; };
-		690D63E91648AA43008CB35B /* core_24f.h */ = {isa = PBXFileReference; lastKnownFileType = file; path = core_24f.h; sourceTree = "<group>"; };
-		690D63EA1648AA43008CB35B /* core_24f_opcode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; path = core_24f_opcode.c; sourceTree = "<group>"; };
-		690D63EB1648AA43008CB35B /* core_24f_opcode.h */ = {isa = PBXFileReference; lastKnownFileType = file; path = core_24f_opcode.h; sourceTree = "<group>"; };
-		690D63ED1648AA43008CB35B /* mem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; path = mem.c; sourceTree = "<group>"; };
-		690D63EE1648AA43008CB35B /* mem.h */ = {isa = PBXFileReference; lastKnownFileType = file; path = mem.h; sourceTree = "<group>"; };
-		690D63EF1648AA43008CB35B /* mem_cfg.h */ = {isa = PBXFileReference; lastKnownFileType = file; path = mem_cfg.h; sourceTree = "<group>"; };
-		690D63F11648AA43008CB35B /* ascii.h */ = {isa = PBXFileReference; lastKnownFileType = file; path = ascii.h; sourceTree = "<group>"; };
-		690D63F21648AA43008CB35B /* ascii.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; path = ascii.c; sourceTree = "<group>"; };
-		690D63F41648AA43008CB35B /* coff_parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; path = coff_parser.c; sourceTree = "<group>"; };
-		690D63F51648AA43008CB35B /* coff_parser.h */ = {isa = PBXFileReference; lastKnownFileType = file; path = coff_parser.h; sourceTree = "<group>"; };
-		690D63F61648AA43008CB35B /* coff_cfg.h */ = {isa = PBXFileReference; lastKnownFileType = file; path = coff_cfg.h; sourceTree = "<group>"; };
-		690D63F81648AA43008CB35B /* cpu.h */ = {isa = PBXFileReference; lastKnownFileType = file; path = cpu.h; sourceTree = "<group>"; };
-		690D63F91648AA43008CB35B /* cpu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; path = cpu.c; sourceTree = "<group>"; };
-		690D63FB1648AA43008CB35B /* hex_parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; path = hex_parser.c; sourceTree = "<group>"; };
-		690D63FC1648AA43008CB35B /* hex_parser.h */ = {isa = PBXFileReference; lastKnownFileType = file; path = hex_parser.h; sourceTree = "<group>"; };
-		690D63FD1648AA43008CB35B /* hex_cfg.h */ = {isa = PBXFileReference; lastKnownFileType = file; path = hex_cfg.h; sourceTree = "<group>"; };
-		690D63FF1648AA43008CB35B /* main.c */ = {isa = PBXFileReference; lastKnownFileType = file; path = main.c; sourceTree = "<group>"; };
-		690D64001648AA43008CB35B /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; path = main.h; sourceTree = "<group>"; };
-		690D64011648AA43008CB35B /* sipic_cfg.h */ = {isa = PBXFileReference; lastKnownFileType = file; path = sipic_cfg.h; sourceTree = "<group>"; };
-		690D64021648AA43008CB35B /* err.h */ = {isa = PBXFileReference; lastKnownFileType = file; path = err.h; sourceTree = "<group>"; };
-		690D64031648AA43008CB35B /* mem_cfg_24f3011.h */ = {isa = PBXFileReference; lastKnownFileType = file; path = mem_cfg_24f3011.h; sourceTree = "<group>"; };
-		690D64041648AA43008CB35B /* snippets.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; path = snippets.txt; sourceTree = "<group>"; };
 		690D64061648AA43008CB35B /* Sipic */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; name = Sipic; path = "/Users/aop007/Library/Developer/Xcode/DerivedData/Sipic-bkdytcqsvwxwaqhkqjyhctvuzpny/Build/Products/Debug/Sipic"; sourceTree = "<absolute>"; };
-		690D64301648B4BC008CB35B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../../Sipic/AppDelegate.h; sourceTree = "<group>"; };
-		690D64311648B4BC008CB35B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = ../../Sipic/AppDelegate.m; sourceTree = "<group>"; };
-		690D64321648B4BC008CB35B /* MainMenu.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MainMenu.xib; path = ../../Sipic/MainMenu.xib; sourceTree = "<group>"; };
+		690D643F1648D037008CB35B /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		690D64401648D037008CB35B /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		690D645E1648D037008CB35B /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
+		690D645F1648D037008CB35B /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
+		690D64691648D038008CB35B /* SimulationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimulationController.h; sourceTree = "<group>"; };
+		690D646A1648D038008CB35B /* SimulationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimulationController.m; sourceTree = "<group>"; };
+		690D646D1648D038008CB35B /* SipicUI-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "SipicUI-Info.plist"; sourceTree = "<group>"; };
+		690D646E1648D038008CB35B /* SipicUI-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SipicUI-Prefix.pch"; sourceTree = "<group>"; };
+		690D64701648D038008CB35B /* start_main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = start_main.m; sourceTree = "<group>"; };
+		690D64711648D038008CB35B /* WindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
+		690D64721648D038008CB35B /* WindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WindowController.m; sourceTree = "<group>"; };
+		690D64731648D038008CB35B /* WindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WindowController.xib; sourceTree = "<group>"; };
+		690D64941648D0F9008CB35B /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main.c; path = ../Sipic/main.c; sourceTree = "<group>"; };
+		690D64951648D0F9008CB35B /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = main.h; path = ../Sipic/main.h; sourceTree = "<group>"; };
+		690D64961648D0F9008CB35B /* sim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sim.h; path = ../Sipic/sim.h; sourceTree = "<group>"; };
+		690D64971648D0F9008CB35B /* sim.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sim.c; path = ../Sipic/sim.c; sourceTree = "<group>"; };
+		690D64981648D0F9008CB35B /* ascii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ascii.h; path = ../Sipic/ascii.h; sourceTree = "<group>"; };
+		690D64991648D0F9008CB35B /* coff_cfg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = coff_cfg.h; path = ../Sipic/coff_cfg.h; sourceTree = "<group>"; };
+		690D649A1648D0F9008CB35B /* coff_parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = coff_parser.h; path = ../Sipic/coff_parser.h; sourceTree = "<group>"; };
+		690D649B1648D0F9008CB35B /* core_24f_opcode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = core_24f_opcode.c; path = ../Sipic/core_24f_opcode.c; sourceTree = "<group>"; };
+		690D649C1648D0F9008CB35B /* core_24f_opcode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = core_24f_opcode.h; path = ../Sipic/core_24f_opcode.h; sourceTree = "<group>"; };
+		690D649D1648D0F9008CB35B /* core_24f.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = core_24f.c; path = ../Sipic/core_24f.c; sourceTree = "<group>"; };
+		690D649E1648D0F9008CB35B /* core_24f.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = core_24f.h; path = ../Sipic/core_24f.h; sourceTree = "<group>"; };
+		690D649F1648D0F9008CB35B /* cpu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = cpu.c; path = ../Sipic/cpu.c; sourceTree = "<group>"; };
+		690D64A01648D0F9008CB35B /* cpu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cpu.h; path = ../Sipic/cpu.h; sourceTree = "<group>"; };
+		690D64A11648D0F9008CB35B /* err.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = err.h; path = ../Sipic/err.h; sourceTree = "<group>"; };
+		690D64A21648D0F9008CB35B /* hardware.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = hardware.h; path = ../Sipic/hardware.h; sourceTree = "<group>"; };
+		690D64A31648D0F9008CB35B /* hex_cfg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = hex_cfg.h; path = ../Sipic/hex_cfg.h; sourceTree = "<group>"; };
+		690D64A41648D0F9008CB35B /* hex_parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = hex_parser.c; path = ../Sipic/hex_parser.c; sourceTree = "<group>"; };
+		690D64A51648D0F9008CB35B /* hex_parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = hex_parser.h; path = ../Sipic/hex_parser.h; sourceTree = "<group>"; };
+		690D64A61648D0F9008CB35B /* mem_cfg_24f3011.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mem_cfg_24f3011.h; path = ../Sipic/mem_cfg_24f3011.h; sourceTree = "<group>"; };
+		690D64A71648D0F9008CB35B /* mem_cfg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mem_cfg.h; path = ../Sipic/mem_cfg.h; sourceTree = "<group>"; };
+		690D64A81648D0F9008CB35B /* mem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mem.c; path = ../Sipic/mem.c; sourceTree = "<group>"; };
+		690D64A91648D0F9008CB35B /* mem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mem.h; path = ../Sipic/mem.h; sourceTree = "<group>"; };
+		690D64AA1648D0F9008CB35B /* peri_isr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = peri_isr.c; path = ../Sipic/peri_isr.c; sourceTree = "<group>"; };
+		690D64AB1648D0F9008CB35B /* peripheral.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = peripheral.c; path = ../Sipic/peripheral.c; sourceTree = "<group>"; };
+		690D64AC1648D0F9008CB35B /* peripheral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = peripheral.h; path = ../Sipic/peripheral.h; sourceTree = "<group>"; };
+		690D64AD1648D0F9008CB35B /* sipic_cfg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sipic_cfg.h; path = ../Sipic/sipic_cfg.h; sourceTree = "<group>"; };
+		690D64AE1648D0F9008CB35B /* coff_parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = coff_parser.c; path = ../Sipic/coff_parser.c; sourceTree = "<group>"; };
+		690D64AF1648D0F9008CB35B /* ascii.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ascii.c; path = ../Sipic/ascii.c; sourceTree = "<group>"; };
+		690D64BC1648D105008CB35B /* main.cof */ = {isa = PBXFileReference; lastKnownFileType = file; path = main.cof; sourceTree = "<group>"; };
+		690D64BD1648D105008CB35B /* main.err */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.err; sourceTree = "<group>"; };
+		690D64BE1648D105008CB35B /* main.esym */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.esym; sourceTree = "<group>"; };
+		690D64BF1648D105008CB35B /* main.exe */ = {isa = PBXFileReference; lastKnownFileType = file; path = main.exe; sourceTree = "<group>"; };
+		690D64C01648D105008CB35B /* main.hex */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.hex; sourceTree = "<group>"; };
+		690D64C11648D105008CB35B /* main.lst */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.lst; sourceTree = "<group>"; };
+		690D64C21648D105008CB35B /* main.sta */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.sta; sourceTree = "<group>"; };
+		690D64C31648D105008CB35B /* main.sym */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.sym; sourceTree = "<group>"; };
+		690D64C41648D105008CB35B /* main.tre */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.tre; sourceTree = "<group>"; };
+		690D64C51648D105008CB35B /* main.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,7 +112,7 @@
 		690D63A21648A9EC008CB35B = {
 			isa = PBXGroup;
 			children = (
-				690D64051648AA43008CB35B /* Sipic */,
+				690D64931648D0E5008CB35B /* Core */,
 				690D64071648AA43008CB35B /* Products */,
 				690D63B71648A9EC008CB35B /* SipicUI */,
 				690D63B01648A9EC008CB35B /* Frameworks */,
@@ -162,9 +150,18 @@
 		690D63B71648A9EC008CB35B /* SipicUI */ = {
 			isa = PBXGroup;
 			children = (
-				690D64301648B4BC008CB35B /* AppDelegate.h */,
-				690D64311648B4BC008CB35B /* AppDelegate.m */,
-				690D64321648B4BC008CB35B /* MainMenu.xib */,
+				690D643F1648D037008CB35B /* AppDelegate.h */,
+				690D64401648D037008CB35B /* AppDelegate.m */,
+				690D645E1648D037008CB35B /* MainMenu.xib */,
+				690D645F1648D037008CB35B /* MainWindow.xib */,
+				690D64691648D038008CB35B /* SimulationController.h */,
+				690D646A1648D038008CB35B /* SimulationController.m */,
+				690D646D1648D038008CB35B /* SipicUI-Info.plist */,
+				690D646E1648D038008CB35B /* SipicUI-Prefix.pch */,
+				690D64701648D038008CB35B /* start_main.m */,
+				690D64711648D038008CB35B /* WindowController.h */,
+				690D64721648D038008CB35B /* WindowController.m */,
+				690D64731648D038008CB35B /* WindowController.xib */,
 				690D63B81648A9EC008CB35B /* Supporting Files */,
 			);
 			path = SipicUI;
@@ -175,138 +172,11 @@
 			children = (
 				690D63B91648A9EC008CB35B /* SipicUI-Info.plist */,
 				690D63BA1648A9EC008CB35B /* InfoPlist.strings */,
-				690D63BD1648A9EC008CB35B /* main.m */,
+				690D63BD1648A9EC008CB35B /* start_main.m */,
 				690D63BF1648A9EC008CB35B /* SipicUI-Prefix.pch */,
 				690D63C01648A9EC008CB35B /* Credits.rtf */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		690D63DE1648AA43008CB35B /* Input Files */ = {
-			isa = PBXGroup;
-			children = (
-				690D63D41648AA43008CB35B /* main.txt */,
-				690D63D51648AA43008CB35B /* main.cof */,
-				690D63D61648AA43008CB35B /* main.err */,
-				690D63D71648AA43008CB35B /* main.esym */,
-				690D63D81648AA43008CB35B /* main.exe */,
-				690D63D91648AA43008CB35B /* main.hex */,
-				690D63DA1648AA43008CB35B /* main.lst */,
-				690D63DB1648AA43008CB35B /* main.sta */,
-				690D63DC1648AA43008CB35B /* main.sym */,
-				690D63DD1648AA43008CB35B /* main.tre */,
-			);
-			name = "Input Files";
-			sourceTree = "<group>";
-		};
-		690D63E01648AA43008CB35B /* Hardware */ = {
-			isa = PBXGroup;
-			children = (
-				690D63DF1648AA43008CB35B /* hardware.h */,
-			);
-			name = Hardware;
-			sourceTree = "<group>";
-		};
-		690D63E31648AA43008CB35B /* Simulation */ = {
-			isa = PBXGroup;
-			children = (
-				690D63E11648AA43008CB35B /* sim.h */,
-				690D63E21648AA43008CB35B /* sim.c */,
-			);
-			name = Simulation;
-			sourceTree = "<group>";
-		};
-		690D63E71648AA43008CB35B /* Peripherals */ = {
-			isa = PBXGroup;
-			children = (
-				690D63E41648AA43008CB35B /* peripheral.h */,
-				690D63E51648AA43008CB35B /* peripheral.c */,
-				690D63E61648AA43008CB35B /* peri_isr.c */,
-			);
-			name = Peripherals;
-			sourceTree = "<group>";
-		};
-		690D63EC1648AA43008CB35B /* 24FCore */ = {
-			isa = PBXGroup;
-			children = (
-				690D63E81648AA43008CB35B /* core_24f.c */,
-				690D63E91648AA43008CB35B /* core_24f.h */,
-				690D63EA1648AA43008CB35B /* core_24f_opcode.c */,
-				690D63EB1648AA43008CB35B /* core_24f_opcode.h */,
-			);
-			name = 24FCore;
-			sourceTree = "<group>";
-		};
-		690D63F01648AA43008CB35B /* Mem */ = {
-			isa = PBXGroup;
-			children = (
-				690D63ED1648AA43008CB35B /* mem.c */,
-				690D63EE1648AA43008CB35B /* mem.h */,
-				690D63EF1648AA43008CB35B /* mem_cfg.h */,
-			);
-			name = Mem;
-			sourceTree = "<group>";
-		};
-		690D63F31648AA43008CB35B /* ASCII */ = {
-			isa = PBXGroup;
-			children = (
-				690D63F11648AA43008CB35B /* ascii.h */,
-				690D63F21648AA43008CB35B /* ascii.c */,
-			);
-			name = ASCII;
-			sourceTree = "<group>";
-		};
-		690D63F71648AA43008CB35B /* COFF */ = {
-			isa = PBXGroup;
-			children = (
-				690D63F41648AA43008CB35B /* coff_parser.c */,
-				690D63F51648AA43008CB35B /* coff_parser.h */,
-				690D63F61648AA43008CB35B /* coff_cfg.h */,
-			);
-			name = COFF;
-			sourceTree = "<group>";
-		};
-		690D63FA1648AA43008CB35B /* CPU */ = {
-			isa = PBXGroup;
-			children = (
-				690D63F81648AA43008CB35B /* cpu.h */,
-				690D63F91648AA43008CB35B /* cpu.c */,
-			);
-			name = CPU;
-			sourceTree = "<group>";
-		};
-		690D63FE1648AA43008CB35B /* HEX */ = {
-			isa = PBXGroup;
-			children = (
-				690D63FB1648AA43008CB35B /* hex_parser.c */,
-				690D63FC1648AA43008CB35B /* hex_parser.h */,
-				690D63FD1648AA43008CB35B /* hex_cfg.h */,
-			);
-			name = HEX;
-			sourceTree = "<group>";
-		};
-		690D64051648AA43008CB35B /* Sipic */ = {
-			isa = PBXGroup;
-			children = (
-				690D63DE1648AA43008CB35B /* Input Files */,
-				690D63E01648AA43008CB35B /* Hardware */,
-				690D63E31648AA43008CB35B /* Simulation */,
-				690D63E71648AA43008CB35B /* Peripherals */,
-				690D63EC1648AA43008CB35B /* 24FCore */,
-				690D63F01648AA43008CB35B /* Mem */,
-				690D63F31648AA43008CB35B /* ASCII */,
-				690D63F71648AA43008CB35B /* COFF */,
-				690D63FA1648AA43008CB35B /* CPU */,
-				690D63FE1648AA43008CB35B /* HEX */,
-				690D63FF1648AA43008CB35B /* main.c */,
-				690D64001648AA43008CB35B /* main.h */,
-				690D64011648AA43008CB35B /* sipic_cfg.h */,
-				690D64021648AA43008CB35B /* err.h */,
-				690D64031648AA43008CB35B /* mem_cfg_24f3011.h */,
-				690D64041648AA43008CB35B /* snippets.txt */,
-			);
-			name = Sipic;
-			path = ../Sipic;
 			sourceTree = "<group>";
 		};
 		690D64071648AA43008CB35B /* Products */ = {
@@ -316,6 +186,60 @@
 			);
 			name = Products;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		690D64931648D0E5008CB35B /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				690D64BB1648D105008CB35B /* InputFiles */,
+				690D64941648D0F9008CB35B /* main.c */,
+				690D64951648D0F9008CB35B /* main.h */,
+				690D64961648D0F9008CB35B /* sim.h */,
+				690D64971648D0F9008CB35B /* sim.c */,
+				690D64981648D0F9008CB35B /* ascii.h */,
+				690D64991648D0F9008CB35B /* coff_cfg.h */,
+				690D649A1648D0F9008CB35B /* coff_parser.h */,
+				690D649B1648D0F9008CB35B /* core_24f_opcode.c */,
+				690D649C1648D0F9008CB35B /* core_24f_opcode.h */,
+				690D649D1648D0F9008CB35B /* core_24f.c */,
+				690D649E1648D0F9008CB35B /* core_24f.h */,
+				690D649F1648D0F9008CB35B /* cpu.c */,
+				690D64A01648D0F9008CB35B /* cpu.h */,
+				690D64A11648D0F9008CB35B /* err.h */,
+				690D64A21648D0F9008CB35B /* hardware.h */,
+				690D64A31648D0F9008CB35B /* hex_cfg.h */,
+				690D64A41648D0F9008CB35B /* hex_parser.c */,
+				690D64A51648D0F9008CB35B /* hex_parser.h */,
+				690D64A61648D0F9008CB35B /* mem_cfg_24f3011.h */,
+				690D64A71648D0F9008CB35B /* mem_cfg.h */,
+				690D64A81648D0F9008CB35B /* mem.c */,
+				690D64A91648D0F9008CB35B /* mem.h */,
+				690D64AA1648D0F9008CB35B /* peri_isr.c */,
+				690D64AB1648D0F9008CB35B /* peripheral.c */,
+				690D64AC1648D0F9008CB35B /* peripheral.h */,
+				690D64AD1648D0F9008CB35B /* sipic_cfg.h */,
+				690D64AE1648D0F9008CB35B /* coff_parser.c */,
+				690D64AF1648D0F9008CB35B /* ascii.c */,
+			);
+			name = Core;
+			sourceTree = "<group>";
+		};
+		690D64BB1648D105008CB35B /* InputFiles */ = {
+			isa = PBXGroup;
+			children = (
+				690D64BC1648D105008CB35B /* main.cof */,
+				690D64BD1648D105008CB35B /* main.err */,
+				690D64BE1648D105008CB35B /* main.esym */,
+				690D64BF1648D105008CB35B /* main.exe */,
+				690D64C01648D105008CB35B /* main.hex */,
+				690D64C11648D105008CB35B /* main.lst */,
+				690D64C21648D105008CB35B /* main.sta */,
+				690D64C31648D105008CB35B /* main.sym */,
+				690D64C41648D105008CB35B /* main.tre */,
+				690D64C51648D105008CB35B /* main.txt */,
+			);
+			name = InputFiles;
+			path = ../Sipic/InputFiles;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -371,46 +295,11 @@
 			files = (
 				690D63BC1648A9EC008CB35B /* InfoPlist.strings in Resources */,
 				690D63C21648A9EC008CB35B /* Credits.rtf in Resources */,
-				690D64081648AA43008CB35B /* main.txt in Resources */,
-				690D64091648AA43008CB35B /* main.cof in Resources */,
-				690D640A1648AA43008CB35B /* main.err in Resources */,
-				690D640B1648AA43008CB35B /* main.esym in Resources */,
-				690D640C1648AA43008CB35B /* main.exe in Resources */,
-				690D640D1648AA43008CB35B /* main.hex in Resources */,
-				690D640E1648AA43008CB35B /* main.lst in Resources */,
-				690D640F1648AA43008CB35B /* main.sta in Resources */,
-				690D64101648AA43008CB35B /* main.sym in Resources */,
-				690D64111648AA43008CB35B /* main.tre in Resources */,
-				690D64121648AA43008CB35B /* hardware.h in Resources */,
-				690D64131648AA43008CB35B /* sim.h in Resources */,
-				690D64141648AA43008CB35B /* sim.c in Resources */,
-				690D64151648AA43008CB35B /* peripheral.h in Resources */,
-				690D64161648AA43008CB35B /* peripheral.c in Resources */,
-				690D64171648AA43008CB35B /* peri_isr.c in Resources */,
-				690D64181648AA43008CB35B /* core_24f.c in Resources */,
-				690D64191648AA43008CB35B /* core_24f.h in Resources */,
-				690D641A1648AA43008CB35B /* core_24f_opcode.c in Resources */,
-				690D641B1648AA43008CB35B /* core_24f_opcode.h in Resources */,
-				690D641C1648AA43008CB35B /* mem.c in Resources */,
-				690D641D1648AA43008CB35B /* mem.h in Resources */,
-				690D641E1648AA43008CB35B /* mem_cfg.h in Resources */,
-				690D641F1648AA43008CB35B /* ascii.h in Resources */,
-				690D64201648AA43008CB35B /* ascii.c in Resources */,
-				690D64211648AA43008CB35B /* coff_parser.c in Resources */,
-				690D64221648AA43008CB35B /* coff_parser.h in Resources */,
-				690D64231648AA43008CB35B /* coff_cfg.h in Resources */,
-				690D64241648AA43008CB35B /* cpu.h in Resources */,
-				690D64251648AA43008CB35B /* cpu.c in Resources */,
-				690D64261648AA43008CB35B /* hex_parser.c in Resources */,
-				690D64271648AA43008CB35B /* hex_parser.h in Resources */,
-				690D64281648AA43008CB35B /* hex_cfg.h in Resources */,
-				690D64291648AA43008CB35B /* main.c in Resources */,
-				690D642A1648AA43008CB35B /* main.h in Resources */,
-				690D642B1648AA43008CB35B /* sipic_cfg.h in Resources */,
-				690D642C1648AA43008CB35B /* err.h in Resources */,
-				690D642D1648AA43008CB35B /* mem_cfg_24f3011.h in Resources */,
-				690D642E1648AA43008CB35B /* snippets.txt in Resources */,
 				690D642F1648AA43008CB35B /* Sipic in Resources */,
+				690D64861648D038008CB35B /* MainMenu.xib in Resources */,
+				690D64871648D038008CB35B /* MainWindow.xib in Resources */,
+				690D648E1648D038008CB35B /* SipicUI-Info.plist in Resources */,
+				690D64921648D038008CB35B /* WindowController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -421,7 +310,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				690D63BE1648A9EC008CB35B /* main.m in Sources */,
+				690D63BE1648A9EC008CB35B /* start_main.m in Sources */,
+				690D64741648D038008CB35B /* AppDelegate.m in Sources */,
+				690D648C1648D038008CB35B /* SimulationController.m in Sources */,
+				690D64901648D038008CB35B /* start_main.m in Sources */,
+				690D64911648D038008CB35B /* WindowController.m in Sources */,
+				690D64B01648D0F9008CB35B /* main.c in Sources */,
+				690D64B11648D0F9008CB35B /* sim.c in Sources */,
+				690D64B21648D0FA008CB35B /* core_24f_opcode.c in Sources */,
+				690D64B31648D0FA008CB35B /* core_24f.c in Sources */,
+				690D64B41648D0FA008CB35B /* cpu.c in Sources */,
+				690D64B51648D0FA008CB35B /* hex_parser.c in Sources */,
+				690D64B61648D0FA008CB35B /* mem.c in Sources */,
+				690D64B71648D0FA008CB35B /* peri_isr.c in Sources */,
+				690D64B81648D0FA008CB35B /* peripheral.c in Sources */,
+				690D64B91648D0FA008CB35B /* coff_parser.c in Sources */,
+				690D64BA1648D0FA008CB35B /* ascii.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -471,10 +375,18 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"../../Sipic/**",
+					"./**",
+					"../**",
+					"Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/**",
+				);
+				LD_RUNPATH_SEARCH_PATHS = "\"../../Sipic\" \"..\" \".\" Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
+				PUBLIC_HEADERS_FOLDER_PATH = Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/;
 				SDKROOT = macosx;
-				"USER_HEADER_SEARCH_PATHS[arch=*]" = "../../Sipic/** ./** ../../../../** ../**";
+				"USER_HEADER_SEARCH_PATHS[arch=*]" = "../../Sipic/** ./** ../../../../** ../** Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/**";
 			};
 			name = Debug;
 		};
@@ -495,7 +407,14 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"../../Sipic/**",
+					"./**",
+					"../**",
+					"Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/**",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PUBLIC_HEADERS_FOLDER_PATH = Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/;
 				SDKROOT = macosx;
 			};
 			name = Release;

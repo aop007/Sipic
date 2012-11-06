@@ -15,10 +15,9 @@
     [super dealloc];
 }
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+- (void)applicationDidBecomeActive:(NSNotification *)aNotification
 {
-    // Insert code here to initialize your application
-    init();
+
 }
 
 @end

@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <../../Sipic/main.h>
+#import "main.h"
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 

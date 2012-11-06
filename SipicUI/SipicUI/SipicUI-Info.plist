@@ -27,7 +27,7 @@
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2012 Alexis Ouellet-Patenaude. All rights reserved.</string>
 	<key>NSMainNibFile</key>
-	<string>MainMenu</string>
+	<string>WindowController</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>

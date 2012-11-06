@@ -39,9 +39,12 @@ SIM  sim_struct;
 PERI_ERR    peri_static_err;
 CORE_ERR    core_static_err;
 
+#if 0
 int  main (int argc, const char * argv[]);
+#endif
     
-void DLL_API C_STD_CALL init (void);
+//void DLL_API C_STD_CALL init (void);
+void init_sipic(void);
 void DLL_API C_STD_CALL run  (void);
 
 #ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
