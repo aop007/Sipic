@@ -26,7 +26,24 @@ namespace SipicWindows
 
         //unsigned int  __declspec(dllexport) __stdcall Sim_GetOPCFromProgMem(unsigned int addr)
         [DllImport(@"C:\Users\alexis01.micrium01\Projects\Sipic\Sipic.vs2012\Debug\Sipic.dll", EntryPoint = "Sim_GetOPCFromProgMem")]
-        public static extern UInt32 Sim_GetValueFromDataMem(UInt32 addr);
+        public static extern UInt32 Sim_GetOPCFromProgMem(UInt32 addr);
+
+        const UInt16 CORE_SR_C    = 0x0001;
+        const UInt16 CORE_SR_Z    = 0x0002;
+        const UInt16 CORE_SR_OV   = 0x0004;
+        const UInt16 CORE_SR_N    = 0x0008;
+        const UInt16 CORE_SR_RA   = 0x0010;
+        const UInt16 CORE_SR_IPL0 = 0x0020;
+        const UInt16 CORE_SR_IPL1 = 0x0040;
+        const UInt16 CORE_SR_IPL2 = 0x0080;
+        const UInt16 CORE_SR_DC   = 0x0100;
+        const UInt16 CORE_SR_DA   = 0x0200;
+        const UInt16 CORE_SR_SAB  = 0x0400;
+        const UInt16 CORE_SR_OAB  = 0x0800;
+        const UInt16 CORE_SR_SB   = 0x1000;
+        const UInt16 CORE_SR_SA   = 0x2000;
+        const UInt16 CORE_SR_OB   = 0x4000;
+        const UInt16 CORE_SR_OA   = 0x8000;
 
 
         MemoryBlock testBlock1;
@@ -158,7 +175,7 @@ namespace SipicWindows
 
                 for (int i = 0; i < testBlock1.Word_Size; i++)
                 {
-                    if (testBlock1.MemoryHasChangedAtOffset(i))
+                    if (testBlock1.MemoryHasChangedAtOffset(i) || !silent)
                     {
                         DataGridViewCellCollection dgvrc = this.memoryView1.Rows[i].Cells;
                         dgvrc[1].Value = ((testBlock1.GetRowFromOffset(i))[1]);
@@ -173,7 +190,6 @@ namespace SipicWindows
 
 
                 HighLight(this.memoryView1.Rows[stackPtr / 2]);
-
                 HighLight(this.memoryView2.Rows[stackPtr / 2]);
             }
         }
@@ -190,7 +206,7 @@ namespace SipicWindows
         private int GetOPC()
         {
              int PC  = GetPC();
-            uint OPC = Sim_GetValueFromDataMem((uint)PC);
+             uint OPC = Sim_GetOPCFromProgMem((uint)PC);
 
             return (int)OPC;
         }
@@ -218,6 +234,36 @@ namespace SipicWindows
             SynchonizeUI(silent);
         }
 
+        private void UpdateSRBar(bool silent)
+        {
+            if (!silent) {
+                List<string> statusSRList = new List<string>();
+                UInt16 SR = Sim_GetValueFromDataMem(0x42);
+                
+
+                if ((SR & CORE_SR_OA) == CORE_SR_OA) { statusSRList.Add("OA"); }
+                if ((SR & CORE_SR_OB) == CORE_SR_OB) { statusSRList.Add("OB"); }
+                if ((SR & CORE_SR_SA) == CORE_SR_SA) { statusSRList.Add("SA"); }
+                if ((SR & CORE_SR_SB) == CORE_SR_SB) { statusSRList.Add("SB"); }
+                if ((SR & CORE_SR_OAB) == CORE_SR_OAB) { statusSRList.Add("OAB"); }
+                if ((SR & CORE_SR_SAB) == CORE_SR_SAB) { statusSRList.Add("SAB"); }
+                if ((SR & CORE_SR_DA) == CORE_SR_DA) { statusSRList.Add("DA"); }
+                if ((SR & CORE_SR_DC) == CORE_SR_DC) { statusSRList.Add("DC"); }
+                if ((SR & CORE_SR_IPL2) == CORE_SR_IPL2) { statusSRList.Add("IPL2"); }
+                if ((SR & CORE_SR_IPL1) == CORE_SR_IPL1) { statusSRList.Add("IPL1"); }
+                if ((SR & CORE_SR_IPL0) == CORE_SR_IPL0) { statusSRList.Add("IPL0"); }
+                if ((SR & CORE_SR_RA) == CORE_SR_RA) { statusSRList.Add("RA"); }
+                if ((SR & CORE_SR_N) == CORE_SR_N) { statusSRList.Add("N"); }
+                if ((SR & CORE_SR_OV) == CORE_SR_OV) { statusSRList.Add("OV"); }
+                if ((SR & CORE_SR_Z) == CORE_SR_Z) { statusSRList.Add("Z"); }
+                if ((SR & CORE_SR_C) == CORE_SR_C) { statusSRList.Add("C"); }
+
+                string[] statusSRArray = statusSRList.ToArray();
+                string statusSR = string.Join(" | ", statusSRArray);
+
+                StatusRegisterLabel.Text = statusSR;
+            }
+        }
         private void SynchonizeUI(bool silent)
         {
             testBlock1.Update(silent);
@@ -225,6 +271,7 @@ namespace SipicWindows
             UpdatePC(silent);
             UpdateOPC(silent);
             UpdateCodeView(silent);
+            UpdateSRBar(silent);
         }
 
         private void UpdateCodeView(bool silent)
@@ -273,9 +320,30 @@ namespace SipicWindows
             }
         }
 
+        private bool BreakPointNotMet()
+        { 
+            if ((this.checkBox1.Checked) && (GetPC() == BPupdown.Value)) {
+                return false;
+            }
+
+            if (this.condCheck.Checked) {
+                UInt32 addr  = (UInt32)this.condAddr.Value;
+                UInt16 mask  = (UInt16)this.condMask.Value;
+                UInt16 value = (UInt16)this.condValue.Value;
+                UInt16 memory = (UInt16)Sim_GetValueFromDataMem((UInt16)addr);
+
+                if ((memory & mask) == (value & mask)) {
+                    return false;
+                }
+
+            }
+
+            return true;
+        }
+
         private void RunPC()
         {
-            while ((GetPC() != BPupdown.Value) && (exception == false)) {
+            while (BreakPointNotMet() && (exception == false)) {
                 IteratePC(true);
                 //Thread.Sleep(1);
             }
@@ -333,11 +401,6 @@ namespace SipicWindows
             codeGridView.CellBorderStyle = DataGridViewCellBorderStyle.None;
 
             assemblyCode = assemblyFile.ToArray();
-        }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
         }
     }
 }

@@ -104,6 +104,7 @@ void  Core_Run(CORE_24F  *p_core_24f,
                 Core_PC_Slide(p_core_24f, -2);
             }
         }
+
 #ifdef  CORE_CFG_CYCLE_CNTR
         CORE_TRACE_DEBUG(("\r\nPC = %004x\tOPC = %006x\tCYCLE = %d |", Core_PC_Get(p_core_24f), opcode, (CPU_INT32U)p_core_24f->CYCLE));
 #else
@@ -114,7 +115,8 @@ void  Core_Run(CORE_24F  *p_core_24f,
         CORE_TRACE_DEBUG(("PC = %004x\tOPC = %006x\t |", Core_PC_Get(p_core_24f), opcode));
 #endif
 #if 1
-        if (Core_PC_Get(p_core_24f) == 0x0A5E) {
+        if ((Core_PC_Get(p_core_24f) == 0x0AEE) && (p_core_24f->W[0] == 0)){
+            uncaught_instructions *= 1;
             CORE_TRACE_DEBUG((""));
         }
         
@@ -718,11 +720,3 @@ CPU_INT32U  Core_PC_Get (CORE_24F    *p_core)
     
     return (PC);
 }
-
-
-
-
-
-
-
-

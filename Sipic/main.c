@@ -8,8 +8,8 @@
 
 #include "main.h"
 
-#if 0
-int mainX(int argc, const char * argv[])
+#if 1
+int main(int argc, const char * argv[])
 {
     init_sipic();
 

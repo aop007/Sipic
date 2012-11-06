@@ -1814,10 +1814,13 @@ void  Core_BTSC_AF (MEM_24      *p_mem_prog,
     
     addr    =  args & 0x001FFE;
     size_op =  args & 0x000001;
-    bit     =  1 << ((args & 0x00E000) >> 12);
+    
     
     if (size_op == 1) {
+        bit     =  1 << (((args & 0x00E000) >> 12) | (args & 0x000001));
         bit <<= 8;
+    } else {
+        bit     =  1 << ((args & 0x00E000) >> 13);
     }
     
     value   = Mem_Get(p_mem_data, addr, &mem_err);
