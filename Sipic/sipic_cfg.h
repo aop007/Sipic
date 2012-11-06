@@ -13,6 +13,18 @@
 extern "C" {
 #endif
 
+#ifdef   __DLL__
+#define  DLL_API __declspec(dllexport)
+#else
+#define  DLL_API
+#endif
+    
+#ifdef   __STD_C__
+#define  C_STD_CALL __stdcall
+#else
+#define  C_STD_CALL
+#endif
+
 #define  SIPIC_PARSE_METHOD_COFF  1u
 #define  SIPIC_PARSE_METHOD_HEX   2u
 
@@ -21,6 +33,7 @@ extern "C" {
 #define  SIPIC_CFG_MEM_SIZE_OCTET  (64 * 1024)
 
 #define  SIPIC_CFG_PC_START        0u
+
 
 //#define  CORE_CFG_CYCLE_CNTR
 

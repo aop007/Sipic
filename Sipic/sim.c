@@ -62,14 +62,14 @@ void Sim_Step()
                 &core_static_err);
 }
 
-unsigned short __declspec(dllexport) __stdcall Sim_GetValueFromDataMem(unsigned short addr)
+unsigned short DLL_API C_STD_CALL Sim_GetValueFromDataMem(unsigned short addr)
 {
     MEM_ERR  mem_err;
 
     return (Mem_Get(sim_struct.p_mem_data, addr, &mem_err));
 }
 
-unsigned int  __declspec(dllexport) __stdcall Sim_GetOPCFromProgMem(unsigned int addr)
+unsigned int  DLL_API C_STD_CALL Sim_GetOPCFromProgMem(unsigned int addr)
 {
     MEM_ERR  mem_err;
 

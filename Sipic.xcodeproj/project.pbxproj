@@ -58,6 +58,7 @@
 		690FDEC01639F892008EBC43 /* peri_isr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = peri_isr.c; sourceTree = "<group>"; };
 		690FDEC2163A442E008EBC43 /* main.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = main.txt; path = InputFiles/main.txt; sourceTree = "<group>"; };
 		6923CB54163630A0007EFAD1 /* snippets.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = snippets.txt; sourceTree = "<group>"; };
+		692FD1991648A04A008089DD /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
 		6958E9AC161F96D900D2B690 /* hex_parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hex_parser.h; sourceTree = "<group>"; };
 		6958E9AD161F96E600D2B690 /* hex_parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hex_parser.c; sourceTree = "<group>"; };
 		6958E9AF161F96FC00D2B690 /* hex_cfg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hex_cfg.h; sourceTree = "<group>"; };
@@ -134,6 +135,7 @@
 				6958E9B0161F974200D2B690 /* CPU */,
 				6958E9AB161F969500D2B690 /* HEX */,
 				690ADF0B161BE536001DCA06 /* main.c */,
+				692FD1991648A04A008089DD /* main.h */,
 				6958E9B1161F9A4800D2B690 /* sipic_cfg.h */,
 				6958E9C21620C49900D2B690 /* err.h */,
 				69E367CC1624DEE900A38020 /* mem_cfg_24f3011.h */,

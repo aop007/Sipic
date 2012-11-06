@@ -21,11 +21,7 @@ extern "C" {
 #include <hex_cfg.h>
 #endif
     
-#ifdef   __DLL__
-#define  DLL_API __declspec(dllexport)
-#else
-#define  DLL_API    
-#endif
+
 
 #define CORE_TRACE_LEVEL 0
 

@@ -16,6 +16,7 @@ extern "C" {
 #include <core_24f.h>
 #include <peripheral.h>
 #include "cpu.h"
+#include "sipic_cfg.h"
 
 typedef  struct  sim {
     CORE_24F    *p_core;
@@ -24,15 +25,15 @@ typedef  struct  sim {
     PERIPHERAL  *p_periph_head;
 } SIM;
 
-void Sim_Init();
+void                                Sim_Init();
 
-void Sim_Run(SIM  *p_sim);
+void                                Sim_Run(SIM  *p_sim);
 
-void __declspec(dllexport) Sim_Step();
+void            DLL_API             Sim_Step();
 
-unsigned short  __declspec(dllexport) __stdcall Sim_GetValueFromDataMem(unsigned short addr);
+unsigned short  DLL_API             Sim_GetValueFromDataMem(unsigned short addr);
 
-unsigned int    __declspec(dllexport) __stdcall Sim_GetOPCFromProgMem(unsigned int addr);
+unsigned int    DLL_API C_STD_CALL  Sim_GetOPCFromProgMem(unsigned int addr);
 
 
 #ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
