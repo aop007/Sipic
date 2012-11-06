@@ -9,6 +9,9 @@
     <ClCompile Include="..\..\Sipic\mem.c" />
     <ClCompile Include="..\..\Sipic\ascii.c" />
     <ClCompile Include="..\..\Sipic\coff_parser.c" />
+    <ClCompile Include="..\..\Sipic\peri_isr.c" />
+    <ClCompile Include="..\..\Sipic\peripheral.c" />
+    <ClCompile Include="..\..\Sipic\sim.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Sipic\core_24f.h" />
@@ -24,5 +27,9 @@
     <ClInclude Include="..\..\Sipic\ascii.h" />
     <ClInclude Include="..\..\Sipic\coff_cfg.h" />
     <ClInclude Include="..\..\Sipic\coff_parser.h" />
+    <ClInclude Include="..\..\Sipic\sim.h" />
+    <ClInclude Include="..\..\Sipic\hardware.h" />
+    <ClInclude Include="..\..\Sipic\peripheral.h" />
+    <ClInclude Include="..\..\Sipic\main.h" />
   </ItemGroup>
 </Project>

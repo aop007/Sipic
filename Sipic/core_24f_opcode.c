@@ -10,12 +10,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include "core_24f_opcode.h"
+#include "main.h"
 
+CPU_INT32S  Call_Depth = 0;
 
-
-void  Core_OPC_Stats (MEM  *p_mem)
+void  Core_OPC_Stats (MEM_24  *p_mem)
 {
-    MEM_HDR     *p_mem_hdr;
+    MEM_HDR_24  *p_mem_hdr;
     CPU_INT16U   opc_ctr[256];
     CPU_INT32U   mem_size;
     OPCODE       opc;
@@ -42,70 +43,75 @@ void  Core_OPC_Stats (MEM  *p_mem)
         p_mem_hdr = &p_mem->Hdr;
     }
     
-    printf("\r\nOPC STATS:");
+    CORE_TRACE_DEBUG("\r\nOPC STATS:");
     
     for (ix = 0 ; ix < sizeof(opc_ctr) / sizeof (CPU_INT16U) ; ix++) {
         if (ix % 16 == 0) {
-            printf("\r\n");
+            CORE_TRACE_DEBUG("\r\n");
         }
 #if 0
-        printf("\r\n%#x = %d", ix, opc_ctr[ix]);
+        CORE_TRACE_DEBUG("\r\n%#x = %d", ix, opc_ctr[ix]);
 #else
-        printf("%d\t", opc_ctr[ix]);
+        CORE_TRACE_DEBUG(("%d\t", opc_ctr[ix]));
 #endif
     }
 }
 
-void  Core_NOP_00 (MEM         *p_mem_prom,
+void  Core_NOP_00 (MEM_24         *p_mem_prog,
                    MEM         *p_mem_data,
                    CORE_24F    *p_core,
                    CPU_INT32U   args,
                    CORE_ERR    *p_err)
 {
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;
 }
 
-void  Core_CALL_02            (MEM         *p_mem_prog,
+void  Core_CALL_02            (MEM_24      *p_mem_prog,
                                MEM         *p_mem_data,
                                CORE_24F    *p_core,
                                CPU_INT32U   args,
                                CORE_ERR    *p_err)
 {
-    OPCODE   next_word;
-    MEM_ERR  mem_err;
+    CPU_INT32U  pc;
+    OPCODE      next_word;
+    MEM_ERR     mem_err;
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     
-    next_word   = Mem_Get(p_mem_prog, p_core->PC, &mem_err);
+    next_word   = Mem_Get24(p_mem_prog, Core_PC_Get(p_core), &mem_err);
     
     if (mem_err != MEM_ERR_NONE) {
         *p_err = CORE_ERR_INVALID_MEM;
         return;
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
+
+    pc = Core_PC_Get(p_core);
     
-    Core_Push( p_core->PC & 0x00FFFF, p_core, p_mem_data, p_err);
+    Core_Push((pc  & 0x00FFFF), p_core, p_mem_data, p_err);
     
     if (*p_err != CORE_ERR_NONE) {
         return;
     }
     
-    Core_Push((p_core->PC & 0xFF0000) >> 16, p_core, p_mem_data, p_err);
+    Core_Push(((pc & 0xFF0000) >> 16), p_core, p_mem_data, p_err);
 
     if (*p_err != CORE_ERR_NONE) {
         return;
     }
     
-    p_core->PC = (next_word & 0x00007F) << 16 |
-                 (args      & 0x00FFFE);
+    Core_PC_Set(p_core, (next_word & 0x00007F) << 16 |
+                        (args      & 0x00FFFE));
+    
+    Call_Depth++;
     
     *p_err = CORE_ERR_NONE;
 }
 
-void  Core_GOTO_04 (MEM         *p_mem_prog,
+void  Core_GOTO_04 (MEM_24      *p_mem_prog,
                     MEM         *p_mem_data,
                     CORE_24F    *p_core,
                     CPU_INT32U   args,
@@ -115,7 +121,7 @@ void  Core_GOTO_04 (MEM         *p_mem_prog,
     OPCODE      next_word;
     CPU_INT32U  next_PC;
     
-    next_word = Mem_Get(p_mem_prog, p_core->PC + 2, &mem_err);
+    next_word = Mem_Get24(p_mem_prog, Core_PC_Get(p_core) + 2, &mem_err);
     
     if (mem_err != MEM_ERR_NONE) {
         *p_err = CORE_ERR_INVALID_MEM;
@@ -124,12 +130,12 @@ void  Core_GOTO_04 (MEM         *p_mem_prog,
             
     next_PC   = ((next_word & 0x00007F) << 16) | (args & 0x00FFFE);
     
-    p_core->PC = next_PC;
+    Core_PC_Set(p_core,next_PC);
     
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_RETURN_060  (MEM         *p_mem_prog,
+void Core_RETURN_060  (MEM_24      *p_mem_prog,
                        MEM         *p_mem_data,
                        CORE_24F    *p_core,
                        CPU_INT32U   args,
@@ -150,12 +156,53 @@ void Core_RETURN_060  (MEM         *p_mem_prog,
         return;
     }
     
-    p_core->PC = word1 << 16 | word2;
+    Core_PC_Set(p_core, word1 << 16 | word2);
+    
+    Call_Depth--;
     
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_REPEAT_LIT14(MEM         *p_mem_prog,
+void Core_RETFIE_064 (MEM_24      *p_mem_prog,
+                      MEM         *p_mem_data,
+                      CORE_24F    *p_core,
+                      CPU_INT32U   args,
+                      CORE_ERR    *p_err)
+{
+    CPU_INT08U  SRL;
+    CPU_INT08U  IPL3;
+    CPU_INT32U  word1;
+    CPU_INT32U  word2;
+    
+    word1 = Core_Pop(p_core, p_mem_data, p_err);
+    
+    if (*p_err != CORE_ERR_NONE) {
+        return;
+    }
+    
+    word2 = Core_Pop(p_core, p_mem_data, p_err);
+    
+    if (*p_err != CORE_ERR_NONE) {
+        return;
+    }
+    
+    Core_PC_Set(p_core, (word1 & 0x00FF) << 16 | word2);
+    
+    SRL  = (word1 & 0xFF00) >> 8;
+    IPL3 =  word1 & 0x00FF;
+    
+    p_core->SR     &= 0xFF00;
+    p_core->SR     |= SRL;
+    
+    p_core->CORCON &= ~(CORE_CORECON_IPL3);
+    p_core->CORCON |=   IPL3;
+    
+    Call_Depth--;
+    
+    *p_err = CORE_ERR_NONE;
+}
+
+void Core_REPEAT_LIT14(MEM_24      *p_mem_prog,
                        MEM         *p_mem_data,
                        CORE_24F    *p_core,
                        CPU_INT32U   args,
@@ -167,13 +214,13 @@ void Core_REPEAT_LIT14(MEM         *p_mem_prog,
     iterations = args & 0x003FFF;
     
     p_core->RCOUNT  = iterations;
-    p_core->PC     += 2;
+    Core_PC_Slide(p_core, 2);
     p_core->SR     |= CORE_SR_RA;
     
     *p_err = CORE_ERR_NONE;
 }
 
-void  Core_MOV_2 (MEM         *p_mem_prog,
+void  Core_MOV_2 (MEM_24      *p_mem_prog,
                   MEM         *p_mem_data,
                   CORE_24F    *p_core,
                   CPU_INT32U   args,
@@ -188,12 +235,12 @@ void  Core_MOV_2 (MEM         *p_mem_prog,
     
     p_core->W[w_reg] = literal;
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_BRA_34 (MEM         *p_mem_prog,
+void Core_BRA_34 (MEM_24      *p_mem_prog,
                   MEM         *p_mem_data,
                   CORE_24F    *p_core,
                   CPU_INT32U   args,
@@ -208,20 +255,20 @@ void Core_BRA_34 (MEM         *p_mem_prog,
     
     p_slit = (CPU_INT16S *)&slit;
     
-    addr   = p_core->PC + 2 + 2 * (*p_slit);
+    addr   = Core_PC_Get(p_core) + 2 + 2 * (*p_slit);
     
     condition = Core_GetZ(p_core) || (Core_GetN(p_core) && !Core_GetOV(p_core)) || (!Core_GetN(p_core) && Core_GetOV(p_core));
     
     if (condition) {
-        p_core->PC  = addr;
+        Core_PC_Set(p_core, addr);
     } else {
-        p_core->PC += 2;
+        Core_PC_Slide(p_core, 2);
     }
     
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_BRA_37       (MEM         *p_mem_prog,
+void Core_BRA_37       (MEM_24      *p_mem_prog,
                         MEM         *p_mem_data,
                         CORE_24F    *p_core,
                         CPU_INT32U   args,
@@ -235,14 +282,14 @@ void Core_BRA_37       (MEM         *p_mem_prog,
     
     p_slit = (CPU_INT16S *)&slit;
     
-    addr   = p_core->PC + 2 + 2 * (*p_slit);
+    addr   = Core_PC_Get(p_core) + 2 + 2 * (*p_slit);
     
-    p_core->PC = addr;
+    Core_PC_Set(p_core, addr);
     
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_BRA_3A (MEM         *p_mem_prog,
+void Core_BRA_3A (MEM_24      *p_mem_prog,
                   MEM         *p_mem_data,
                   CORE_24F    *p_core,
                   CPU_INT32U   args,
@@ -257,20 +304,20 @@ void Core_BRA_3A (MEM         *p_mem_prog,
     
     p_slit = (CPU_INT16S *)&slit;
     
-    addr   = p_core->PC + 2 + 2 * (*p_slit);
+    addr   = Core_PC_Get(p_core) + 2 + 2 * (*p_slit);
     
     condition = !Core_GetZ(p_core);
     
     if (condition) {
-        p_core->PC  = addr;
+        Core_PC_Set(p_core, addr);
     } else {
-        p_core->PC += 2;
+        Core_PC_Slide(p_core, 2);
     }
     
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_BRA_3D (MEM         *p_mem_prog,
+void Core_BRA_3D (MEM_24      *p_mem_prog,
                   MEM         *p_mem_data,
                   CORE_24F    *p_core,
                   CPU_INT32U   args,
@@ -285,20 +332,20 @@ void Core_BRA_3D (MEM         *p_mem_prog,
     
     p_slit = (CPU_INT16S *)&slit;
     
-    addr   = p_core->PC + 2 + 2 * (*p_slit);
+    addr   = Core_PC_Get(p_core) + 2 + 2 * (*p_slit);
     
     condition = !Core_GetN(p_core);
     
     if (condition) {
-        p_core->PC  = addr;
+        Core_PC_Set(p_core, addr);
     } else {
-        p_core->PC += 2;
+        Core_PC_Slide(p_core, 2);
     }
     
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_MATH_WS_WD   (MEM          *p_mem_prog,
+void Core_MATH_WS_WD   (MEM_24       *p_mem_prog,
                         MEM          *p_mem_data,
                         CORE_24F     *p_core,
                         CPU_INT32U    args,
@@ -638,11 +685,11 @@ void Core_MATH_WS_WD   (MEM          *p_mem_prog,
             return;
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     *p_err = CORE_ERR_NONE;    
 }
 
-void Core_ADDC_48    (MEM         *p_mem_prog,
+void Core_ADDC_48    (MEM_24      *p_mem_prog,
                       MEM         *p_mem_data,
                       CORE_24F    *p_core,
                       CPU_INT32U   args,
@@ -798,14 +845,14 @@ void Core_ADDC_48    (MEM         *p_mem_prog,
         p_core->SR &= ~(CORE_SR_C);
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;
     
 }
 
 
-void Core_ADDC_48006 (MEM         *p_mem_prog,
+void Core_ADDC_48006 (MEM_24      *p_mem_prog,
                       MEM         *p_mem_data,
                       CORE_24F    *p_core,
                       CPU_INT32U   args,
@@ -917,13 +964,13 @@ void Core_ADDC_48006 (MEM         *p_mem_prog,
         p_core->SR &= ~(CORE_SR_C);
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;
     
 }
 
-void Core_SUB_50006 (MEM         *p_mem_prog,
+void Core_SUB_50006 (MEM_24      *p_mem_prog,
                      MEM         *p_mem_data,
                      CORE_24F    *p_core,
                      CPU_INT32U   args,
@@ -1053,12 +1100,12 @@ void Core_SUB_50006 (MEM         *p_mem_prog,
         p_core->SR &= ~(CORE_SR_C);
     }
 
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
 
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_MOV_WS_WD_78 (MEM         *p_mem_prog,
+void Core_MOV_WS_WD_78 (MEM_24      *p_mem_prog,
                         MEM         *p_mem_data,
                         CORE_24F    *p_core,
                         CPU_INT32U   args,
@@ -1422,12 +1469,12 @@ void Core_MOV_WS_WD_78 (MEM         *p_mem_prog,
             return;
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;
 }
 
-void  Core_MOV_M_W_80 (MEM         *p_mem_prog,
+void  Core_MOV_M_W_80 (MEM_24      *p_mem_prog,
                        MEM         *p_mem_data,
                        CORE_24F    *p_core,
                        CPU_INT32U   args,
@@ -1450,12 +1497,12 @@ void  Core_MOV_M_W_80 (MEM         *p_mem_prog,
     
     p_core->W[w_reg] = value;
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;
 }
 
-void  Core_MOV_W_M_88 (MEM         *p_mem_prog,
+void  Core_MOV_W_M_88 (MEM_24      *p_mem_prog,
                        MEM         *p_mem_data,
                        CORE_24F    *p_core,
                        CPU_INT32U   args,
@@ -1478,23 +1525,23 @@ void  Core_MOV_W_M_88 (MEM         *p_mem_prog,
         return;
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;
 }
 
 
-void  Core_BSET_W_A0 (MEM         *p_mem_prog,
+void  Core_BSET_W_A0 (MEM_24      *p_mem_prog,
                       MEM         *p_mem_data,
                       CORE_24F    *p_core,
                       CPU_INT32U   args,
                       CORE_ERR    *p_err)
 {
-    printf("\r\nCore_BSET_W_A0 Unimplemented");
+    CORE_TRACE_DEBUG("\r\nCore_BSET_W_A0 Unimplemented");
     *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
 }
 
-void  Core_BSET_M_A8 (MEM         *p_mem_prog,
+void  Core_BSET_M_A8 (MEM_24      *p_mem_prog,
                       MEM         *p_mem_data,
                       CORE_24F    *p_core,
                       CPU_INT32U   args,
@@ -1526,12 +1573,12 @@ void  Core_BSET_M_A8 (MEM         *p_mem_prog,
         return;
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;
 }
 
-void  Core_BCLR_M_A9 (MEM         *p_mem_prog,
+void  Core_BCLR_M_A9 (MEM_24      *p_mem_prog,
                       MEM         *p_mem_data,
                       CORE_24F    *p_core,
                       CPU_INT32U   args,
@@ -1562,12 +1609,12 @@ void  Core_BCLR_M_A9 (MEM         *p_mem_prog,
         return;
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;
 }
 
-void  Core_BTSS_W (MEM         *p_mem_prog,
+void  Core_BTSS_W (MEM_24      *p_mem_prog,
                    MEM         *p_mem_data,
                    CORE_24F    *p_core,
                    CPU_INT32U   args,
@@ -1632,7 +1679,7 @@ void  Core_BTSS_W (MEM         *p_mem_prog,
     if ((value & bit) == bit) {
         
         
-        opc = Mem_Get(p_mem_prog, p_core->PC, &mem_err);
+        opc = Mem_Get24(p_mem_prog, Core_PC_Get(p_core), &mem_err);
         
         if (mem_err != MEM_ERR_NONE) {
             *p_err = CORE_ERR_INVALID_MEM;
@@ -1644,7 +1691,7 @@ void  Core_BTSS_W (MEM         *p_mem_prog,
         switch (opc_words) {
             case 1:
             case 2:
-                p_core->PC += 2 * opc_words;
+                Core_PC_Slide(p_core, 2 * opc_words);
                 break;
                 
             default:
@@ -1654,12 +1701,12 @@ void  Core_BTSS_W (MEM         *p_mem_prog,
 
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;
 }
 
-void  Core_BTSC_W (MEM         *p_mem_prog,
+void  Core_BTSC_W (MEM_24      *p_mem_prog,
                    MEM         *p_mem_data,
                    CORE_24F    *p_core,
                    CPU_INT32U   args,
@@ -1724,7 +1771,7 @@ void  Core_BTSC_W (MEM         *p_mem_prog,
     if ((value & bit) == 0u) {
         
         
-        opc = Mem_Get(p_mem_prog, p_core->PC, &mem_err);
+        opc = Mem_Get24(p_mem_prog, Core_PC_Get(p_core), &mem_err);
         
         if (mem_err != MEM_ERR_NONE) {
             *p_err = CORE_ERR_INVALID_MEM;
@@ -1736,7 +1783,7 @@ void  Core_BTSC_W (MEM         *p_mem_prog,
         switch (opc_words) {
             case 1:
             case 2:
-                p_core->PC += 2 * opc_words;
+                Core_PC_Slide(p_core, 2 * opc_words);
                 break;
                 
             default:
@@ -1746,12 +1793,12 @@ void  Core_BTSC_W (MEM         *p_mem_prog,
 
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;
 }
 
-void  Core_BTSC_AF (MEM         *p_mem_prog,
+void  Core_BTSC_AF (MEM_24      *p_mem_prog,
                     MEM         *p_mem_data,
                     CORE_24F    *p_core,
                     CPU_INT32U   args,
@@ -1783,7 +1830,7 @@ void  Core_BTSC_AF (MEM         *p_mem_prog,
     if ((value & bit) == 0u) {
         
         
-        opc = Mem_Get(p_mem_prog, p_core->PC, &mem_err);
+        opc = Mem_Get24(p_mem_prog, Core_PC_Get(p_core), &mem_err);
         
         if (mem_err != MEM_ERR_NONE) {
             *p_err = CORE_ERR_INVALID_MEM;
@@ -1795,7 +1842,7 @@ void  Core_BTSC_AF (MEM         *p_mem_prog,
         switch (opc_words) {
             case 1:
             case 2:
-                p_core->PC += 2 * opc_words;
+                Core_PC_Slide(p_core, 2 * opc_words);
                 break;
                 
             default:
@@ -1803,18 +1850,18 @@ void  Core_BTSC_AF (MEM         *p_mem_prog,
                 return;
         }
 #else
-        p_core->PC += 2;
+        Core_PC_Slide(p_core, 2);
         *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
         return;
 #endif
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_ADDC_B08 (MEM         *p_mem_prog,
+void Core_ADDC_B08 (MEM_24      *p_mem_prog,
                     MEM         *p_mem_data,
                     CORE_24F    *p_core,
                     CPU_INT32U   args,
@@ -1873,11 +1920,11 @@ void Core_ADDC_B08 (MEM         *p_mem_prog,
         p_core->SR &= ~(CORE_SR_C);
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_SETM_MOV_8BL_WN_B3C (MEM         *p_mem_prog,
+void Core_SETM_MOV_8BL_WN_B3C (MEM_24      *p_mem_prog,
                                MEM         *p_mem_data,
                                CORE_24F    *p_core,
                                CPU_INT32U   args,
@@ -1893,11 +1940,11 @@ void Core_SETM_MOV_8BL_WN_B3C (MEM         *p_mem_prog,
     p_core->W[w_reg] &= 0xFF00;
     p_core->W[w_reg] |= value;
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_SETM_MOV_8BL_WN_B7A (MEM         *p_mem_prog,
+void Core_SETM_MOV_8BL_WN_B7A (MEM_24      *p_mem_prog,
                                MEM         *p_mem_data,
                                CORE_24F    *p_core,
                                CPU_INT32U   args,
@@ -1948,11 +1995,11 @@ void Core_SETM_MOV_8BL_WN_B7A (MEM         *p_mem_prog,
     
 
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_SUB_B10 (MEM         *p_mem_prog,
+void Core_SUB_B10 (MEM_24      *p_mem_prog,
                    MEM         *p_mem_data,
                    CORE_24F    *p_core,
                    CPU_INT32U   args,
@@ -2011,11 +2058,11 @@ void Core_SUB_B10 (MEM         *p_mem_prog,
         p_core->SR &= ~(CORE_SR_C);
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_ADD_B40     (MEM         *p_mem_prog,
+void Core_ADD_B40     (MEM_24      *p_mem_prog,
                        MEM         *p_mem_data,
                        CORE_24F    *p_core,
                        CPU_INT32U   args,
@@ -2096,11 +2143,11 @@ void Core_ADD_B40     (MEM         *p_mem_prog,
         p_core->SR &= ~(CORE_SR_C);
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_ADDC_B48 (MEM         *p_mem_prog,
+void Core_ADDC_B48 (MEM_24      *p_mem_prog,
                     MEM         *p_mem_data,
                     CORE_24F    *p_core,
                     CPU_INT32U   args,
@@ -2160,13 +2207,161 @@ void Core_ADDC_B48 (MEM         *p_mem_prog,
         p_core->SR &= ~(CORE_SR_C);
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;
 
 }
 
-void Core_MUL_UU_B8006 (MEM         *p_mem_prog,
+void Core_DEC_E90 (MEM_24      *p_mem_prog,
+                   MEM         *p_mem_data,
+                   CORE_24F    *p_core,
+                   CPU_INT32U   args,
+                   CORE_ERR    *p_err)
+{
+    CPU_INT32U  size_op;
+    CPU_INT32U  dst_addr_mode;
+    CPU_INT32U  dst_w;
+    CPU_INT32U  src_addr_mode;
+    CPU_INT32U  src_w;
+    CPU_INT32U  value;
+    CPU_INT32U  initial;
+    CPU_INT32U  offset;
+    MEM_ERR     mem_err;
+    
+    
+    size_op       = (args & 0x004000) >> 14;
+    dst_addr_mode = (args & 0x003800) >> 11;
+    dst_w         = (args & 0x000780) >>  7;
+    src_addr_mode = (args & 0x000070) >>  4;
+    src_w         =  args & 0x00000F;
+    
+    if (size_op != 0) {
+        offset = 1;
+        *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+        return;
+    } else {
+        offset = 2;
+    }
+    
+    mem_err = MEM_ERR_NONE;
+    
+    switch (src_addr_mode) {
+        case CORE_OPC_ADDR_MODE_DIR:
+            value = p_core->W[src_w];
+            break;
+            
+        case CORE_OPC_ADDR_MODE_IND:
+            value = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
+            break;
+            
+        case CORE_OPC_ADDR_MODE_IND_POS_DEC:
+            value = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
+            p_core->W[src_w] -= 2;
+            break;
+            
+        case CORE_OPC_ADDR_MODE_IND_POS_INC:
+            value = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
+            p_core->W[src_w] += 2;
+            break;
+            
+        case CORE_OPC_ADDR_MODE_IND_PRE_DEC:
+            p_core->W[src_w] -= 2;
+            value = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
+            break;
+            
+        case CORE_OPC_ADDR_MODE_IND_PRE_INC:
+            p_core->W[src_w] += 2;
+            value = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
+            break;
+            
+        default:
+            *p_err = CORE_ERR_INVALID_OPC_ARG;
+            return;
+    }
+    
+    if (mem_err != MEM_ERR_NONE) {
+        *p_err = CORE_ERR_INVALID_MEM;
+        return;
+    }
+    
+    initial = value;
+    value--;
+    
+    switch (dst_addr_mode) {
+        case CORE_OPC_ADDR_MODE_DIR:
+            p_core->W[dst_w] = value;
+            break;
+            
+        case CORE_OPC_ADDR_MODE_IND:
+            Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
+            break;
+            
+        case CORE_OPC_ADDR_MODE_IND_POS_DEC:
+            Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
+            p_core->W[src_w] -= 2;
+            break;
+            
+        case CORE_OPC_ADDR_MODE_IND_POS_INC:
+            Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
+            p_core->W[src_w] += 2;
+            break;
+            
+        case CORE_OPC_ADDR_MODE_IND_PRE_DEC:
+            p_core->W[src_w] -= 2;
+            Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
+            break;
+            
+        case CORE_OPC_ADDR_MODE_IND_PRE_INC:
+            p_core->W[src_w] += 2;
+            Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
+            break;
+            
+        default:
+            *p_err = CORE_ERR_INVALID_OPC_ARG;
+            return;
+    }
+    
+    if (mem_err != MEM_ERR_NONE) {
+        *p_err = CORE_ERR_INVALID_MEM;
+        return;
+    }
+    
+    /* Update Status Register */
+    if (((initial & 0x00000080) &&                              /* DC */
+         (value   & 0x00000080))) {
+        p_core->SR |=   CORE_SR_DC;
+    } else {
+        p_core->SR &= ~(CORE_SR_DC);
+    }
+    
+    p_core->SR &= ~(CORE_SR_N);                                 /* N */
+
+    
+    if (initial < value) {
+        p_core->SR |=   CORE_SR_OV;
+    } else {
+        p_core->SR &= ~(CORE_SR_OV);
+    }
+    
+    if (value == 0) {                                         /* Z */
+        p_core->SR |=   CORE_SR_Z;
+    } else {
+        p_core->SR &= ~(CORE_SR_Z);
+    }
+    
+    if (((initial & 0x00008000) &&                              /* C */
+         (value   & 0x00008000))) {
+        p_core->SR |=   CORE_SR_C;
+    } else {
+        p_core->SR &= ~(CORE_SR_C);
+    }
+
+    Core_PC_Slide(p_core, 2);
+    *p_err = CORE_ERR_NONE;
+}
+
+void Core_MUL_UU_B8006 (MEM_24      *p_mem_prog,
                         MEM         *p_mem_data,
                         CORE_24F    *p_core,
                         CPU_INT32U   args,
@@ -2186,12 +2381,12 @@ void Core_MUL_UU_B8006 (MEM         *p_mem_prog,
     p_core->W[dest_w]     = (result & 0x0000FFFF);
     p_core->W[dest_w + 1] = (result & 0xFFFF0000);
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_MUL_UU_B80 (MEM         *p_mem_prog,
+void Core_MUL_UU_B80 (MEM_24      *p_mem_prog,
                       MEM         *p_mem_data,
                       CORE_24F    *p_core,
                       CPU_INT32U   args,
@@ -2279,12 +2474,12 @@ void Core_MUL_UU_B80 (MEM         *p_mem_prog,
     
     p_core->W[dest_reg]     = (result & 0x0000FFFF);
     p_core->W[dest_reg + 1] = (result & 0xFFFF0000);
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_MUL_SS_B88 (MEM         *p_mem_prog,
+void Core_MUL_SS_B88 (MEM_24      *p_mem_prog,
                       MEM         *p_mem_data,
                       CORE_24F    *p_core,
                       CPU_INT32U   args,
@@ -2372,12 +2567,12 @@ void Core_MUL_SS_B88 (MEM         *p_mem_prog,
     
     p_core->W[dest_reg]     = (result & 0x0000FFFF);
     p_core->W[dest_reg + 1] = (result & 0xFFFF0000);
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_MUL_SS_B98 (MEM         *p_mem_prog,
+void Core_MUL_SS_B98 (MEM_24      *p_mem_prog,
                       MEM         *p_mem_data,
                       CORE_24F    *p_core,
                       CPU_INT32U   args,
@@ -2465,12 +2660,12 @@ void Core_MUL_SS_B98 (MEM         *p_mem_prog,
     
     p_core->W[dest_reg]     = (result & 0x0000FFFF);
     p_core->W[dest_reg + 1] = (result & 0xFFFF0000);
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_MOV_BF8 (MEM         *p_mem_prog,
+void Core_MOV_BF8 (MEM_24      *p_mem_prog,
                    MEM         *p_mem_data,
                    CORE_24F    *p_core,
                    CPU_INT32U   args,
@@ -2531,11 +2726,11 @@ void Core_MOV_BF8 (MEM         *p_mem_prog,
         p_core->SR &= ~(CORE_SR_Z);
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_DIV_S_D8000 (MEM         *p_mem_prog,
+void Core_DIV_S_D8000 (MEM_24      *p_mem_prog,
                        MEM         *p_mem_data,
                        CORE_24F    *p_core,
                        CPU_INT32U   args,
@@ -2595,12 +2790,12 @@ void Core_DIV_S_D8000 (MEM         *p_mem_prog,
     }
 #endif
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_CP0_E0000 (MEM         *p_mem_prog,
+void Core_CP0_E0000 (MEM_24      *p_mem_prog,
                      MEM         *p_mem_data,
                      CORE_24F    *p_core,
                      CPU_INT32U   args,
@@ -2683,11 +2878,11 @@ void Core_CP0_E0000 (MEM         *p_mem_prog,
     
     p_core->SR &= ~(CORE_SR_C);                                 /* C */
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_CP_E1006 (MEM         *p_mem_prog,
+void Core_CP_E1006 (MEM_24      *p_mem_prog,
                     MEM         *p_mem_data,
                     CORE_24F    *p_core,
                     CPU_INT32U   args,
@@ -2741,12 +2936,12 @@ void Core_CP_E1006 (MEM         *p_mem_prog,
         p_core->SR &= ~(CORE_SR_C);
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_SETM_WS_EB8 (MEM         *p_mem_prog,
+void Core_SETM_WS_EB8 (MEM_24      *p_mem_prog,
                        MEM         *p_mem_data,
                        CORE_24F    *p_core,
                        CPU_INT32U   args,
@@ -2815,12 +3010,12 @@ void Core_SETM_WS_EB8 (MEM         *p_mem_prog,
         return;
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_INC_EC0 (MEM         *p_mem_prog,
+void Core_INC_EC0 (MEM_24      *p_mem_prog,
                    MEM         *p_mem_data,
                    CORE_24F    *p_core,
                    CPU_INT32U   args,
@@ -2898,10 +3093,10 @@ void Core_INC_EC0 (MEM         *p_mem_prog,
         }
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
 }
 
-void Core_CLR_WD_EB0000 (MEM         *p_mem_prog,
+void Core_CLR_WD_EB0000 (MEM_24      *p_mem_prog,
                          MEM         *p_mem_data,
                          CORE_24F    *p_core,
                          CPU_INT32U   args,
@@ -2967,12 +3162,12 @@ void Core_CLR_WD_EB0000 (MEM         *p_mem_prog,
         return;
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_SETM_M_W0_EF8 (MEM         *p_mem_prog,
+void Core_SETM_M_W0_EF8 (MEM_24      *p_mem_prog,
                          MEM         *p_mem_data,
                          CORE_24F    *p_core,
                          CPU_INT32U   args,
@@ -3021,11 +3216,11 @@ void Core_SETM_M_W0_EF8 (MEM         *p_mem_prog,
         }
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_CLR_M_W0_EF0 (MEM         *p_mem_prog,
+void Core_CLR_M_W0_EF0 (MEM_24      *p_mem_prog,
                         MEM         *p_mem_data,
                         CORE_24F    *p_core,
                         CPU_INT32U   args,
@@ -3052,8 +3247,11 @@ void Core_CLR_M_W0_EF0 (MEM         *p_mem_prog,
         p_core->W[0] &= ~(val);
     } else {
         if ((DEF_FIELD_IS_SET(addr,    0x000001)  &&
-             DEF_FIELD_IS_SET(size_op, 0x004000))) {
+             DEF_FIELD_IS_CLR(size_op, 0x004000))) {
             
+            /* Provoque an address error trap isr */
+            *p_err = CORE_ERR_ADDR_ERROR_TRAP;
+            return;
         }
         
         reg_val = Mem_Get(p_mem_data, (addr & 0x001FFE), &mem_err);
@@ -3073,11 +3271,11 @@ void Core_CLR_M_W0_EF0 (MEM         *p_mem_prog,
         }
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     *p_err = CORE_ERR_NONE;
 }
 
-void  Core_PUSH_F8 (MEM         *p_mem_prog,
+void  Core_PUSH_F8 (MEM_24      *p_mem_prog,
                     MEM         *p_mem_data,
                     CORE_24F    *p_core,
                     CPU_INT32U   args,
@@ -3099,10 +3297,10 @@ void  Core_PUSH_F8 (MEM         *p_mem_prog,
         return;
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
 }
 
-void  Core_POP_F9 (MEM         *p_mem_prog,
+void  Core_POP_F9 (MEM_24      *p_mem_prog,
                    MEM         *p_mem_data,
                    CORE_24F    *p_core,
                    CPU_INT32U   args,
@@ -3124,10 +3322,10 @@ void  Core_POP_F9 (MEM         *p_mem_prog,
         return;
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
 }
 
-void Core_SE_FB00       (MEM         *p_mem_prog,
+void Core_SE_FB00       (MEM_24      *p_mem_prog,
                          MEM         *p_mem_data,
                          CORE_24F    *p_core,
                          CPU_INT32U   args,
@@ -3245,7 +3443,7 @@ void Core_SE_FB00       (MEM         *p_mem_prog,
         p_core->SR &= ~(CORE_SR_Z);
     }
     
-    p_core->PC += 2;
+    Core_PC_Slide(p_core, 2);
     *p_err = CORE_ERR_NONE;
 }
 

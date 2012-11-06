@@ -19,6 +19,9 @@
     <ClCompile Include="..\..\Sipic\hex_parser.c" />
     <ClCompile Include="..\..\Sipic\main.c" />
     <ClCompile Include="..\..\Sipic\mem.c" />
+    <ClCompile Include="..\..\Sipic\peripheral.c" />
+    <ClCompile Include="..\..\Sipic\peri_isr.c" />
+    <ClCompile Include="..\..\Sipic\sim.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Sipic\ascii.h" />
@@ -28,11 +31,15 @@
     <ClInclude Include="..\..\Sipic\core_24f_opcode.h" />
     <ClInclude Include="..\..\Sipic\cpu.h" />
     <ClInclude Include="..\..\Sipic\err.h" />
+    <ClInclude Include="..\..\Sipic\hardware.h" />
     <ClInclude Include="..\..\Sipic\hex_cfg.h" />
     <ClInclude Include="..\..\Sipic\hex_parser.h" />
+    <ClInclude Include="..\..\Sipic\main.h" />
     <ClInclude Include="..\..\Sipic\mem.h" />
     <ClInclude Include="..\..\Sipic\mem_cfg.h" />
     <ClInclude Include="..\..\Sipic\mem_cfg_24f3011.h" />
+    <ClInclude Include="..\..\Sipic\peripheral.h" />
+    <ClInclude Include="..\..\Sipic\sim.h" />
     <ClInclude Include="..\..\Sipic\sipic_cfg.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -42,7 +49,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v110</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -76,7 +83,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);__DLL__;__STD_C__</PreprocessorDefinitions>
       <ExceptionHandling>false</ExceptionHandling>
       <CompileAs>CompileAsC</CompileAs>
       <AdditionalIncludeDirectories>.\;..\..\Sipic;..\..\Sipic\InputFiles;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

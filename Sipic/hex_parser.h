@@ -9,6 +9,10 @@
 #ifndef Sipic_hex_parser_h
 #define Sipic_hex_parser_h
 
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+extern "C" {
+#endif
+
 #include "cpu.h"
 #include "hex_cfg.h"
 #include "mem.h"
@@ -34,7 +38,11 @@
  */
 
 void  HexParser_ReadFile(const  char            *p_file_name,
-                                MEM             *p_mem,
+                                MEM_24          *p_mem,
                                 HEX_PARSER_ERR  *p_err);
+
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+}
+#endif
 
 #endif

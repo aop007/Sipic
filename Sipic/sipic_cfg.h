@@ -9,6 +9,22 @@
 #ifndef Sipic_sipic_cfg_h
 #define Sipic_sipic_cfg_h
 
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+extern "C" {
+#endif
+
+#ifdef   __DLL__
+#define  DLL_API __declspec(dllexport)
+#else
+#define  DLL_API
+#endif
+    
+#ifdef   __STD_C__
+#define  C_STD_CALL __stdcall
+#else
+#define  C_STD_CALL
+#endif
+
 #define  SIPIC_PARSE_METHOD_COFF  1u
 #define  SIPIC_PARSE_METHOD_HEX   2u
 
@@ -18,6 +34,11 @@
 
 #define  SIPIC_CFG_PC_START        0u
 
-#define  CORE_CFG_CYCLE_CNTR
+
+//#define  CORE_CFG_CYCLE_CNTR
+
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+}
+#endif
 
 #endif

@@ -9,6 +9,10 @@
 #ifndef Sipic_err_h
 #define Sipic_err_h
 
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+extern "C" {
+#endif
+
 /*
  * COFF PARSER ERRORS
  */
@@ -48,20 +52,43 @@ enum mem_err {
 
 typedef enum mem_err MEM_ERR;
 
+
 /*
  * CORE ERRORS
  */
 
 enum core_err {
-    CORE_ERR_NONE               = 4000u,
-    CORE_ERR_OPC_NOTFOUND       = 4001u,
-    CORE_ERR_INVALID_MEM        = 4002u,
-    CORE_ERR_INVALID_OPC_ARG    = 4003u,
-    CORE_ERR_OPC_UNSUPORTED_YET = 4004u,
-    CORE_ERR_INVALID_OPC_CYCLE  = 4005u,
-    CORE_ERR_INVALID_MATH_OP    = 4006u
+    CORE_ERR_NONE                = 4000u,
+    CORE_ERR_OPC_NOTFOUND        = 4001u,
+    CORE_ERR_INVALID_MEM         = 4002u,
+    CORE_ERR_INVALID_OPC_ARG     = 4003u,
+    CORE_ERR_OPC_UNSUPORTED_YET  = 4004u,
+    CORE_ERR_INVALID_OPC_CYCLE   = 4005u,
+    CORE_ERR_INVALID_MATH_OP     = 4006u,
+    
+    CORE_ERR_OSCI_ERROR_TRAP     = 4100u,
+    CORE_ERR_ADDR_ERROR_TRAP     = 4200u,
+    CORE_ERR_MATH_ERROR_TRAP     = 4300u,
+    CORE_ERR_STAK_ERROR_TRAP     = 4400u
+    
 };
 
 typedef enum core_err CORE_ERR;
+
+/*
+ * PERI_ERR ERRORS
+ */
+
+enum peri_err {
+    PERI_ERR_NONE            = 5000u,
+    PERI_ERR_INVALID_MEM     = 5001u,
+    PERI_ERR_INVALID_CORE_OP = 5002u
+};
+
+typedef enum peri_err PERI_ERR;
+
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+}
+#endif
 
 #endif

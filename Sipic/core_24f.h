@@ -9,6 +9,10 @@
 #ifndef Sipic_core_24f_h
 #define Sipic_core_24f_h
 
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+extern "C" {
+#endif
+
 #include "cpu.h"
 #include "mem.h"
 #include "err.h"
@@ -31,6 +35,8 @@
 #define  CORE_SR_OB    0x4000
 #define  CORE_SR_OA    0x8000
 
+#define  CORE_CORECON_IPL3 0x0008
+
 #define  CORE_MATH_OP_ADD  0x0001
 #define  CORE_MATH_OP_SUB  0x0002
 #define  CORE_MATH_OP_MUL  0x0003
@@ -39,45 +45,34 @@
 
 typedef struct core_24f {
     
-#if 0
-    CPU_INT16U  W0;
-    CPU_INT16U  W1;
-    CPU_INT16U  W2;
-    CPU_INT16U  W3;
-    CPU_INT16U  W4;
-    CPU_INT16U  W5;
-    CPU_INT16U  W6;
-    CPU_INT16U  W7;
-    CPU_INT16U  W8;
-    CPU_INT16U  W9;
-    CPU_INT16U  W10;
-    CPU_INT16U  W11;
-    CPU_INT16U  W12;
-    CPU_INT16U  W13;
-    CPU_INT16U  W14;
-    CPU_INT16U  W15;
-#endif
-    
     CPU_INT16U  W[16];
     
     CPU_INT16U  SPLIM;
     
-    CPU_INT64U  ACCA;
-    CPU_INT64U  ACCB;
+    CPU_INT16U  ACCA[3];
+    CPU_INT16U  ACCB[3];
     
-    CPU_INT32U  PC;
+    CPU_INT08U  PC[4];
     
     CPU_INT08U  TBLPAG;
     
+    CPU_INT08U  Reserved0;
+    
     CPU_INT08U  PSVPAG;
     
+    CPU_INT08U  Reserved1;
+    
     CPU_INT16U  RCOUNT;
+    CPU_INT16U  DCOUNT;
     
-    CPU_INT32U  DOSTART;
+    CPU_INT08U  DOSTART[4];
     
-    CPU_INT32U  DOEND;
+    CPU_INT08U  DOEND[4];
     
-    CPU_INT16U SR;
+    CPU_INT16U  SR;
+    
+    CPU_INT16U  CORCON;
+    CPU_INT16U  MODCON;
     
 #ifdef  CORE_CFG_CYCLE_CNTR
     CPU_INT64U CYCLE;
@@ -86,6 +81,10 @@ typedef struct core_24f {
 } CORE_24F;
 
 typedef  CPU_INT16U  CORE_MATH_OP;
+
+CORE_24F * Core_Init(MEM         *p_mem_data,
+                     CPU_INT32U   addr,
+                     CORE_ERR    *p_err);
 
 void        Core_Push(CPU_INT32U   val,
                       CORE_24F    *p_core,
@@ -96,7 +95,8 @@ CPU_INT32U  Core_Pop (CORE_24F    *p_core,
                       MEM         *p_mem,
                       CORE_ERR    *p_err);
 
-void        Core_Run (MEM         *p_mem_prog,
+void        Core_Run (CORE_24F    *p_core,
+                      MEM_24      *p_mem_prog,
                       MEM         *p_mem_data,
                       CORE_ERR    *p_err);
 
@@ -104,6 +104,14 @@ CPU_INT08U  Core_GetCarry (CORE_24F  *p_core);
 CPU_INT08U  Core_GetZ     (CORE_24F  *p_core);
 CPU_INT08U  Core_GetOV    (CORE_24F  *p_core);
 CPU_INT08U  Core_GetN     (CORE_24F  *p_core);
+
+void        Core_PC_Slide (CORE_24F    *p_core,
+                           CPU_INT32S   slide);
+
+void        Core_PC_Set   (CORE_24F    *p_core,
+                           CPU_INT32U   value);
+
+CPU_INT32U  Core_PC_Get   (CORE_24F    *p_core);
 
 /* 2                    opcode      mask
  CALL EXPR           0x020000 /  0xFF0001
@@ -117,5 +125,7 @@ CPU_INT08U  Core_GetN     (CORE_24F  *p_core);
  */
 
 CPU_INT32U  Core_OPC_Words (OPCODE  opc);
+
+extern  CPU_INT32S  Call_Depth;
 
 #endif

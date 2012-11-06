@@ -9,7 +9,14 @@
 #ifndef Sipic_mem_cfg_h
 #define Sipic_mem_cfg_h
 
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+extern "C" {
+#endif
+
 #define  MEM_CFG_NAME_SIZE  33u
 
+#ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
+}
+#endif
 
 #endif

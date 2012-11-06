@@ -7,7 +7,7 @@
 //
 
 #include <stdio.h>
-#include <cpu.h>
+#include "cpu.h"
 
 CPU_INT16U  CPU_Swap16 (CPU_INT16U  val)
 {

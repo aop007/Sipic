@@ -13,13 +13,14 @@
 #include "ascii.h"
 #include "mem.h"
 #include "sipic_cfg.h"
+#include "main.h"
 
-void HexParser_ReadFile(const char      *p_file_name,
-                         MEM             *p_mem,
+void HexParser_ReadFile(const char       *p_file_name,
+                         MEM_24          *p_mem,
                          HEX_PARSER_ERR  *p_err)
 {
     FILE        *p_file;
-    MEM_HDR     *p_mem_hdr;
+    MEM_HDR_24  *p_mem_hdr;
     CPU_CHAR     sol;
     CPU_INT08U   byte_count;
     CPU_INT16U   address_lo;
@@ -52,7 +53,7 @@ void HexParser_ReadFile(const char      *p_file_name,
             address_lo     = CPU_Swap16(address_lo);
             address        = (address_hi << 16) | address_lo;
             
-            //printf("\r\nAddress = %x", address);
+            //CORE_TRACE_DEBUG("\r\nAddress = %x", address);
             
             record_type = ASCII_GetByte(p_file);
             
@@ -77,13 +78,13 @@ void HexParser_ReadFile(const char      *p_file_name,
                     
                     for (ix = 0 ; ix < (byte_count / 4) ; ix++) {
                         
-                        Mem_Set(p_mem,
-                                (address + ix * 4) / 2,
-                                block[ix],
-                               &mem_err);
+                        Mem_Set24(p_mem,
+                                  (address + ix * 4) / 2,
+                                  block[ix],
+                                 &mem_err);
                         
                         if (mem_err != MEM_ERR_NONE) {
-                            printf("\r\nMEM_Set() Error at %x", address + ix * 4);
+                            CORE_TRACE_DEBUG(("\r\nMEM_Set() Error at %x", address + ix * 4));
                            *p_err = mem_err;
                         }
 

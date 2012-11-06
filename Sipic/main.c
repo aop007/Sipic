@@ -6,62 +6,73 @@
 //  Copyright (c) 2012 Alexis Ouellet-Patenaude. All rights reserved.
 //
 
-#include <stdio.h>
-#include "sipic_cfg.h"
-#include "mem.h"
-#include "core_24f.h"
-#include "core_24f_opcode.h"
-#include "mem_cfg_24f3011.h"
+#include "main.h"
 
-#if    (SIPIC_CFG_PARSE_METHOD == SIPIC_PARSE_METHOD_COFF)
-#include <coff_parser.h>
-#include <coff_cfg.h>
-#elif  (SIPIC_CFG_PARSE_METHOD == SIPIC_PARSE_METHOD_HEX)
-#include <hex_parser.h>
-#include <hex_cfg.h>
+#if 0
+int mainX(int argc, const char * argv[])
+{
+    init_sipic();
+
+    Sim_Run(&sim_struct);
+}
 #endif
 
-
-int main(int argc, const char * argv[])
+void DLL_API C_STD_CALL run ()
 {
-    MEM      *p_mem_prog;
+    Sim_Run(&sim_struct);
+}
+
+void DLL_API C_STD_CALL init_sipic(void)
+{
+    SIM      *p_sim;
+    //SIM       sim_struct;
+    CORE_24F *p_core;
+    MEM_24   *p_mem_prog;
     MEM      *p_mem_data;
     MEM_ERR   mem_err;
     CORE_ERR  core_err;
-    HEX_PARSER_ERR  hex_err;    
+    HEX_PARSER_ERR  hex_err;
     
-    p_mem_prog = Mem_Init(&mem_cfg_prog_dsPIC30F[0],
-                    sizeof(mem_cfg_prog_dsPIC30F),
-                          &mem_err);
+    p_sim = &sim_struct;
+    core_static_err = CORE_ERR_NONE;
+    peri_static_err = PERI_ERR_NONE;
+    
+    p_mem_prog = Mem_Init24(&mem_cfg_prog_dsPIC30F[0],
+                            sizeof(mem_cfg_prog_dsPIC30F),
+                            &mem_err);
     
     p_mem_data = Mem_Init(&mem_cfg_data_dsPIC30F[0],
-                    sizeof(mem_cfg_data_dsPIC30F),
+                          sizeof(mem_cfg_data_dsPIC30F),
                           &mem_err);
     
 #if  (SIPIC_CFG_PARSE_METHOD == SIPIC_PARSE_METHOD_COFF)
     COFF_PARSER_ERR  coff_err;
-
+    
     CoffParser_ReadFile(COFF_CFG_FILE_PATH,
-                       &coff_err);
+                        &coff_err);
 #elif (SIPIC_CFG_PARSE_METHOD == SIPIC_PARSE_METHOD_HEX)
     
     
     HexParser_ReadFile(HEX_CFG_FILE_PATH,
                        p_mem_prog,
-                      &hex_err);
+                       &hex_err);
     
     if (hex_err != HEX_PARSER_ERR_NONE) {
-        printf("\r\nError in HexParser_ReadFile().");
-        return -1;
+        CORE_TRACE_DEBUG("\r\nError in HexParser_ReadFile().");
+        return;
     }
 #ifdef  CORE_STAT_EN
     Core_OPC_Stats(p_mem);
 #endif
     
-    Core_Run(p_mem_prog,
-             p_mem_data,
-            &core_err);
+    p_core = Core_Init(p_mem_data, 0x0000, &core_err);
+    
+    p_sim->p_core     = p_core;
+    p_sim->p_mem_data = p_mem_data;
+    p_sim->p_mem_prog = p_mem_prog;
+    
+    //Sim_Run(&sim_struct);
+    
 #endif
-    return 0;
+    return;
 }
-
