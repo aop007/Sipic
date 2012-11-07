@@ -2885,6 +2885,104 @@ void Core_CP0_E0000 (MEM_24      *p_mem_prog,
     *p_err = CORE_ERR_NONE;
 }
 
+void Core_CP_E1000 (MEM_24      *p_mem_prog,
+                    MEM         *p_mem_data,
+                    CORE_24F    *p_core,
+                    CPU_INT32U   args,
+                    CORE_ERR    *p_err)
+{
+    CPU_INT32U  src_w;
+    CPU_INT32U  size_op;
+    CPU_INT32U  addr_mode;
+    CPU_INT32U  dst_w;
+    CPU_INT32U  result;
+    CPU_INT32U  operand1;
+    CPU_INT32U  operand2;
+    MEM_ERR     mem_err;
+    
+    
+    src_w     = (args & 0x007800) >> 11;
+    size_op   = (args & 0x000400) >> 10;
+    addr_mode = (args & 0x000070) >> 4;
+    dst_w     =  args & 0x00000F;
+    
+    operand1  = p_core->W[src_w];
+    
+    mem_err = MEM_ERR_NONE;
+    
+    switch (addr_mode) {
+        case CORE_OPC_ADDR_MODE_DIR:
+            operand2 = p_core->W[dst_w];
+            break;
+            
+        case CORE_OPC_ADDR_MODE_IND:
+            operand2 = Mem_Get(p_mem_data, p_core->W[dst_w], &mem_err);
+            break;
+            
+        case CORE_OPC_ADDR_MODE_IND_POS_DEC:
+            operand2 = Mem_Get(p_mem_data, p_core->W[dst_w], &mem_err);
+            p_core->W[src_w] -= 2;
+            break;
+            
+        case CORE_OPC_ADDR_MODE_IND_POS_INC:
+            operand2 = Mem_Get(p_mem_data, p_core->W[dst_w], &mem_err);
+            p_core->W[src_w] += 2;
+            break;
+            
+        case CORE_OPC_ADDR_MODE_IND_PRE_DEC:
+            p_core->W[src_w] -= 2;
+            operand2 = Mem_Get(p_mem_data, p_core->W[dst_w], &mem_err);
+            break;
+            
+        case CORE_OPC_ADDR_MODE_IND_PRE_INC:
+            p_core->W[src_w] += 2;
+            operand2 = Mem_Get(p_mem_data, p_core->W[dst_w], &mem_err);
+            break;
+            
+        default:
+            *p_err = CORE_ERR_INVALID_OPC_ARG;
+            return;
+    }
+    
+    if (mem_err != MEM_ERR_NONE) {
+        *p_err = CORE_ERR_INVALID_MEM;
+        return;
+    }
+    
+    result = operand1 - operand2;
+    
+    /* Update Status Register */
+    if (((operand1 & 0x00000080) &&                              /* DC */
+         (result  & 0x00000080))) {
+        p_core->SR |=   CORE_SR_DC;
+    } else {
+        p_core->SR &= ~(CORE_SR_DC);
+    }
+    
+                                                                /* N */
+    p_core->SR &= ~(CORE_SR_N);
+    
+                                                                /* OV */
+    p_core->SR &= ~(CORE_SR_OV);
+    
+    if (result == 0) {                                          /* Z */
+        p_core->SR |=   CORE_SR_Z;
+    } else {
+        p_core->SR &= ~(CORE_SR_Z);
+    }
+    
+    if (((operand1 & 0x00008000) &&                              /* C */
+         (result  & 0x00008000))) {
+        p_core->SR |=   CORE_SR_C;
+    } else {
+        p_core->SR &= ~(CORE_SR_C);
+    }
+    
+    Core_PC_Slide(p_core, 2);
+    
+    *p_err = CORE_ERR_NONE;
+}
+
 void Core_CP_E1006 (MEM_24      *p_mem_prog,
                     MEM         *p_mem_data,
                     CORE_24F    *p_core,

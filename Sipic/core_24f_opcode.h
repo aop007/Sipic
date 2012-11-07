@@ -78,6 +78,7 @@ extern "C" {
 
 #define  CORE_OPC_CP0_WN_SF  0xE00000
 #define  CORE_OPC_CP_W_LIT   0xE10060
+#define  CORE_OPC_CP_WB_WS   0xE10000
 #define  CORE_OPC_DEC_WS_WD  0xE90000
 #define  CORE_OPC_SETM_WS    0xEB8000
 #define  CORE_OPC_INC_EC0    0xEC0000
@@ -332,6 +333,12 @@ void Core_CP0_E0000 (MEM_24      *p_mem_prog,
                      CPU_INT32U   args,
                      CORE_ERR    *p_err);
 
+void Core_CP_E1000 (MEM_24      *p_mem_prog,
+                        MEM         *p_mem_data,
+                        CORE_24F    *p_core,
+                        CPU_INT32U   args,
+                        CORE_ERR    *p_err);
+    
 void Core_CP_E1006 (MEM_24      *p_mem_prog,
                     MEM         *p_mem_data,
                     CORE_24F    *p_core,

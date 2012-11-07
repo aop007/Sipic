@@ -115,7 +115,7 @@ void  Core_Run(CORE_24F  *p_core_24f,
         CORE_TRACE_DEBUG(("PC = %004x\tOPC = %006x\t |", Core_PC_Get(p_core_24f), opcode));
 #endif
 #if 1
-        if ((Core_PC_Get(p_core_24f) == 0x0AEE) && (p_core_24f->W[0] == 0)){
+        if ((Core_PC_Get(p_core_24f) == 0x0C04)) { // && (p_core_24f->W[0] == 0)){
             uncaught_instructions *= 1;
             CORE_TRACE_DEBUG((""));
         }
@@ -242,7 +242,6 @@ void  Core_Run(CORE_24F  *p_core_24f,
             }
         }
         
-        
         if (found_instruction == DEF_NO) {
             instruction = opcode & 0xFF83E0;
             args        = opcode & 0x007C1F;
@@ -253,6 +252,22 @@ void  Core_Run(CORE_24F  *p_core_24f,
                     Core_CP_E1006(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
                     break;
                     
+                    
+                default:
+                    found_instruction = DEF_NO;
+                    break;
+            }
+        }
+        
+        if (found_instruction == DEF_NO) {
+            instruction = opcode & 0xFF8380;
+            args        = opcode & 0x007C7F;
+            found_instruction = DEF_YES;
+            
+            switch (instruction) {
+                case CORE_OPC_CP_WB_WS:
+                    Core_CP_E1000(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
+                    break;
                     
                 default:
                     found_instruction = DEF_NO;

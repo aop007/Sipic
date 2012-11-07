@@ -8,7 +8,7 @@
 
 #include "main.h"
 
-#if 1
+#ifndef OBJ_C
 int main(int argc, const char * argv[])
 {
     init_sipic();

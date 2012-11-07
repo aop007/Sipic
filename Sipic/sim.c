@@ -12,13 +12,15 @@
 #include "core_24f_opcode.h"
 #include "main.h"
 
-void Sim_Run(SIM  *p_sim)
+void Sim_Run()
 {
+    SIM        *p_sim;
     PERI_ERR    peri_err;
     CORE_ERR    core_err;
     
     core_err = CORE_ERR_NONE;
     peri_err = PERI_ERR_NONE;
+    p_sim    = &sim_struct;
     
     while (1) {
         
