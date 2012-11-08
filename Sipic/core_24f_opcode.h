@@ -59,6 +59,8 @@ extern "C" {
 #define  CORE_OPC_MOV_W_M    0x880000
 
 #define  CORE_OPC_BSET_W     0xA00000
+#define  CORE_OPC_BCLR_W     0xA10000
+#define  CORE_OPC_BTG_W      0xA20000
 #define  CORE_OPC_BTSS_W     0xA60000
 #define  CORE_OPC_BTSC_W     0xA70000
 #define  CORE_OPC_BSET_M     0xA80000
@@ -85,7 +87,7 @@ extern "C" {
 #define  CORE_OPC_CP_WB_WS   0xE10000
 //#define  CORE_OPC_DEC_WS_WD  0xE90000
 #define  CORE_OPC_SETM_WS    0xEB8000
-//#define  CORE_OPC_INC_WS_WD  0xEC0000
+#define  CORE_OPC_INC_M      0xEC0000
 #define  CORE_OPC_CLR_WD     0xEB0000
 #define  CORE_OPC_CLR_M_W0   0xEF0000
 #define  CORE_OPC_SETM_M_W0  0xEF8000
@@ -94,24 +96,26 @@ extern "C" {
 #define  CORE_OPC_POP_F9     0xF90000
 
 #define  CORE_OPC_SE         0xFB0000
+#define  CORE_OPC_ZE         0xFB8000
+#define  CORE_OPC_SWAP_WN    0xFD8000
     
-#define  CORE_OPC_ASR        0xD18000
-#define  CORE_OPC_COM        0xEA8000
-#define  CORE_OPC_DEC        0xE90000
-#define  CORE_OPC_DEC2       0xE98000
-#define  CORE_OPC_INC        0xE80000
-#define  CORE_OPC_INC2       0xE88000
-#define  CORE_OPC_LSR        0xD10000
-#define  CORE_OPC_NEG        0xEA0000
-#define  CORE_OPC_RLC        0xD28000
-#define  CORE_OPC_RLNC       0xD20000
-#define  CORE_OPC_RRC        0xD38000
-#define  CORE_OPC_RRNC       0xD30000
-#define  CORE_OPC_SL         0xD00000
-#define  CORE_OPC_TBLRDH     0xBA8000
-#define  CORE_OPC_TBLRDL     0xBA0000
-#define  CORE_OPC_TBLWDH     0xBB8000
-#define  CORE_OPC_TBLWDL     0xBB0000
+#define  CORE_OPC_ASR_W        0xD18000
+#define  CORE_OPC_COM_W        0xEA8000
+#define  CORE_OPC_DEC_W        0xE90000
+#define  CORE_OPC_DEC2_W       0xE98000
+#define  CORE_OPC_INC_W        0xE80000
+#define  CORE_OPC_INC2_W       0xE88000
+#define  CORE_OPC_LSR_W        0xD10000
+#define  CORE_OPC_NEG_W        0xEA0000
+#define  CORE_OPC_RLC_W        0xD28000
+#define  CORE_OPC_RLNC_W       0xD20000
+#define  CORE_OPC_RRC_W        0xD38000
+#define  CORE_OPC_RRNC_W       0xD30000
+#define  CORE_OPC_SL_W         0xD00000
+#define  CORE_OPC_TBLRDH_W     0xBA8000
+#define  CORE_OPC_TBLRDL_W     0xBA0000
+#define  CORE_OPC_TBLWDH_W     0xBB8000
+#define  CORE_OPC_TBLWDL_W     0xBB0000
     
 
 #define  CORE_OPC_ADDR_MODE_DIR          0x00
@@ -235,10 +239,11 @@ void Core_MOV_W_M_88   (MEM_24      *p_mem_prog,
                         CPU_INT32U   args,
                         CORE_ERR    *p_err);
 
-void Core_BSET_W_A0    (MEM_24      *p_mem_prog,
+void Core_BIT_LOGIC_W  (MEM_24      *p_mem_prog,
                         MEM         *p_mem_data,
                         CORE_24F    *p_core,
                         CPU_INT32U   args,
+                        OPCODE       instruction,
                         CORE_ERR    *p_err);
 
 void Core_BSET_M_A8    (MEM_24      *p_mem_prog,
@@ -423,6 +428,18 @@ void Core_POP_F9        (MEM_24      *p_mem_prog,
                          CORE_ERR    *p_err);
 
 void Core_SE_FB00       (MEM_24      *p_mem_prog,
+                         MEM         *p_mem_data,
+                         CORE_24F    *p_core,
+                         CPU_INT32U   args,
+                         CORE_ERR    *p_err);
+
+void Core_ZE_FB8        (MEM_24      *p_mem_prog,
+                         MEM         *p_mem_data,
+                         CORE_24F    *p_core,
+                         CPU_INT32U   args,
+                         CORE_ERR    *p_err);
+
+void Core_SWAP_FD800    (MEM_24      *p_mem_prog,
                          MEM         *p_mem_data,
                          CORE_24F    *p_core,
                          CPU_INT32U   args,

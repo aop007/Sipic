@@ -93,10 +93,13 @@ void        Core_Run (CORE_24F    *p_core,
                       MEM         *p_mem_data,
                       CORE_ERR    *p_err);
 
-CPU_INT08U  Core_GetC     (CORE_24F  *p_core);
-CPU_INT08U  Core_GetZ     (CORE_24F  *p_core);
-CPU_INT08U  Core_GetOV    (CORE_24F  *p_core);
-CPU_INT08U  Core_GetN     (CORE_24F  *p_core);
+CPU_INT08U  Core_GetC     (CORE_24F     *p_core);
+CPU_INT08U  Core_GetZ     (CORE_24F     *p_core);
+CPU_INT08U  Core_GetOV    (CORE_24F     *p_core);
+CPU_INT08U  Core_GetN     (CORE_24F     *p_core);
+
+void        Core_SetC     (CORE_24F     *p_core, 
+                           CPU_BOOLEAN   value);
 
 void        Core_PC_Slide (CORE_24F    *p_core,
                            CPU_INT32S   slide);

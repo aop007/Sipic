@@ -43,6 +43,7 @@ void Sim_Run()
         
         if (core_err != CORE_ERR_NONE) {
             printf("\r\nCore Error no %d",core_err);
+            printf(" ");
         }
         
     }
