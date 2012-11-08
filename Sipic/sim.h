@@ -27,7 +27,7 @@ typedef  struct  sim {
 
 void                                Sim_Init();
 
-void                                Sim_Run(SIM  *p_sim);
+void                                Sim_Run();
 
 void            DLL_API             Sim_Step();
 

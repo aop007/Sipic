@@ -21,7 +21,7 @@ extern "C" {
 #include "hex_cfg.h"
 #endif
 
-#define CORE_TRACE_LEVEL 0
+#define CORE_TRACE_LEVEL 1
 
 #if (CORE_TRACE_LEVEL > 0)
 #define CORE_TRACE_INFO(x) printf x

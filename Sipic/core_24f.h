@@ -37,12 +37,6 @@ extern "C" {
 
 #define  CORE_CORECON_IPL3 0x0008
 
-#define  CORE_MATH_OP_ADD  0x0001
-#define  CORE_MATH_OP_SUB  0x0002
-#define  CORE_MATH_OP_MUL  0x0003
-#define  CORE_MATH_OP_DIV  0x0004
-
-
 typedef struct core_24f {
     
     CPU_INT16U  W[16];
@@ -80,7 +74,6 @@ typedef struct core_24f {
     
 } CORE_24F;
 
-typedef  CPU_INT16U  CORE_MATH_OP;
 
 CORE_24F * Core_Init(MEM         *p_mem_data,
                      CPU_INT32U   addr,
@@ -100,7 +93,7 @@ void        Core_Run (CORE_24F    *p_core,
                       MEM         *p_mem_data,
                       CORE_ERR    *p_err);
 
-CPU_INT08U  Core_GetCarry (CORE_24F  *p_core);
+CPU_INT08U  Core_GetC     (CORE_24F  *p_core);
 CPU_INT08U  Core_GetZ     (CORE_24F  *p_core);
 CPU_INT08U  Core_GetOV    (CORE_24F  *p_core);
 CPU_INT08U  Core_GetN     (CORE_24F  *p_core);

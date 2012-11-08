@@ -12,13 +12,15 @@
 #include "core_24f_opcode.h"
 #include "main.h"
 
-void Sim_Run(SIM  *p_sim)
+void Sim_Run()
 {
+    SIM        *p_sim;
     PERI_ERR    peri_err;
     CORE_ERR    core_err;
     
     core_err = CORE_ERR_NONE;
     peri_err = PERI_ERR_NONE;
+    p_sim    = &sim_struct;
     
     while (1) {
         
@@ -37,7 +39,11 @@ void Sim_Run(SIM  *p_sim)
                  p_sim->p_mem_data,
                 &core_err);
         
-        printf("\r\n%004x", Core_PC_Get(p_sim->p_core));
+        //printf("\r\n%004x", Core_PC_Get(p_sim->p_core));
+        
+        if (core_err != CORE_ERR_NONE) {
+            printf("\r\nCore Error no %d",core_err);
+        }
         
     }
 }

@@ -34,7 +34,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.Run = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.BPupdown = new System.Windows.Forms.NumericUpDown();
             this.numPC = new System.Windows.Forms.NumericUpDown();
             this.codeGridView = new System.Windows.Forms.DataGridView();
@@ -43,12 +42,23 @@
             this.memoryView2 = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.StatusRegisterLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.condCheck = new System.Windows.Forms.CheckBox();
+            this.condAddr = new System.Windows.Forms.NumericUpDown();
+            this.condMask = new System.Windows.Forms.NumericUpDown();
+            this.condValue = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.memoryView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BPupdown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPC)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.codeGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numOPC)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.memoryView2)).BeginInit();
+            this.statusStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.condAddr)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.condMask)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.condValue)).BeginInit();
             this.SuspendLayout();
             // 
             // memoryView1
@@ -70,9 +80,8 @@
             this.memoryView1.ShowCellErrors = false;
             this.memoryView1.ShowCellToolTips = false;
             this.memoryView1.ShowEditingIcon = false;
-            this.memoryView1.Size = new System.Drawing.Size(206, 496);
+            this.memoryView1.Size = new System.Drawing.Size(206, 515);
             this.memoryView1.TabIndex = 0;
-            this.memoryView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // AddressColumn
             // 
@@ -115,15 +124,6 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "PC:";
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(553, 44);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(24, 13);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "BP:";
-            // 
             // BPupdown
             // 
             this.BPupdown.Hexadecimal = true;
@@ -132,7 +132,7 @@
             0,
             0,
             0});
-            this.BPupdown.Location = new System.Drawing.Point(583, 44);
+            this.BPupdown.Location = new System.Drawing.Point(638, 44);
             this.BPupdown.Maximum = new decimal(new int[] {
             16777214,
             0,
@@ -175,7 +175,7 @@
             this.codeGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.codeGridView.Location = new System.Drawing.Point(436, 71);
             this.codeGridView.Name = "codeGridView";
-            this.codeGridView.Size = new System.Drawing.Size(685, 437);
+            this.codeGridView.Size = new System.Drawing.Size(685, 456);
             this.codeGridView.TabIndex = 7;
             // 
             // numOPC
@@ -226,9 +226,8 @@
             this.memoryView2.ShowCellErrors = false;
             this.memoryView2.ShowCellToolTips = false;
             this.memoryView2.ShowEditingIcon = false;
-            this.memoryView2.Size = new System.Drawing.Size(206, 496);
+            this.memoryView2.Size = new System.Drawing.Size(206, 515);
             this.memoryView2.TabIndex = 0;
-            this.memoryView2.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // dataGridViewTextBoxColumn1
             // 
@@ -242,16 +241,116 @@
             this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
             this.dataGridViewTextBoxColumn2.ReadOnly = true;
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.StatusRegisterLabel});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 530);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(1133, 22);
+            this.statusStrip1.TabIndex = 8;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // StatusRegisterLabel
+            // 
+            this.StatusRegisterLabel.Name = "StatusRegisterLabel";
+            this.StatusRegisterLabel.Size = new System.Drawing.Size(109, 17);
+            this.StatusRegisterLabel.Text = "StatusRegisterLabel";
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(556, 45);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(76, 17);
+            this.checkBox1.TabIndex = 9;
+            this.checkBox1.Text = "Enable BP";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // condCheck
+            // 
+            this.condCheck.AutoSize = true;
+            this.condCheck.Location = new System.Drawing.Point(744, 45);
+            this.condCheck.Name = "condCheck";
+            this.condCheck.Size = new System.Drawing.Size(106, 17);
+            this.condCheck.TabIndex = 9;
+            this.condCheck.Text = "Enable Condition";
+            this.condCheck.UseVisualStyleBackColor = true;
+            // 
+            // condAddr
+            // 
+            this.condAddr.Hexadecimal = true;
+            this.condAddr.Increment = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.condAddr.Location = new System.Drawing.Point(856, 44);
+            this.condAddr.Maximum = new decimal(new int[] {
+            16777214,
+            0,
+            0,
+            0});
+            this.condAddr.Name = "condAddr";
+            this.condAddr.Size = new System.Drawing.Size(62, 20);
+            this.condAddr.TabIndex = 5;
+            this.condAddr.Value = new decimal(new int[] {
+            2796,
+            0,
+            0,
+            0});
+            // 
+            // condMask
+            // 
+            this.condMask.Hexadecimal = true;
+            this.condMask.Location = new System.Drawing.Point(924, 44);
+            this.condMask.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.condMask.Name = "condMask";
+            this.condMask.Size = new System.Drawing.Size(62, 20);
+            this.condMask.TabIndex = 5;
+            this.condMask.Value = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            // 
+            // condValue
+            // 
+            this.condValue.Hexadecimal = true;
+            this.condValue.Location = new System.Drawing.Point(992, 44);
+            this.condValue.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.condValue.Name = "condValue";
+            this.condValue.Size = new System.Drawing.Size(62, 20);
+            this.condValue.TabIndex = 5;
+            this.condValue.Value = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1133, 520);
+            this.ClientSize = new System.Drawing.Size(1133, 552);
+            this.Controls.Add(this.condCheck);
+            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.codeGridView);
             this.Controls.Add(this.numOPC);
             this.Controls.Add(this.numPC);
+            this.Controls.Add(this.condValue);
+            this.Controls.Add(this.condMask);
+            this.Controls.Add(this.condAddr);
             this.Controls.Add(this.BPupdown);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.Run);
@@ -259,13 +358,18 @@
             this.Controls.Add(this.memoryView2);
             this.Controls.Add(this.memoryView1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Sipic";
             ((System.ComponentModel.ISupportInitialize)(this.memoryView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BPupdown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPC)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.codeGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numOPC)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.memoryView2)).EndInit();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.condAddr)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.condMask)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.condValue)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -279,7 +383,6 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button Run;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown BPupdown;
         private System.Windows.Forms.NumericUpDown numPC;
         private System.Windows.Forms.DataGridView codeGridView;
@@ -288,6 +391,13 @@
         private System.Windows.Forms.DataGridView memoryView2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel StatusRegisterLabel;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox condCheck;
+        private System.Windows.Forms.NumericUpDown condAddr;
+        private System.Windows.Forms.NumericUpDown condMask;
+        private System.Windows.Forms.NumericUpDown condValue;
     }
 }
 
