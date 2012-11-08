@@ -41,6 +41,10 @@ void Sim_Run()
         
         //printf("\r\n%004x", Core_PC_Get(p_sim->p_core));
         
+        if (core_err != CORE_ERR_NONE) {
+            printf("\r\nCore Error no %d",core_err);
+        }
+        
     }
 }
 

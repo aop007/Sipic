@@ -240,103 +240,92 @@ void  Core_MOV_2 (MEM_24      *p_mem_prog,
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_BRA_34 (MEM_24      *p_mem_prog,
-                  MEM         *p_mem_data,
-                  CORE_24F    *p_core,
-                  CPU_INT32U   args,
-                  CORE_ERR    *p_err)
+void Core_BRA_3 (MEM_24      *p_mem_prog,
+                 MEM         *p_mem_data,
+                 CORE_24F    *p_core,
+                 CPU_INT32U   args,
+                 CORE_ERR    *p_err)
 {
     CPU_INT16U     slit;
     CPU_INT16S  *p_slit;
     CPU_INT32U   addr;
-    CPU_BOOLEAN  condition;
+    CPU_INT32U   cond_sel;
+    CPU_BOOLEAN  result;
     
-    slit = args;
+    slit     =  args & 0x00FFFF;
+    cond_sel = (args & 0x0F0000) >> 16;
     
     p_slit = (CPU_INT16S *)&slit;
     
     addr   = Core_PC_Get(p_core) + 2 + 2 * (*p_slit);
     
-    condition = Core_GetZ(p_core) || (Core_GetN(p_core) && !Core_GetOV(p_core)) || (!Core_GetN(p_core) && Core_GetOV(p_core));
-    
-    if (condition) {
-        Core_PC_Set(p_core, addr);
-    } else {
-        Core_PC_Slide(p_core, 2);
+    switch (cond_sel) {
+        case CORE_OPC_BRA_OV:
+            result = Core_GetOV(p_core);
+            break;
+            
+        case CORE_OPC_BRA_C:
+            result = Core_GetC(p_core);
+            break;
+            
+        case CORE_OPC_BRA_Z:
+            result = Core_GetZ(p_core);
+            break;
+            
+        case CORE_OPC_BRA_N:
+            result = Core_GetN(p_core);
+            break;
+            
+        case CORE_OPC_BRA_LE:
+            result = Core_GetZ(p_core) || (Core_GetN(p_core) && !Core_GetOV(p_core)) || (!Core_GetN(p_core) && Core_GetOV(p_core));
+            break;
+            
+        case CORE_OPC_BRA_LT:
+            *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+            return;
+            
+        case CORE_OPC_BRA_LEU:
+            *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+            return;
+            
+        case CORE_OPC_BRA_UNC:
+            result = DEF_YES;
+            break;
+            
+        case CORE_OPC_BRA_NOV:
+            *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+            return;
+            
+        case CORE_OPC_BRA_NC:
+            *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+            return;
+            
+        case CORE_OPC_BRA_NZ:
+            result = !Core_GetZ(p_core);
+            break;
+            
+        case CORE_OPC_BRA_NN:
+            *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+            return;
+            
+        case CORE_OPC_BRA_GT:
+            *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+            return;
+            
+        case CORE_OPC_BRA_GE:
+            result = !Core_GetN(p_core);
+            break;
+            
+        case CORE_OPC_BRA_GTU:
+            *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+            return;
+            
+        default:
+            *p_err = CORE_ERR_INVALID_OPC_ARG;
+            return; 
     }
-    
-    *p_err = CORE_ERR_NONE;
-}
 
-void Core_BRA_37       (MEM_24      *p_mem_prog,
-                        MEM         *p_mem_data,
-                        CORE_24F    *p_core,
-                        CPU_INT32U   args,
-                        CORE_ERR    *p_err)
-{
-    CPU_INT16U     slit;
-    CPU_INT16S  *p_slit;
-    CPU_INT32U   addr;
-    
-    slit = args;
-    
-    p_slit = (CPU_INT16S *)&slit;
-    
-    addr   = Core_PC_Get(p_core) + 2 + 2 * (*p_slit);
-    
-    Core_PC_Set(p_core, addr);
-    
-    *p_err = CORE_ERR_NONE;
-}
-
-void Core_BRA_3A (MEM_24      *p_mem_prog,
-                  MEM         *p_mem_data,
-                  CORE_24F    *p_core,
-                  CPU_INT32U   args,
-                  CORE_ERR    *p_err)
-{
-    CPU_INT16U     slit;
-    CPU_INT16S  *p_slit;
-    CPU_INT32U   addr;
-    CPU_BOOLEAN  condition;
-    
-    slit = args;
-    
-    p_slit = (CPU_INT16S *)&slit;
-    
-    addr   = Core_PC_Get(p_core) + 2 + 2 * (*p_slit);
-    
-    condition = !Core_GetZ(p_core);
-    
-    if (condition) {
-        Core_PC_Set(p_core, addr);
-    } else {
-        Core_PC_Slide(p_core, 2);
-    }
-    
-    *p_err = CORE_ERR_NONE;
-}
-
-void Core_BRA_3D (MEM_24      *p_mem_prog,
-                  MEM         *p_mem_data,
-                  CORE_24F    *p_core,
-                  CPU_INT32U   args,
-                  CORE_ERR    *p_err)
-{
-    CPU_INT16U     slit;
-    CPU_INT16S  *p_slit;
-    CPU_INT32U   addr;
-    CPU_BOOLEAN  condition;
-    
-    slit = args;
-    
-    p_slit = (CPU_INT16S *)&slit;
-    
-    addr   = Core_PC_Get(p_core) + 2 + 2 * (*p_slit);
-    
-    condition = !Core_GetN(p_core);
-    
-    if (condition) {
+    if (result) {
         Core_PC_Set(p_core, addr);
     } else {
         Core_PC_Slide(p_core, 2);
@@ -349,7 +338,7 @@ void Core_MATH_WS_WD   (MEM_24       *p_mem_prog,
                         MEM          *p_mem_data,
                         CORE_24F     *p_core,
                         CPU_INT32U    args,
-                        CORE_MATH_OP  math_op,
+                        OPCODE        math_opc,
                         CORE_ERR     *p_err)
 {
     CPU_INT32U  base_w_addr;                                    /* wwww */
@@ -477,25 +466,33 @@ void Core_MATH_WS_WD   (MEM_24       *p_mem_prog,
             return;
     }
 
-    switch (math_op) {
-        case CORE_MATH_OP_ADD:
+    switch (math_opc) {
+        case CORE_OPC_ADD_WB_WS_WD:
             result = operand_1 + operand_2;
             break;
             
-        case CORE_MATH_OP_SUB:
+        case CORE_OPC_ADDC_WB_WS_WD:
+            result = operand_1 + operand_2 + Core_GetC(p_core);
+            break;
+            
+        case CORE_OPC_SUB_WB_WS_WD:
             result = operand_1 - operand_2;
             break;
-            
-        case CORE_MATH_OP_MUL:
-            result = operand_1 * operand_2;
+
+        case CORE_OPC_XOR_WB_WS_WD:
+            result = operand_1 ^ operand_2;
             break;
             
-        case CORE_MATH_OP_DIV:
-            result = operand_1 / operand_2;
-            break;
+        case CORE_OPC_AND_WB_WS_WD:
+        case CORE_OPC_IOR_WB_WS_WD:
+        case CORE_OPC_SUBB_WB_WS_WD:
+        case CORE_OPC_SUBBR_WB_WS_WD:
+        case CORE_OPC_SUBR_WB_WS_WD:
+            *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+            return;
             
         default:
-            *p_err = CORE_ERR_INVALID_MATH_OP;
+            *p_err = CORE_ERR_INVALID_OPC_ARG;
             return;
     }
     
@@ -762,7 +759,7 @@ void Core_ADDC_48    (MEM_24      *p_mem_prog,
         return;
     }
     
-    result  = p_core->W[base_w] + operand1 + Core_GetCarry(p_core);
+    result  = p_core->W[base_w] + operand1 + Core_GetC(p_core);
     mem_err = MEM_ERR_NONE;
     
     switch (dest_addr_mode) {
@@ -881,7 +878,7 @@ void Core_ADDC_48006 (MEM_24      *p_mem_prog,
         offset = 2;
     }
     
-    result  = p_core->W[base_w] + operand1 + Core_GetCarry(p_core);
+    result  = p_core->W[base_w] + operand1 + Core_GetC(p_core);
     mem_err = MEM_ERR_NONE;
     
     switch (addr_mode) {
@@ -1886,7 +1883,7 @@ void Core_ADDC_B08 (MEM_24      *p_mem_prog,
     }
 
     initial = p_core->W[w_reg];
-    result  = lit + initial + Core_GetCarry(p_core);
+    result  = lit + initial + Core_GetC(p_core);
 
     p_core->W[w_reg] = result;
 
@@ -2179,7 +2176,7 @@ void Core_ADDC_B48 (MEM_24      *p_mem_prog,
         return;
     }
     
-    result = operand + p_core->W[0] + Core_GetCarry(p_core);
+    result = operand + p_core->W[0] + Core_GetC(p_core);
     
     /* Update Status Register */
     if (((operand & 0x00000080) &&                             /* DC */
@@ -2362,6 +2359,15 @@ void Core_DEC_E90 (MEM_24      *p_mem_prog,
 
     Core_PC_Slide(p_core, 2);
     *p_err = CORE_ERR_NONE;
+}
+
+void Core_RLC_D28 (MEM_24      *p_mem_prog,
+                   MEM         *p_mem_data,
+                   CORE_24F    *p_core,
+                   CPU_INT32U   args,
+                   CORE_ERR    *p_err)
+{
+    *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
 }
 
 void Core_MUL_UU_B8006 (MEM_24      *p_mem_prog,

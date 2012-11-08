@@ -35,16 +35,20 @@ extern "C" {
 
 #define  CORE_OPC_MOV_L_W    0x200000
 
-#define  CORE_OPC_BRA_LE_EXPR    0x340000
-#define  CORE_OPC_BRA_EXPR       0x370000
-#define  CORE_OPC_BRA_NZ_EXPR    0x3A0000
-#define  CORE_OPC_BRA_NN_EXPR    0x3D0000
+#define  CORE_OPC_BRA_COND_SLIT  0x300000
 
-#define  CORE_OPC_ADD_WB_WS      0x400000
+#define  CORE_OPC_ADD_WB_WS_WD   0x400000
 #define  CORE_OPC_ADDC_WB_WS_WD  0x480000
+#define  CORE_OPC_AND_WB_WS_WD   0x600000
+#define  CORE_OPC_IOR_WB_WS_WD   0x700000
+#define  CORE_OPC_SUB_WB_WS_WD   0x500000
+#define  CORE_OPC_SUBB_WB_WS_WD  0x510000
+#define  CORE_OPC_SUBBR_WB_WS_WD 0x110000
+#define  CORE_OPC_SUBR_WB_WS_WD  0x100000
+#define  CORE_OPC_XOR_WB_WS_WD   0x680000
+    
 #define  CORE_OPC_ADDC_WB_LIT_WD 0x480060
 
-#define  CORE_OPC_SUB_WB_WS  0x500000
 #define  CORE_OPC_LIT_WB     0x500060
 
 
@@ -73,7 +77,7 @@ extern "C" {
 #define  CORE_OPC_MOV_WN_M   0xB7A000
 #define  CORE_OPC_MOV_M_WM   0xBF8000
 
-
+#define  CORE_OPC_RLC_WS_WD  0xD28000
 #define  CORE_OPC_DIV_S      0xD80000
 
 #define  CORE_OPC_CP0_WN_SF  0xE00000
@@ -100,6 +104,23 @@ extern "C" {
 #define  CORE_OPC_ADDR_MODE_OFFSET       0x06
 
 
+#define  CORE_OPC_BRA_OV        0x0
+#define  CORE_OPC_BRA_C         0x1
+#define  CORE_OPC_BRA_Z         0x2
+#define  CORE_OPC_BRA_N         0x3
+#define  CORE_OPC_BRA_LE        0x4
+#define  CORE_OPC_BRA_LT        0x5
+#define  CORE_OPC_BRA_LEU       0x6
+#define  CORE_OPC_BRA_UNC       0x7
+#define  CORE_OPC_BRA_NOV       0x8
+#define  CORE_OPC_BRA_NC        0x9
+#define  CORE_OPC_BRA_NZ        0xA
+#define  CORE_OPC_BRA_NN        0xB
+#define  CORE_OPC_BRA_GT        0xC
+#define  CORE_OPC_BRA_GE        0xD
+#define  CORE_OPC_BRA_GTU       0xE
+    
+    
 void Core_OPC_Stats           (MEM_24      *p_mem);
 
 void  Core_NOP_00             (MEM_24      *p_mem_prog,
@@ -145,36 +166,18 @@ void Core_MOV_2        (MEM_24      *p_mem_prog,
                         CORE_24F    *p_core,
                         CPU_INT32U   args,
                         CORE_ERR    *p_err);
-
-void Core_BRA_34 (MEM_24      *p_mem_prog,
-                  MEM         *p_mem_data,
-                  CORE_24F    *p_core,
-                  CPU_INT32U   args,
-                  CORE_ERR    *p_err);
-
-void Core_BRA_37       (MEM_24      *p_mem_prog,
-                        MEM         *p_mem_data,
-                        CORE_24F    *p_core,
-                        CPU_INT32U   args,
-                        CORE_ERR    *p_err);
-
-void Core_BRA_3A (MEM_24      *p_mem_prog,
-                  MEM         *p_mem_data,
-                  CORE_24F    *p_core,
-                  CPU_INT32U   args,
-                  CORE_ERR    *p_err);
-
-void Core_BRA_3D (MEM_24      *p_mem_prog,
-                  MEM         *p_mem_data,
-                  CORE_24F    *p_core,
-                  CPU_INT32U   args,
-                  CORE_ERR    *p_err);
+    
+void Core_BRA_3 (MEM_24      *p_mem_prog,
+                     MEM         *p_mem_data,
+                     CORE_24F    *p_core,
+                     CPU_INT32U   args,
+                 CORE_ERR    *p_err);
 
 void Core_MATH_WS_WD   (MEM_24        *p_mem_prog,
                         MEM           *p_mem_data,
                         CORE_24F      *p_core,
                         CPU_INT32U     args,
-                        CORE_MATH_OP   math_op,
+                        OPCODE         math_opc,
                         CORE_ERR      *p_err);
 
 void Core_ADDC_48 (MEM_24      *p_mem_prog,
