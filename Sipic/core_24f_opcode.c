@@ -2361,13 +2361,66 @@ void Core_DEC_E90 (MEM_24      *p_mem_prog,
     *p_err = CORE_ERR_NONE;
 }
 
-void Core_RLC_D28 (MEM_24      *p_mem_prog,
+void Core_Logical (MEM_24      *p_mem_prog,
                    MEM         *p_mem_data,
                    CORE_24F    *p_core,
                    CPU_INT32U   args,
+                   OPCODE       operation,
                    CORE_ERR    *p_err)
 {
-    *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+    CPU_INT32U  size_op;
+    CPU_INT32U  dst_addr_mode;
+    CPU_INT32U  dst_w;
+    CPU_INT32U  src_addr_mode;
+    CPU_INT32U  src_w;
+    
+    
+    size_op = (args & 0x004000) >> 14;
+//    ...
+    
+    
+    switch (operation) {
+        case CORE_OPC_INC:
+            break;
+            
+        case CORE_OPC_DEC:
+            break;
+            
+        case CORE_OPC_RLC:
+            break;
+            
+        case CORE_OPC_ASR:
+            break;
+        case CORE_OPC_COM:
+            break;
+        case CORE_OPC_INC2:
+            break;
+        case CORE_OPC_DEC2:
+            break;
+        case CORE_OPC_LSR:
+            break;
+        case CORE_OPC_NEG:
+            break;
+        case CORE_OPC_RLNC:
+            break;
+        case CORE_OPC_RRC:
+            break;
+        case CORE_OPC_RRNC:
+            break;
+        case CORE_OPC_SL:
+            break;
+        case CORE_OPC_TBLRDH:
+
+        case CORE_OPC_TBLRDL:
+
+        case CORE_OPC_TBLWDH:
+
+        case CORE_OPC_TBLWDL:
+            break;
+    }
+    
+    
+    
 }
 
 void Core_MUL_UU_B8006 (MEM_24      *p_mem_prog,
