@@ -297,8 +297,8 @@ void Core_BRA_3 (MEM_24      *p_mem_prog,
             return;
             
         case CORE_OPC_BRA_NC:
-            *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
-            return;
+            result = !Core_GetC(p_core);
+            break;
             
         case CORE_OPC_BRA_NZ:
             result = !Core_GetZ(p_core);
@@ -331,6 +331,127 @@ void Core_BRA_3 (MEM_24      *p_mem_prog,
         Core_PC_Slide(p_core, 2);
     }
     
+    *p_err = CORE_ERR_NONE;
+}
+
+void Core_MATH_WN_LIT  (MEM_24       *p_mem_prog,
+                        MEM          *p_mem_data,
+                        CORE_24F     *p_core,
+                        CPU_INT32U    args,
+                        OPCODE        math_opc,
+                        CORE_ERR     *p_err)
+{
+    CPU_INT32U  size_op;
+    CPU_INT32U  lit;
+    CPU_INT32U  w_reg;
+    CPU_INT32U  result;
+    CPU_INT32U  initial;
+    CPU_INT32U  flags;
+    CPU_INT32U  mask;
+
+    size_op = (args & 0x004000) >> 14;
+    lit     = (args & 0x003FF0) >>  4;
+    w_reg   =  args & 0x00000F;
+
+    if (size_op == 0) {
+        mask = 0xFFFF;
+    } else {
+        mask = 0xFF;
+    }
+
+    initial = p_core->W[w_reg] & mask;
+
+    switch (math_opc) {
+        case CORE_OPC_ADD_LIT_W:
+            result  = lit + initial;
+            flags   = CORE_SR_DC | CORE_SR_N | CORE_SR_OV | CORE_SR_Z | CORE_SR_C;
+            break;
+
+        case CORE_OPC_ADDC_LIT_W:
+            result  = lit + initial + Core_GetC(p_core);
+            flags   = CORE_SR_DC | CORE_SR_N | CORE_SR_OV | CORE_SR_Z | CORE_SR_C;
+            break;
+
+        case CORE_OPC_SUB_W_LIT:
+            result  = initial - lit;
+            flags   = CORE_SR_DC | CORE_SR_N | CORE_SR_OV | CORE_SR_Z | CORE_SR_C;
+            break;
+
+        case CORE_OPC_AND_LIT_W:
+            result  = initial & lit;
+            flags   = CORE_SR_N | CORE_SR_Z;
+            break;
+
+        case CORE_OPC_IOR_LIT_W:
+            result  = initial | lit;
+            flags   = CORE_SR_N | CORE_SR_Z;
+            break;
+
+        case CORE_OPC_XOR_LIT_W:
+            result  = initial ^ lit;
+            flags   = CORE_SR_N | CORE_SR_Z;
+            break;
+
+        case CORE_OPC_SUBB_W_LIT:
+            result  = initial - lit;
+            if (!Core_GetC(p_core)) {
+                result--;
+            }
+            flags   = CORE_SR_DC | CORE_SR_N | CORE_SR_OV | CORE_SR_Z | CORE_SR_C;
+            break;
+
+        default:
+            *p_err = CORE_ERR_INVALID_OPC_ARG;
+            return;
+    }
+
+    p_core->W[w_reg] &= ~mask;
+    p_core->W[w_reg] |= (result & mask);
+
+    /* Update Status Register */
+    if (flags & CORE_SR_DC) {
+        if (((initial & 0x00000080) &&                              /* DC */
+             (result  & 0x00000080))) {
+            p_core->SR |=   CORE_SR_DC;
+        } else {
+            p_core->SR &= ~(CORE_SR_DC);
+        }
+    }
+    
+    if (flags & CORE_SR_N) {
+        if (result < 0) {                                          /* N */
+            p_core->SR |=   CORE_SR_N;
+        } else {
+            p_core->SR &= ~(CORE_SR_N);
+        }
+    }
+
+    if (flags & CORE_SR_OV) {
+        if (result > initial) {
+            p_core->SR |=   CORE_SR_OV;
+        } else {
+            p_core->SR &= ~(CORE_SR_OV);
+        }
+    }
+    
+    if (flags & CORE_SR_Z) {
+        if (result == 0) {                                         /* Z */
+            p_core->SR |=   CORE_SR_Z;
+        } else {
+            p_core->SR &= ~(CORE_SR_Z);
+        }
+    }
+    
+    if (flags & CORE_SR_C) {
+        if (((initial & 0x00008000) &&                              /* C */
+             (result  & 0x00008000))) {
+            p_core->SR |=   CORE_SR_C;
+        } else {
+            p_core->SR &= ~(CORE_SR_C);
+        }
+    }
+    
+    Core_PC_Slide(p_core, 2);
     *p_err = CORE_ERR_NONE;
 }
 
@@ -369,11 +490,13 @@ void Core_MATH_WS_WD   (MEM_24       *p_mem_prog,
     } else {
         addr_offset = 1;
         value_mask  = 0x00FF;
+#if 0
         *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
         return;
+#endif
     }
     
-    operand_1 = CPU_SignExt16(p_core->W[base_w_addr]);
+    operand_1 = (CPU_SignExt16(p_core->W[base_w_addr]) & value_mask);
 
     switch (src_addr_mode) {
         case CORE_OPC_ADDR_MODE_DIR:
@@ -388,7 +511,7 @@ void Core_MATH_WS_WD   (MEM_24       *p_mem_prog,
                 return;
             }
             
-            if ((size_op != 0) &&
+            if ((size_op                        != 0) &&
                 ((p_core->W[src_addr] & 0x0001) == 0x0001)) {
                 operand_2 >>= 8;
             }
@@ -403,7 +526,7 @@ void Core_MATH_WS_WD   (MEM_24       *p_mem_prog,
                 return;
             }
             
-            if ((size_op != 0) &&
+            if ((size_op                        != 0) &&
                 ((p_core->W[src_addr] & 0x0001) == 0x0001)) {
                 operand_2 >>= 8;
             }
@@ -419,7 +542,7 @@ void Core_MATH_WS_WD   (MEM_24       *p_mem_prog,
                 return;
             }
             
-            if ((size_op != 0) &&
+            if ((size_op                        != 0) &&
                 ((p_core->W[src_addr] & 0x0001) == 0x0001)) {
                 operand_2 >>= 8;
             }
@@ -437,7 +560,7 @@ void Core_MATH_WS_WD   (MEM_24       *p_mem_prog,
                 return;
             }
             
-            if ((size_op != 0) &&
+            if ((size_op                        != 0) &&
                 ((p_core->W[src_addr] & 0x0001) == 0x0001)) {
                 operand_2 >>= 8;
             }
@@ -454,7 +577,7 @@ void Core_MATH_WS_WD   (MEM_24       *p_mem_prog,
                 return;
             }
             
-            if ((size_op != 0) &&
+            if ((size_op                        != 0) &&
                 ((p_core->W[src_addr] & 0x0001) == 0x0001)) {
                 operand_2 >>= 8;
             }
@@ -482,9 +605,15 @@ void Core_MATH_WS_WD   (MEM_24       *p_mem_prog,
         case CORE_OPC_XOR_WB_WS_WD:
             result = operand_1 ^ operand_2;
             break;
-            
-        case CORE_OPC_AND_WB_WS_WD:
+
         case CORE_OPC_IOR_WB_WS_WD:
+            result = operand_1 | operand_2;
+            break;
+
+        case CORE_OPC_AND_WB_WS_WD:
+            result = operand_1 & operand_2;
+            break;
+
         case CORE_OPC_SUBB_WB_WS_WD:
         case CORE_OPC_SUBBR_WB_WS_WD:
         case CORE_OPC_SUBR_WB_WS_WD:
@@ -2493,8 +2622,11 @@ void Core_Logical (MEM_24      *p_mem_prog,
     CPU_INT32U  src_addr_mode;
     CPU_INT32U  src_w;
     CPU_INT32U  value;
+    CPU_INT32U  value_original;
     CPU_INT32U  initial;
     CPU_INT32U  offset;
+    CPU_INT32U  src_mask;
+    CPU_INT32U  dst_mask;
     MEM_ERR     mem_err;
     
     
@@ -2504,43 +2636,49 @@ void Core_Logical (MEM_24      *p_mem_prog,
     src_addr_mode = (args & 0x000070) >>  4;
     src_w         =  args & 0x00000F;
     
-    if (size_op != 0) {
-        offset = 1;
-        *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
-        return;
-    } else {
+    if (size_op == 0) {
         offset = 2;
+    } else {
+        offset = 1;
+        *p_err = CORE_ERR_STAK_ERROR_TRAP;
+        return;
     }
     
     mem_err = MEM_ERR_NONE;
     
     switch (src_addr_mode) {
         case CORE_OPC_ADDR_MODE_DIR:
-            value = p_core->W[src_w];
+            src_mask = Core_MaskGet(size_op, 0);
+            value    = p_core->W[src_w];
             break;
             
         case CORE_OPC_ADDR_MODE_IND:
-            value = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
+            src_mask = Core_MaskGet(size_op, p_core->W[src_w]);
+            value    = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
             break;
             
         case CORE_OPC_ADDR_MODE_IND_POS_DEC:
-            value = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
-            p_core->W[src_w] -= 2;
+            src_mask          = Core_MaskGet(size_op, p_core->W[src_w]);
+            value             = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
+            p_core->W[src_w] -= offset;
             break;
             
         case CORE_OPC_ADDR_MODE_IND_POS_INC:
-            value = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
-            p_core->W[src_w] += 2;
+            src_mask          = Core_MaskGet(size_op, p_core->W[src_w]);
+            value             = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
+            p_core->W[src_w] += offset;
             break;
             
         case CORE_OPC_ADDR_MODE_IND_PRE_DEC:
-            p_core->W[src_w] -= 2;
-            value = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
+            p_core->W[src_w] -= offset;
+            src_mask          = Core_MaskGet(size_op, p_core->W[src_w]);
+            value             = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
             break;
             
         case CORE_OPC_ADDR_MODE_IND_PRE_INC:
-            p_core->W[src_w] += 2;
-            value = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
+            p_core->W[src_w] += offset;
+            src_mask          = Core_MaskGet(size_op, p_core->W[src_w]);
+            value             = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
             break;
             
         default:
@@ -2553,6 +2691,7 @@ void Core_Logical (MEM_24      *p_mem_prog,
         return;
     }
     
+    value   = Core_Align(value, src_mask);
     initial = value;
 
     switch (operation) {
@@ -2572,10 +2711,26 @@ void Core_Logical (MEM_24      *p_mem_prog,
             break;
 
         case CORE_OPC_RLC_W:
+
             value <<= 1;
             value  &= 0xFFFFFFFE;
             value  |= Core_GetC(p_core);
-            Core_SetC(p_core, (value & 0x00010000) >> 16);
+            if (size_op == 0) {
+                Core_SetC(p_core, (value & 0x00010000) >> 16);
+            } else {
+                Core_SetC(p_core, (value & 0x00000100) >> 8);
+            }
+            break;
+
+        case CORE_OPC_RRC_W:
+            if (size_op == 0) {
+                value |= (Core_GetC(p_core) << 16);
+            } else { 
+                value |= (Core_GetC(p_core) << 8);
+            }
+            Core_SetC(p_core, (value & 0x1));
+            value >>= 1;
+            value  &= 0xFFFFFFFF;           
             break;
             
         case CORE_OPC_ASR_W:
@@ -2583,7 +2738,6 @@ void Core_Logical (MEM_24      *p_mem_prog,
         case CORE_OPC_LSR_W:
         case CORE_OPC_NEG_W:
         case CORE_OPC_RLNC_W:
-        case CORE_OPC_RRC_W:
         case CORE_OPC_RRNC_W:
         case CORE_OPC_SL_W:
         case CORE_OPC_TBLRDH_W:
@@ -2601,30 +2755,36 @@ void Core_Logical (MEM_24      *p_mem_prog,
     
     switch (dst_addr_mode) {
         case CORE_OPC_ADDR_MODE_DIR:
+            dst_mask = Core_MaskGet(size_op, 0); 
             p_core->W[dst_w] = value;
             break;
             
         case CORE_OPC_ADDR_MODE_IND:
+            dst_mask = Core_MaskGet(size_op, p_core->W[dst_w]);
             Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
             break;
             
         case CORE_OPC_ADDR_MODE_IND_POS_DEC:
+            dst_mask = Core_MaskGet(size_op, p_core->W[dst_w]);
             Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
-            p_core->W[src_w] -= 2;
+            p_core->W[src_w] -= offset;
             break;
             
         case CORE_OPC_ADDR_MODE_IND_POS_INC:
+            dst_mask = Core_MaskGet(size_op, p_core->W[dst_w]);
             Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
-            p_core->W[src_w] += 2;
+            p_core->W[src_w] += offset;
             break;
             
         case CORE_OPC_ADDR_MODE_IND_PRE_DEC:
-            p_core->W[src_w] -= 2;
+            p_core->W[src_w] -= offset;
+            dst_mask = Core_MaskGet(size_op, p_core->W[dst_w]);
             Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
             break;
             
         case CORE_OPC_ADDR_MODE_IND_PRE_INC:
-            p_core->W[src_w] += 2;
+            p_core->W[src_w] += offset;
+            dst_mask = Core_MaskGet(size_op, p_core->W[dst_w]);
             Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
             break;
             

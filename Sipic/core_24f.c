@@ -389,10 +389,25 @@ void  Core_Run(CORE_24F  *p_core_24f,
             found_instruction = DEF_YES;
             
             switch (instruction) {
-                case CORE_OPC_SUB_WN_LIT:
+#if 0
+                case CORE_OPC_SUB_W_LIT:
                     Core_SUB_B10(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
                     break;
-                    
+
+                case CORE_OPC_ADDC_LIT_W:
+                    Core_ADDC_B08(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
+                    break;
+#else
+                case CORE_OPC_ADD_LIT_W:
+                case CORE_OPC_ADDC_LIT_W:
+                case CORE_OPC_SUB_W_LIT:
+                case CORE_OPC_SUBB_W_LIT:
+                case CORE_OPC_AND_LIT_W:
+                case CORE_OPC_IOR_LIT_W:
+                case CORE_OPC_XOR_LIT_W:
+                    Core_MATH_WN_LIT(p_mem_prog, p_mem_data, p_core_24f, args, instruction, p_err);
+                    break;
+#endif
                 case CORE_OPC_ADD_B40:
                     Core_ADD_B40(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
                     break;
@@ -430,9 +445,7 @@ void  Core_Run(CORE_24F  *p_core_24f,
                     Core_ADDC_B48(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
                     break;
 
-                case CORE_OPC_ADDC_LIT_W:
-                    Core_ADDC_B08(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
-                    break;
+                
 
                 case CORE_OPC_INC_M:
                     Core_INC_EC0(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
@@ -599,12 +612,13 @@ void  Core_Run(CORE_24F  *p_core_24f,
         }
 
         
-        if (found_instruction == DEF_NO) {
+        if ((found_instruction == DEF_NO) ||
+            (*p_err            != CORE_ERR_NONE)) {
             *p_err = CORE_ERR_OPC_NOTFOUND;
 #ifdef  CORE_CFG_CYCLE_CNTR
             CORE_TRACE_INFO(("\r\nINSTRUCTION NOT FOUND. %X at %X \t@%ld cycles.", opcode, Core_PC_Get(p_core_24f), p_core_24f->CYCLE));
 #else
-            CORE_TRACE_INFO(("\r\nINSTRUCTION NOT FOUND. %X at %X.", opcode, Core_PC_Get(p_core_24f)));
+            CORE_TRACE_INFO(("\r\nINSTRUCTION Error. %X at %X.", opcode, Core_PC_Get(p_core_24f)));
 #endif
             return;
         }
@@ -761,4 +775,34 @@ CPU_INT32U  Core_PC_Get (CORE_24F    *p_core)
     memcpy(&PC, &p_core->PC[0], sizeof(PC));
     
     return (PC);
+}
+
+CPU_INT32U  Core_MaskGet (CPU_INT08U  byte_mode, 
+                          CPU_INT32U  addr)
+{
+    if (byte_mode == 0) {
+        return 0xFFFF;
+    } else {
+        if (addr & 0x1) {
+            return 0xFF00;
+        } else {
+            return 0xFF;
+        }
+    }
+}
+
+CPU_INT32U  Core_Align   (CPU_INT32U    value,
+                          CPU_INT32U    mask)
+{
+    switch(mask) {
+        case 0xFF:
+        case 0xFFFF:
+            return (value & mask);
+
+        case 0xFF00:
+            return ((value & mask) >> 8);
+
+        default:
+            printf("\r\n***\r\nUnsupported mask\r\n***");
+    }
 }

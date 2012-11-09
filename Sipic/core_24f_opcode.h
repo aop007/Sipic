@@ -67,8 +67,14 @@ extern "C" {
 #define  CORE_OPC_BCLR_M     0xA90000
 #define  CORE_OPC_BTSC       0xAF0000
 
+#define  CORE_OPC_ADD_LIT_W  0xB00000
 #define  CORE_OPC_ADDC_LIT_W 0xB08000
-#define  CORE_OPC_SUB_WN_LIT 0xB10000
+#define  CORE_OPC_SUB_W_LIT  0xB10000
+#define  CORE_OPC_SUBB_W_LIT 0xB18000
+#define  CORE_OPC_AND_LIT_W  0xB20000
+#define  CORE_OPC_IOR_LIT_W  0xB30000
+#define  CORE_OPC_XOR_LIT_W  0xB28000
+
 #define  CORE_OPC_ADDC_M_W   0xB48000
 #define  CORE_OPC_MUL_UU     0xB80000
 #define  CORE_OPC_MUL_UU_LIT 0xB80060
@@ -195,6 +201,13 @@ void Core_BRA_3 (MEM_24      *p_mem_prog,
                      CORE_24F    *p_core,
                      CPU_INT32U   args,
                  CORE_ERR    *p_err);
+
+void Core_MATH_WN_LIT  (MEM_24       *p_mem_prog,
+                        MEM          *p_mem_data,
+                        CORE_24F     *p_core,
+                        CPU_INT32U    args,
+                        OPCODE        math_opc,
+                        CORE_ERR     *p_err);
 
 void Core_MATH_WS_WD   (MEM_24        *p_mem_prog,
                         MEM           *p_mem_data,

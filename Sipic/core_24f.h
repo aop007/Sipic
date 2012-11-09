@@ -109,6 +109,12 @@ void        Core_PC_Set   (CORE_24F    *p_core,
 
 CPU_INT32U  Core_PC_Get   (CORE_24F    *p_core);
 
+CPU_INT32U  Core_MaskGet (CPU_INT08U    byte_mode, 
+                          CPU_INT32U    addr);
+
+CPU_INT32U  Core_Align   (CPU_INT32U    value,
+                          CPU_INT32U    mask);
+
 /* 2                    opcode      mask
  CALL EXPR           0x020000 /  0xFF0001
  DO   #lit14, Expr   0x080000 /  0xFFC000
