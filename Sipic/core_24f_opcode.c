@@ -2640,8 +2640,8 @@ void Core_Logical (MEM_24      *p_mem_prog,
         offset = 2;
     } else {
         offset = 1;
-        *p_err = CORE_ERR_STAK_ERROR_TRAP;
-        return;
+        //*p_err = CORE_ERR_STAK_ERROR_TRAP;
+        //return;
     }
     
     mem_err = MEM_ERR_NONE;
@@ -2760,31 +2760,41 @@ void Core_Logical (MEM_24      *p_mem_prog,
             break;
             
         case CORE_OPC_ADDR_MODE_IND:
-            dst_mask = Core_MaskGet(size_op, p_core->W[dst_w]);
+            dst_mask          = Core_MaskGet(size_op, p_core->W[dst_w]);
+            value_original    = Mem_Get(p_mem_data, p_core->W[dst_w], &mem_err);
+            value             = Core_Merge(value_original, value, dst_mask);
             Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
             break;
             
         case CORE_OPC_ADDR_MODE_IND_POS_DEC:
-            dst_mask = Core_MaskGet(size_op, p_core->W[dst_w]);
+            dst_mask          = Core_MaskGet(size_op, p_core->W[dst_w]);
+            value_original    = Mem_Get(p_mem_data, p_core->W[dst_w], &mem_err);
+            value             = Core_Merge(value_original, value, dst_mask);
             Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
             p_core->W[src_w] -= offset;
             break;
             
         case CORE_OPC_ADDR_MODE_IND_POS_INC:
-            dst_mask = Core_MaskGet(size_op, p_core->W[dst_w]);
+            dst_mask          = Core_MaskGet(size_op, p_core->W[dst_w]);
+            value_original    = Mem_Get(p_mem_data, p_core->W[dst_w], &mem_err);
+            value             = Core_Merge(value_original, value, dst_mask);
             Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
             p_core->W[src_w] += offset;
             break;
             
         case CORE_OPC_ADDR_MODE_IND_PRE_DEC:
             p_core->W[src_w] -= offset;
-            dst_mask = Core_MaskGet(size_op, p_core->W[dst_w]);
+            dst_mask          = Core_MaskGet(size_op, p_core->W[dst_w]);
+            value_original    = Mem_Get(p_mem_data, p_core->W[dst_w], &mem_err);
+            value             = Core_Merge(value_original, value, dst_mask);
             Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
             break;
             
         case CORE_OPC_ADDR_MODE_IND_PRE_INC:
             p_core->W[src_w] += offset;
-            dst_mask = Core_MaskGet(size_op, p_core->W[dst_w]);
+            dst_mask          = Core_MaskGet(size_op, p_core->W[dst_w]);
+            value_original    = Mem_Get(p_mem_data, p_core->W[dst_w], &mem_err);
+            value             = Core_Merge(value_original, value, dst_mask);
             Mem_Set(p_mem_data, p_core->W[dst_w], value, &mem_err);
             break;
             
@@ -3277,7 +3287,9 @@ void Core_CP0_E0000 (MEM_24      *p_mem_prog,
     CPU_INT32U  w_reg;
     CPU_INT32U  value;
     CPU_INT32U  offset;
+    CPU_INT32U  mask;
     MEM_ERR     mem_err;
+    
     
     size_op   = (args & 0x000400) >> 10;
     addr_mode = (args & 0x000070) >>  4;
@@ -3285,8 +3297,6 @@ void Core_CP0_E0000 (MEM_24      *p_mem_prog,
     
     if (size_op != 0) {
         offset = 1;
-        *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
-        return;
     } else {
         offset = 2;
     }
@@ -3295,31 +3305,37 @@ void Core_CP0_E0000 (MEM_24      *p_mem_prog,
     
     switch (addr_mode) {
         case CORE_OPC_ADDR_MODE_DIR:
-            value = p_core->W[w_reg];
+            mask  = Core_MaskGet(size_op, p_core->W[w_reg]);
+            value = p_core->W[w_reg] & mask;
             break;
             
         case CORE_OPC_ADDR_MODE_IND:
-            value = Mem_Get(p_mem_data, p_core->W[w_reg], &mem_err);
+            mask  = Core_MaskGet(size_op, p_core->W[w_reg]);
+            value = Mem_Get(p_mem_data, p_core->W[w_reg], &mem_err) & mask;
             break;
             
         case CORE_OPC_ADDR_MODE_IND_POS_DEC:
-            value = Mem_Get(p_mem_data, p_core->W[w_reg], &mem_err);
+            mask  = Core_MaskGet(size_op, p_core->W[w_reg]);
+            value = Mem_Get(p_mem_data, p_core->W[w_reg], &mem_err) & mask;
             p_core->W[w_reg] -= offset;
             break;
             
         case CORE_OPC_ADDR_MODE_IND_POS_INC:
-            value = Mem_Get(p_mem_data, p_core->W[w_reg], &mem_err);
+            mask  = Core_MaskGet(size_op, p_core->W[w_reg]);
+            value = Mem_Get(p_mem_data, p_core->W[w_reg], &mem_err) & mask;
             p_core->W[w_reg] += offset;
             break;
             
         case CORE_OPC_ADDR_MODE_IND_PRE_DEC:
             p_core->W[w_reg] -= offset;
-            value = Mem_Get(p_mem_data, p_core->W[w_reg], &mem_err);
+            mask  = Core_MaskGet(size_op, p_core->W[w_reg]);
+            value = Mem_Get(p_mem_data, p_core->W[w_reg], &mem_err) & mask;
             break;
             
         case CORE_OPC_ADDR_MODE_IND_PRE_INC:
             p_core->W[w_reg] += offset;
-            value = Mem_Get(p_mem_data, p_core->W[w_reg], &mem_err);
+            mask  = Core_MaskGet(size_op, p_core->W[w_reg]);
+            value = Mem_Get(p_mem_data, p_core->W[w_reg], &mem_err) & mask;
             break;
             
         default:
@@ -3331,6 +3347,9 @@ void Core_CP0_E0000 (MEM_24      *p_mem_prog,
         *p_err = CORE_ERR_INVALID_MEM;
         return;
     }
+    
+    value = Core_Align(value, mask);
+    
     
     /* Update Status Register */
                                                                 

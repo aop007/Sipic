@@ -804,5 +804,31 @@ CPU_INT32U  Core_Align   (CPU_INT32U    value,
 
         default:
             printf("\r\n***\r\nUnsupported mask\r\n***");
+            return 0;
     }
 }
+
+CPU_INT32U  Core_Merge   (CPU_INT32U    value_original,
+                          CPU_INT32U    value,
+                          CPU_INT32U    mask)
+{
+    switch(mask) {
+        case 0xFF:
+        case 0xFFFF:
+            return (value & mask) | (value_original & ~(mask));
+            
+        case 0xFF00:
+            return ((value << 8) & mask) | (value_original & ~(mask));
+            
+        default:
+            printf("\r\n***\r\nUnsupported mask\r\n***");
+            return 0;
+    }
+}
+
+
+
+
+
+
+
