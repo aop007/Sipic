@@ -18,6 +18,7 @@ extern "C" {
 #include "err.h"
 #include "sipic_cfg.h"
 
+#define  CORE_SR_NONE  0x0000
 #define  CORE_SR_C     0x0001
 #define  CORE_SR_Z     0x0002
 #define  CORE_SR_OV    0x0004

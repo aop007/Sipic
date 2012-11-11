@@ -400,6 +400,7 @@ void  Core_Run(CORE_24F  *p_core_24f,
                     break;
 
 #if 1
+                /* BDf ffff ffff ffff */
                 case CORE_OPC_ADD_M_W:
                 case CORE_OPC_ADDC_M_W:
                 case CORE_OPC_AND_M_W:
@@ -412,7 +413,7 @@ void  Core_Run(CORE_24F  *p_core_24f,
                 case CORE_OPC_INC2_M_W:
                 case CORE_OPC_IOR_M_W:
                 case CORE_OPC_LSR_M_W:
-                case CORE_OPC_MOV_M_W:
+                case CORE_OPC_MOV2_M_W:
                 case CORE_OPC_NEG_M_W:
                 case CORE_OPC_RLC_M_W:
                 case CORE_OPC_RLNC_M_W:
@@ -425,7 +426,7 @@ void  Core_Run(CORE_24F  *p_core_24f,
                 case CORE_OPC_SUBBR_M_W:
                 case CORE_OPC_SUBR_M_W:
                 case CORE_OPC_XOR_M_W:
-                    
+                    Core_Logical_M_W(p_mem_prog, p_mem_data, p_core_24f, args, instruction, p_err);
                     break;
 #else
                 case CORE_OPC_ADD_B40:
@@ -447,6 +448,10 @@ void  Core_Run(CORE_24F  *p_core_24f,
                 case CORE_OPC_INC_M:
                     Core_INC_EC0(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
                     break;
+                    
+                case CORE_OPC_MOV_M_W:
+                    Core_MOV_BF8(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
+                    break;
 #endif
                     
 
@@ -463,9 +468,7 @@ void  Core_Run(CORE_24F  *p_core_24f,
                     Core_MUL_SS_B98(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
                     break;
                     
-                case CORE_OPC_MOV_M_WM:
-                    Core_MOV_BF8(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
-                    break;
+
                     
                 case CORE_OPC_SETM_WS:
                     Core_SETM_WS_EB8(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
@@ -550,6 +553,9 @@ void  Core_Run(CORE_24F  *p_core_24f,
                     Core_BCLR_M_A9(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
                     break;
                     
+                case CORE_OPC_BTSS:
+                    Core_BTSS_AE(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
+                    break;
                     
                 case CORE_OPC_BTSC:
                     Core_BTSC_AF(p_mem_prog, p_mem_data, p_core_24f, args, p_err);

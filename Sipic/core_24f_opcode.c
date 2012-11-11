@@ -2084,7 +2084,7 @@ void  Core_BTSC_AF (MEM_24      *p_mem_prog,
             *p_err = CORE_ERR_INVALID_MEM;
             return;
         }
-#if 1
+        
         opc_words = Core_OPC_Words(opc);
         
         switch (opc_words) {
@@ -2097,11 +2097,67 @@ void  Core_BTSC_AF (MEM_24      *p_mem_prog,
                 *p_err = CORE_ERR_INVALID_OPC_CYCLE;
                 return;
         }
-#else
-        Core_PC_Slide(p_core, 2);
-        *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+    }
+    
+    Core_PC_Slide(p_core, 2);
+    
+    *p_err = CORE_ERR_NONE;
+}
+
+void  Core_BTSS_AE (MEM_24      *p_mem_prog,
+                    MEM         *p_mem_data,
+                    CORE_24F    *p_core,
+                    CPU_INT32U   args,
+                    CORE_ERR    *p_err)
+{
+    CPU_INT32U  value;
+    CPU_INT32U  addr;
+    CPU_INT32U  bit;
+    CPU_INT32U  opc_words;
+    CPU_INT32U  size_op;
+    OPCODE      opc;
+    MEM_ERR     mem_err;
+    
+    addr    =  args & 0x001FFE;
+    size_op =  args & 0x000001;
+    
+    
+    if (size_op == 1) {
+        bit     =  1 << (((args & 0x00E000) >> 12) | (args & 0x000001));
+        bit <<= 8;
+    } else {
+        bit     =  1 << ((args & 0x00E000) >> 13);
+    }
+    
+    value   = Mem_Get(p_mem_data, addr, &mem_err);
+    
+    if (mem_err != MEM_ERR_NONE) {
+        *p_err = CORE_ERR_INVALID_MEM;
         return;
-#endif
+    }
+    
+    if ((value & bit) != 0u) {
+        
+        
+        opc = Mem_Get24(p_mem_prog, Core_PC_Get(p_core), &mem_err);
+        
+        if (mem_err != MEM_ERR_NONE) {
+            *p_err = CORE_ERR_INVALID_MEM;
+            return;
+        }
+        
+        opc_words = Core_OPC_Words(opc);
+        
+        switch (opc_words) {
+            case 1:
+            case 2:
+                Core_PC_Slide(p_core, 2 * opc_words);
+                break;
+                
+            default:
+                *p_err = CORE_ERR_INVALID_OPC_CYCLE;
+                return;
+        }
     }
     
     Core_PC_Slide(p_core, 2);
@@ -2607,6 +2663,180 @@ void Core_DEC_E90 (MEM_24      *p_mem_prog,
 
     Core_PC_Slide(p_core, 2);
     *p_err = CORE_ERR_NONE;
+}
+
+void Core_Logical_M_W (MEM_24      *p_mem_prog,
+                       MEM         *p_mem_data,
+                       CORE_24F    *p_core,
+                       CPU_INT32U   args,
+                       OPCODE       operation,
+                       CORE_ERR    *p_err)
+{
+    CPU_INT32U  size_op;
+    CPU_INT32U  dest;
+    CPU_INT32U  addr;
+    CPU_INT32S  value_0;
+    CPU_INT32S  value_1;
+    CPU_INT32U  value_original;
+    CPU_INT32S  val_wreg;
+    CPU_INT32U  flags;
+    CPU_INT32U  mask;
+    MEM_ERR     mem_err;
+    
+    
+    size_op = args & 0x004000;
+    dest    = args & 0x002000;
+    addr    = args & 0x001FFF;
+    flags   = CORE_SR_NONE;
+    mask    = Core_MaskGet(size_op, addr);
+    
+    value_0 = Mem_Get(p_mem_data, (addr & 0xFFFE), &mem_err);
+    
+    if (mem_err != MEM_ERR_NONE) {
+        *p_err = CORE_ERR_INVALID_MEM;
+        return;
+    }
+    
+    value_0  = Core_Align(value_0, mask);
+    
+    value_0  = CPU_SignExt16(value_0);
+    val_wreg = CPU_SignExt16(p_core->W[0]);
+    
+    switch (operation) {
+        case CORE_OPC_ADD_M_W:
+            value_1 = value_0 + val_wreg;
+            flags   = CORE_SR_DC | CORE_SR_N | CORE_SR_OV | CORE_SR_Z | CORE_SR_C;
+            break;
+            
+        case CORE_OPC_ADDC_M_W:
+            value_1 = value_0 + val_wreg + Core_GetC(p_core);
+            flags   = CORE_SR_DC | CORE_SR_N | CORE_SR_OV | CORE_SR_Z | CORE_SR_C;
+            break;
+            
+        case CORE_OPC_AND_M_W:
+            value_1 = value_0 & val_wreg;
+            flags   = CORE_SR_N | CORE_SR_Z;
+            break;
+            
+        case CORE_OPC_ASR_M_W:
+            *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+            return;
+            
+        case CORE_OPC_CLR_M_W:
+            value_1 = 0x0000;
+            break;
+            
+        case CORE_OPC_COM_M_W:
+        case CORE_OPC_DEC_M_W:
+        case CORE_OPC_DEC2_M_W:
+            *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+            return;
+            
+        case CORE_OPC_INC_M_W:
+            value_1 = value_0 + 1;
+            flags   = CORE_SR_DC | CORE_SR_N | CORE_SR_OV | CORE_SR_Z | CORE_SR_C;
+            break;
+            
+        case CORE_OPC_INC2_M_W:
+        case CORE_OPC_IOR_M_W:
+        case CORE_OPC_LSR_M_W:
+            *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+            return;
+            
+        case CORE_OPC_MOV2_M_W:
+            value_1 = value_0;
+            flags   = CORE_SR_N | CORE_SR_Z;
+            break;
+            
+        case CORE_OPC_NEG_M_W:
+        case CORE_OPC_RLC_M_W:
+        case CORE_OPC_RLNC_M_W:
+        case CORE_OPC_RRC_M_W:
+        case CORE_OPC_RRNC_M_W:
+            *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+            return;
+            
+        case CORE_OPC_SETM_M_W:
+            value_1 = 0xFFFF;
+            break;
+            
+        case CORE_OPC_SL_M_W:
+        case CORE_OPC_SUB_M_W:
+        case CORE_OPC_SUBB_M_W:
+        case CORE_OPC_SUBBR_M_W:
+        case CORE_OPC_SUBR_M_W:
+        case CORE_OPC_XOR_M_W:
+            *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+            return;
+            
+        default:
+            *p_err = CORE_ERR_INVALID_OPC_ARG;
+            return;
+    }
+    
+    if (dest == 0) {
+        value_original = p_core->W[0];
+        p_core->W[0] = Core_Merge(value_original, value_1, mask);
+    } else {
+        value_original    = Mem_Get(p_mem_data, (addr & 0xFFFE), &mem_err);
+        
+        Mem_Set(p_mem_data,
+               (addr & 0xFFFE),
+                Core_Merge(value_original, value_1, mask),
+               &mem_err);
+        
+        if (mem_err != MEM_ERR_NONE) {
+            *p_err = CORE_ERR_INVALID_MEM;
+            return;
+        }
+    }
+    
+    /* Update Status Register */
+    if (flags & CORE_SR_DC) {
+        if (((value_0 & 0x00000080) &&                              /* DC */
+             (value_1 & 0x00000080))) {
+            p_core->SR |=   CORE_SR_DC;
+        } else {
+            p_core->SR &= ~(CORE_SR_DC);
+        }
+    }
+    
+    if (flags & CORE_SR_N) {
+        if (value_1 < 0) {                                          /* N */
+            p_core->SR |=   CORE_SR_N;
+        } else {
+            p_core->SR &= ~(CORE_SR_N);
+        }
+    }
+    
+    if (flags & CORE_SR_OV) {
+        if (value_1 > value_0) {
+            p_core->SR |=   CORE_SR_OV;
+        } else {
+            p_core->SR &= ~(CORE_SR_OV);
+        }
+    }
+    
+    if (flags & CORE_SR_Z) {
+        if (value_1 == 0) {                                         /* Z */
+            p_core->SR |=   CORE_SR_Z;
+        } else {
+            p_core->SR &= ~(CORE_SR_Z);
+        }
+    }
+    
+    if (flags & CORE_SR_C) {
+        if (((value_0 & 0x00008000) &&                              /* C */
+             (value_1 & 0x00008000))) {
+            p_core->SR |=   CORE_SR_C;
+        } else {
+            p_core->SR &= ~(CORE_SR_C);
+        }
+    }
+    
+    Core_PC_Slide(p_core, 2);
+    *p_err = CORE_ERR_NONE;
+
 }
 
 void Core_Logical (MEM_24      *p_mem_prog,

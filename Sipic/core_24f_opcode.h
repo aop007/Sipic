@@ -65,6 +65,7 @@ extern "C" {
 #define  CORE_OPC_BTSC_W     0xA70000
 #define  CORE_OPC_BSET_M     0xA80000
 #define  CORE_OPC_BCLR_M     0xA90000
+#define  CORE_OPC_BTSS       0xAE0000
 #define  CORE_OPC_BTSC       0xAF0000
 
 #define  CORE_OPC_ADD_LIT_W  0xB00000
@@ -74,21 +75,31 @@ extern "C" {
 #define  CORE_OPC_AND_LIT_W  0xB20000
 #define  CORE_OPC_IOR_LIT_W  0xB30000
 #define  CORE_OPC_XOR_LIT_W  0xB28000
-
 #define  CORE_OPC_ADD_M_W    0xB40000
 #define  CORE_OPC_ADDC_M_W   0xB48000
-#define  CORE_OPC_ASR_M_W    0xB58000
+#define  CORE_OPC_SUB_M_W    0xB50000
+#define  CORE_OPC_SUBB_M_W   0xB58000
 #define  CORE_OPC_AND_M_W    0xB60000
+#define  CORE_OPC_XOR_M_W    0xB68000
 #define  CORE_OPC_MUL_UU     0xB80000
 #define  CORE_OPC_MUL_UU_LIT 0xB80060
 #define  CORE_OPC_MUL_US     0xB88000
 #define  CORE_OPC_MUL_SS     0xB98000
 #define  CORE_OPC_MOV_8BL_WN 0xB3C000
-
+#define  CORE_OPC_IOR_M_W    0xB70000
 #define  CORE_OPC_MOV_WN_M   0xB7A000
-#define  CORE_OPC_MOV_M_WM   0xBF8000
+#define  CORE_OPC_SUBR_M_W   0xBD0000
+#define  CORE_OPC_SUBBR_M_W  0xBD8000    
+#define  CORE_OPC_MOV2_M_W   0xBF8000
 
 #define  CORE_OPC_RLC_WS_WD  0xD28000
+#define  CORE_OPC_SL_M_W     0xD40000
+#define  CORE_OPC_LSR_M_W    0xD50000
+#define  CORE_OPC_ASR_M_W    0xD58000
+#define  CORE_OPC_RLNC_M_W   0xD60000
+#define  CORE_OPC_RLC_M_W    0xD68000
+#define  CORE_OPC_RRNC_M_W   0xD70000
+#define  CORE_OPC_RRC_M_W    0xD78000
 #define  CORE_OPC_DIV_S      0xD80000
 
 #define  CORE_OPC_CP0_WN_SF  0xE00000
@@ -96,10 +107,15 @@ extern "C" {
 #define  CORE_OPC_CP_WB_WS   0xE10000
 #define  CORE_OPC_CP0_M      0xE20000
 #define  CORE_OPC_SETM_WS    0xEB8000
-#define  CORE_OPC_INC_M      0xEC0000
+#define  CORE_OPC_INC_M_W    0xEC0000
+#define  CORE_OPC_INC2_M_W   0xEC8000
 #define  CORE_OPC_CLR_WD     0xEB0000
-#define  CORE_OPC_CLR_M_W0   0xEF0000
-#define  CORE_OPC_SETM_M_W0  0xEF8000
+#define  CORE_OPC_DEC_M_W    0xED0000
+#define  CORE_OPC_DEC2_M_W   0xED8000
+#define  CORE_OPC_NEG_M_W    0xEE0000
+#define  CORE_OPC_COM_M_W    0xEE8000
+#define  CORE_OPC_CLR_M_W    0xEF0000
+#define  CORE_OPC_SETM_M_W   0xEF8000
 
 #define  CORE_OPC_PUSH_F8    0xF80000
 #define  CORE_OPC_POP_F9     0xF90000
@@ -286,11 +302,17 @@ void  Core_BTSC_W (MEM_24      *p_mem_prog,
                    CPU_INT32U   args,
                    CORE_ERR    *p_err);
 
+void  Core_BTSS_AE (MEM_24      *p_mem_prog,
+                        MEM         *p_mem_data,
+                        CORE_24F    *p_core,
+                        CPU_INT32U   args,
+                        CORE_ERR    *p_err);
+    
 void  Core_BTSC_AF (MEM_24      *p_mem_prog,
-                    MEM         *p_mem_data,
-                    CORE_24F    *p_core,
-                    CPU_INT32U   args,
-                    CORE_ERR    *p_err);
+                        MEM         *p_mem_data,
+                        CORE_24F    *p_core,
+                        CPU_INT32U   args,
+                        CORE_ERR    *p_err);
 
 void Core_ADDC_B08 (MEM_24      *p_mem_prog,
                     MEM         *p_mem_data,
@@ -327,6 +349,13 @@ void Core_ADDC_B48 (MEM_24      *p_mem_prog,
                     CORE_24F    *p_core,
                     CPU_INT32U   args,
                     CORE_ERR    *p_err);
+
+void Core_Logical_M_W (MEM_24      *p_mem_prog,
+                                MEM         *p_mem_data,
+                                CORE_24F    *p_core,
+                                CPU_INT32U   args,
+                                OPCODE       operation,
+                       CORE_ERR    *p_err);
     
 void Core_Logical     (MEM_24      *p_mem_prog,
                        MEM         *p_mem_data,
@@ -388,6 +417,12 @@ void Core_CP_E1000 (MEM_24      *p_mem_prog,
                         CORE_24F    *p_core,
                         CPU_INT32U   args,
                         CORE_ERR    *p_err);
+    
+void Core_CP0_E20 (MEM_24      *p_mem_prog,
+                       MEM         *p_mem_data,
+                       CORE_24F    *p_core,
+                       CPU_INT32U   args,
+                       CORE_ERR    *p_err);
     
 void Core_CP_E1006 (MEM_24      *p_mem_prog,
                     MEM         *p_mem_data,
