@@ -92,6 +92,15 @@ void Peri_ISR(ISR_VECT_NUM   isr_vect_num,
 #define  ADC_ADCON1_SAMP        DEF_BIT_01
 #define  ADC_ADCON1_DONE        DEF_BIT_00
     
+#define  ADC_ADCON3_SAMC       (DEF_BIT_12 | DEF_BIT_11 | DEF_BIT_10 | DEF_BIT_09 | DEF_BIT_08)
+#define  ADC_ADCON3_ADRC        DEF_BIT_07
+#define  ADC_ADCON3_ADCS       (DEF_BIT_05 | DEF_BIT_04 | DEF_BIT_03 | DEF_BIT_02 | DEF_BIT_01 | DEF_BIT_00)
+    
+#define  ADC_STATUS_NONE            DEF_BIT_NONE
+#define  ADC_STATUS_SAMPLING        DEF_BIT_01
+#define  ADC_STATUS_CONVERTING      DEF_BIT_02
+#define  ADC_STATUS_DONE            DEF_BIT_03
+    
     
 #define  PERI_ADC_BASE_ADDR         0x0280
 #define  PERI_TYPE_ADC              CPU_MAKE_TYPE('A','D','C',' ')
@@ -109,7 +118,13 @@ typedef struct adc_mem {
 } ADC_MEM;
     
 typedef  struct  adc_data {
-    CPU_INT32U  data;
+    CPU_INT32U  SampleClk;
+    CPU_INT32U  Status;
+    
+    CPU_INT16U  SampTime;
+    CPU_INT16U  ConvTime;
+    
+    CPU_INT16U  ADCON1_Shadow;
 } ADC_DATA;
 
 typedef struct adc {

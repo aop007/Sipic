@@ -1797,12 +1797,14 @@ void  Core_BSET_M_A8 (MEM_24      *p_mem_prog,
     MEM_ERR     mem_err;
     CPU_INT32U  value;
     
-    bit  = ((args & 0x00E000) >> 12) |
-            (args & 0x000001);
+    bit  = (args & 0x00E000) >> 13;
+    addr =  args & 0x001FFF;
     
-    addr =  (args & 0x001FFE) >> 1;
+    if (addr & 0x1) {
+        bit += 8;
+    }
     
-    value = Mem_Get(p_mem_data, addr, &mem_err);
+    value = Mem_Get(p_mem_data, (addr & 0x001FFE), &mem_err);
     
     if (mem_err != MEM_ERR_NONE) {
         *p_err = CORE_ERR_INVALID_MEM;
@@ -1811,7 +1813,7 @@ void  Core_BSET_M_A8 (MEM_24      *p_mem_prog,
     
     value |= (1 << bit);
     
-    Mem_Set(p_mem_data, addr, value, &mem_err);
+    Mem_Set(p_mem_data, (addr & 0x001FFE), value, &mem_err);
     
     if (mem_err != MEM_ERR_NONE) {
         *p_err = CORE_ERR_INVALID_MEM;

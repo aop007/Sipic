@@ -21,9 +21,6 @@ CORE_24F * Core_Init(MEM         *p_mem_data,
 {
     CORE_24F  *p_core;
     MEM_ERR    mem_err;
-#if 1
-    CPU_INT64U  offset;
-#endif
     
     
     p_core = (CORE_24F *)Mem_GetAddr(p_mem_data, addr, &mem_err);
@@ -40,15 +37,6 @@ CORE_24F * Core_Init(MEM         *p_mem_data,
     p_core->CYCLE = 0;
 #endif
     
-#if 1
-    offset = (CPU_INT64U)&p_core->SPLIM - (CPU_INT64U)p_core;
-    offset = (CPU_INT64U)&p_core->ACCA - (CPU_INT64U)p_core;
-    offset = (CPU_INT64U)&p_core->ACCB - (CPU_INT64U)p_core;
-    offset = (CPU_INT64U)&p_core->PC - (CPU_INT64U)p_core;
-    offset = (CPU_INT64U)&p_core->RCOUNT - (CPU_INT64U)p_core;
-    offset = (CPU_INT64U)&p_core->DCOUNT - (CPU_INT64U)p_core;
-    offset = (CPU_INT64U)&p_core->SR - (CPU_INT64U)p_core;
-#endif
     /* Write protection */
     
     Mem_SetAccess(p_mem_data, 0x0042, 0x01EF, &mem_err);        /* Protect SR SRF */
@@ -115,7 +103,7 @@ void  Core_Run(CORE_24F  *p_core_24f,
         CORE_TRACE_DEBUG(("PC = %004x\tOPC = %006x\t |", Core_PC_Get(p_core_24f), opcode));
 #endif
 #if 1
-        if ((Core_PC_Get(p_core_24f) == 0x0C90)) { // && (p_core_24f->W[0] == 0)){
+        if ((Core_PC_Get(p_core_24f) == 0x1C0A)) { // && (p_core_24f->W[0] == 0)){
             uncaught_instructions *= 1;
             CORE_TRACE_DEBUG((""));
         }

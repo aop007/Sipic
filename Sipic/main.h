@@ -35,7 +35,8 @@ extern "C" {
 #define CORE_TRACE_DEBUG(x) 
 #endif
 
-SIM  sim_struct;
+SIM         sim_struct;
+CORE_DATA   core_data;
 PERI_ERR    peri_static_err;
 CORE_ERR    core_static_err;
 

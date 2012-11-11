@@ -22,8 +22,13 @@ void Sim_Init()
     
     
     p_sim                = &sim_struct;
+    p_sim->p_core_data   = &core_data;
     p_sim->p_periph_head = NULL;
     p_peri_next          = NULL;
+    
+    
+    core_data.cycles = 0;
+    core_data.fcy    = 118662200u;
     
     /************** ADC ***************/
     p_peri = malloc(sizeof(PERIPHERAL));
@@ -54,14 +59,19 @@ void Sim_Init()
 void Sim_Run()
 {
     SIM        *p_sim;
+    CORE_DATA  *p_core_data;
     PERI_ERR    peri_err;
     CORE_ERR    core_err;
     
-    core_err = CORE_ERR_NONE;
-    peri_err = PERI_ERR_NONE;
-    p_sim    = &sim_struct;
+    core_err    = CORE_ERR_NONE;
+    peri_err    = PERI_ERR_NONE;
+    p_sim       = &sim_struct;
+    p_core_data = p_sim->p_core_data;
+    
+    
     
     while (1) {
+        p_core_data->cycles++;
         
         /* Process HW */
         
@@ -92,24 +102,28 @@ void Sim_Run()
 void Sim_Step()
 {
     SIM        *p_sim;
+    CORE_DATA  *p_core_data;
 
-    p_sim = &sim_struct;
+    p_sim       = &sim_struct;
+    p_core_data = p_sim->p_core_data;
     
-        /* Process HW */
+    p_core_data->cycles++;
+    
+    /* Process HW */
         
         /* Process Peripherals */
-        Peripheral_Run(&core_static_err,
-                       p_sim->p_mem_prog,
-                       p_sim->p_mem_data,
-                       p_sim->p_core,
-                       p_sim->p_periph_head,
-                       &peri_static_err);
+    Peripheral_Run(&core_static_err,
+                   p_sim->p_mem_prog,
+                   p_sim->p_mem_data,
+                   p_sim->p_core,
+                   p_sim->p_periph_head,
+                  &peri_static_err);
         
         /* Process Core */
-        Core_Run(p_sim->p_core,
-                 p_sim->p_mem_prog,
-                 p_sim->p_mem_data,
-                &core_static_err);
+    Core_Run(p_sim->p_core,
+             p_sim->p_mem_prog,
+             p_sim->p_mem_data,
+            &core_static_err);
 }
 
 unsigned short DLL_API C_STD_CALL Sim_GetValueFromDataMem(unsigned short addr)

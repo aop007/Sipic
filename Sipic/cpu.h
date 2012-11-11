@@ -23,22 +23,23 @@ extern "C" {
 #define  DEF_OK     1u
 #define  DEF_TRUE   1u
     
-#define  DEF_BIT_15  0x8000
-#define  DEF_BIT_14  0x4000
-#define  DEF_BIT_13  0x2000
-#define  DEF_BIT_12  0x1000
-#define  DEF_BIT_11  0x0800
-#define  DEF_BIT_10  0x0400
-#define  DEF_BIT_09  0x0200
-#define  DEF_BIT_08  0x0100
-#define  DEF_BIT_07  0x0080
-#define  DEF_BIT_06  0x0040
-#define  DEF_BIT_05  0x0020
-#define  DEF_BIT_04  0x0010
-#define  DEF_BIT_03  0x0008
-#define  DEF_BIT_02  0x0004
-#define  DEF_BIT_01  0x0002
-#define  DEF_BIT_00  0x0001
+#define  DEF_BIT_15     0x8000
+#define  DEF_BIT_14     0x4000
+#define  DEF_BIT_13     0x2000
+#define  DEF_BIT_12     0x1000
+#define  DEF_BIT_11     0x0800
+#define  DEF_BIT_10     0x0400
+#define  DEF_BIT_09     0x0200
+#define  DEF_BIT_08     0x0100
+#define  DEF_BIT_07     0x0080
+#define  DEF_BIT_06     0x0040
+#define  DEF_BIT_05     0x0020
+#define  DEF_BIT_04     0x0010
+#define  DEF_BIT_03     0x0008
+#define  DEF_BIT_02     0x0004
+#define  DEF_BIT_01     0x0002
+#define  DEF_BIT_00     0x0001
+#define  DEF_BIT_NONE   0x0000
 
 
 /*

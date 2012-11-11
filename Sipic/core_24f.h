@@ -71,6 +71,10 @@ typedef struct core_24f {
     
 } CORE_24F;
 
+typedef struct core_data {
+    CPU_INT64U  cycles;
+    CPU_INT32U  fcy;
+} CORE_DATA;
 
 CORE_24F * Core_Init(MEM         *p_mem_data,
                      CPU_INT32U   addr,

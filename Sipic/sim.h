@@ -23,6 +23,7 @@ typedef  struct  sim {
     MEM_24      *p_mem_prog;
     MEM         *p_mem_data;
     PERIPHERAL  *p_periph_head;
+    CORE_DATA   *p_core_data;
 } SIM;
 
 void                                Sim_Init();
