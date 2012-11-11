@@ -65,11 +65,15 @@ void DLL_API C_STD_CALL init_sipic(void)
     Core_OPC_Stats(p_mem);
 #endif
     
+    
+    
     p_core = Core_Init(p_mem_data, 0x0000, &core_err);
     
     p_sim->p_core     = p_core;
     p_sim->p_mem_data = p_mem_data;
     p_sim->p_mem_prog = p_mem_prog;
+    
+    Sim_Init();
     
     //Sim_Run(&sim_struct);
     

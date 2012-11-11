@@ -29,6 +29,7 @@
 		690D64B81648D0FA008CB35B /* peripheral.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D64AB1648D0F9008CB35B /* peripheral.c */; };
 		690D64B91648D0FA008CB35B /* coff_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D64AE1648D0F9008CB35B /* coff_parser.c */; };
 		690D64BA1648D0FA008CB35B /* ascii.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D64AF1648D0F9008CB35B /* ascii.c */; };
+		6929603116502D7B00B07386 /* peri_adc.c in Sources */ = {isa = PBXBuildFile; fileRef = 6929603016502D7B00B07386 /* peri_adc.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -90,6 +91,7 @@
 		690D64C31648D105008CB35B /* main.sym */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.sym; sourceTree = "<group>"; };
 		690D64C41648D105008CB35B /* main.tre */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.tre; sourceTree = "<group>"; };
 		690D64C51648D105008CB35B /* main.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.txt; sourceTree = "<group>"; };
+		6929603016502D7B00B07386 /* peri_adc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = peri_adc.c; path = ../Sipic/peri_adc.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -186,8 +188,8 @@
 				690D64BB1648D105008CB35B /* InputFiles */,
 				690D64941648D0F9008CB35B /* main.c */,
 				690D64951648D0F9008CB35B /* main.h */,
-				690D64961648D0F9008CB35B /* sim.h */,
 				690D64971648D0F9008CB35B /* sim.c */,
+				690D64961648D0F9008CB35B /* sim.h */,
 				690D64981648D0F9008CB35B /* ascii.h */,
 				690D64991648D0F9008CB35B /* coff_cfg.h */,
 				690D649A1648D0F9008CB35B /* coff_parser.h */,
@@ -206,6 +208,7 @@
 				690D64A71648D0F9008CB35B /* mem_cfg.h */,
 				690D64A81648D0F9008CB35B /* mem.c */,
 				690D64A91648D0F9008CB35B /* mem.h */,
+				6929603016502D7B00B07386 /* peri_adc.c */,
 				690D64AA1648D0F9008CB35B /* peri_isr.c */,
 				690D64AB1648D0F9008CB35B /* peripheral.c */,
 				690D64AC1648D0F9008CB35B /* peripheral.h */,
@@ -316,6 +319,7 @@
 				690D64B81648D0FA008CB35B /* peripheral.c in Sources */,
 				690D64B91648D0FA008CB35B /* coff_parser.c in Sources */,
 				690D64BA1648D0FA008CB35B /* ascii.c in Sources */,
+				6929603116502D7B00B07386 /* peri_adc.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

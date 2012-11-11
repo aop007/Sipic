@@ -6,11 +6,9 @@
 //  Copyright (c) 2012 Alexis Ouellet-Patenaude. All rights reserved.
 //
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "mem.h"
 #include "main.h"
+
 
 static  CPU_INT32U  Mem_GetSegSize(const MEM_CFG  *p_cfg);
 

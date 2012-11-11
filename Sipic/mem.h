@@ -13,6 +13,9 @@
 extern "C" {
 #endif
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "cpu.h"
 #include "mem_cfg.h"
 #include "err.h"

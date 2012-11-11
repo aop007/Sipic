@@ -11,6 +11,45 @@
 #include "core_24f.h"
 #include "core_24f_opcode.h"
 #include "main.h"
+#include "peripheral.h"
+
+void Sim_Init()
+{
+    SIM         *p_sim;
+    PERIPHERAL  *p_peri;
+    PERIPHERAL  *p_peri_next;
+    PERI_ERR     peri_err;
+    
+    
+    p_sim                = &sim_struct;
+    p_sim->p_periph_head = NULL;
+    p_peri_next          = NULL;
+    
+    /************** ADC ***************/
+    p_peri = malloc(sizeof(PERIPHERAL));
+    
+    
+    p_peri->Type     = PERI_TYPE_ADC;
+    p_peri->p_device = Peri_ADC_Init(p_sim->p_mem_data, &peri_err);
+    p_peri->p_next   = p_peri_next;
+    
+    p_peri_next      = p_peri;
+    /************ END ADC *************/
+    
+    /************** ISR ***************/
+    p_peri = malloc(sizeof(PERIPHERAL));
+    
+    
+    p_peri->Type     = PERI_TYPE_ISR;
+    p_peri->p_device = Peri_ISR_Init(p_sim->p_mem_data, &peri_err);
+    p_peri->p_next   = p_peri_next;
+    
+    p_peri_next      = p_peri;
+    /************ END ADC *************/
+    
+    
+    p_sim->p_periph_head = p_peri_next;
+}
 
 void Sim_Run()
 {
@@ -31,6 +70,7 @@ void Sim_Run()
                        p_sim->p_mem_prog,
                        p_sim->p_mem_data,
                        p_sim->p_core,
+                       p_sim->p_periph_head,
                        &peri_err);
         
         /* Process Core */
@@ -62,6 +102,7 @@ void Sim_Step()
                        p_sim->p_mem_prog,
                        p_sim->p_mem_data,
                        p_sim->p_core,
+                       p_sim->p_periph_head,
                        &peri_static_err);
         
         /* Process Core */

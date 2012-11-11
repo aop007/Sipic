@@ -782,11 +782,11 @@ void  Core_PC_Slide (CORE_24F    *p_core,
 {
     CPU_INT32U  PC;
     
-    memcpy(&PC, &p_core->PC[0], sizeof(PC));
+    memcpy(&PC, (const void *)&p_core->PC[0], sizeof(PC));
     
     PC += slide;
     
-    memcpy(&p_core->PC[0], &PC, sizeof(PC));
+    memcpy((void *)&p_core->PC[0], &PC, sizeof(PC));
 }
 
 void  Core_PC_Set (CORE_24F    *p_core,
@@ -794,18 +794,18 @@ void  Core_PC_Set (CORE_24F    *p_core,
 {
     CPU_INT32U  PC;
     
-    memcpy(&PC, &p_core->PC[0], sizeof(PC));
+    memcpy(&PC, (const void *)&p_core->PC[0], sizeof(PC));
     
     PC = value;
     
-    memcpy(&p_core->PC[0], &PC, sizeof(PC));
+    memcpy((void *)&p_core->PC[0], &PC, sizeof(PC));
 }
 
 CPU_INT32U  Core_PC_Get (CORE_24F    *p_core)
 {
     CPU_INT32U  PC;
     
-    memcpy(&PC, &p_core->PC[0], sizeof(PC));
+    memcpy(&PC, (const void *)&p_core->PC[0], sizeof(PC));
     
     return (PC);
 }

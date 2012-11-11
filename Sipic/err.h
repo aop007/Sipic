@@ -80,9 +80,11 @@ typedef enum core_err CORE_ERR;
  */
 
 enum peri_err {
-    PERI_ERR_NONE            = 5000u,
-    PERI_ERR_INVALID_MEM     = 5001u,
-    PERI_ERR_INVALID_CORE_OP = 5002u
+    PERI_ERR_NONE               = 5000u,
+    PERI_ERR_INVALID_MEM        = 5001u,
+    PERI_ERR_INVALID_CORE_OP    = 5002u,
+    PERI_ERR_ALLOC              = 5003u,
+    PERI_ERR_INVALID_PERI_TYPE  = 5004u
 };
 
 typedef enum peri_err PERI_ERR;

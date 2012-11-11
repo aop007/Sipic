@@ -40,38 +40,34 @@ extern "C" {
 
 typedef struct core_24f {
     
-    CPU_INT16U  W[16];
+    volatile CPU_INT16U  W[16];
     
-    CPU_INT16U  SPLIM;
+    volatile CPU_INT16U  SPLIM;
     
-    CPU_INT16U  ACCA[3];
-    CPU_INT16U  ACCB[3];
+    volatile CPU_INT16U  ACCA[3];
+    volatile CPU_INT16U  ACCB[3];
     
-    CPU_INT08U  PC[4];
+    volatile CPU_INT08U  PC[4];
     
-    CPU_INT08U  TBLPAG;
+    volatile CPU_INT08U  TBLPAG;
     
-    CPU_INT08U  Reserved0;
+    volatile CPU_INT08U  Reserved0;
     
-    CPU_INT08U  PSVPAG;
+    volatile CPU_INT08U  PSVPAG;
     
-    CPU_INT08U  Reserved1;
+    volatile CPU_INT08U  Reserved1;
     
-    CPU_INT16U  RCOUNT;
-    CPU_INT16U  DCOUNT;
+    volatile CPU_INT16U  RCOUNT;
+    volatile CPU_INT16U  DCOUNT;
     
-    CPU_INT08U  DOSTART[4];
+    volatile CPU_INT08U  DOSTART[4];
     
-    CPU_INT08U  DOEND[4];
+    volatile CPU_INT08U  DOEND[4];
     
-    CPU_INT16U  SR;
+    volatile CPU_INT16U  SR;
     
-    CPU_INT16U  CORCON;
-    CPU_INT16U  MODCON;
-    
-#ifdef  CORE_CFG_CYCLE_CNTR
-    CPU_INT64U CYCLE;
-#endif
+    volatile CPU_INT16U  CORCON;
+    volatile CPU_INT16U  MODCON;
     
 } CORE_24F;
 
