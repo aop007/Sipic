@@ -389,15 +389,6 @@ void  Core_Run(CORE_24F  *p_core_24f,
             found_instruction = DEF_YES;
             
             switch (instruction) {
-#if 0
-                case CORE_OPC_SUB_W_LIT:
-                    Core_SUB_B10(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
-                    break;
-
-                case CORE_OPC_ADDC_LIT_W:
-                    Core_ADDC_B08(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
-                    break;
-#else
                 case CORE_OPC_ADD_LIT_W:
                 case CORE_OPC_ADDC_LIT_W:
                 case CORE_OPC_SUB_W_LIT:
@@ -407,10 +398,58 @@ void  Core_Run(CORE_24F  *p_core_24f,
                 case CORE_OPC_XOR_LIT_W:
                     Core_MATH_WN_LIT(p_mem_prog, p_mem_data, p_core_24f, args, instruction, p_err);
                     break;
-#endif
+
+#if 1
+                case CORE_OPC_ADD_M_W:
+                case CORE_OPC_ADDC_M_W:
+                case CORE_OPC_AND_M_W:
+                case CORE_OPC_ASR_M_W:
+                case CORE_OPC_CLR_M_W:
+                case CORE_OPC_COM_M_W:
+                case CORE_OPC_DEC_M_W:
+                case CORE_OPC_DEC2_M_W:
+                case CORE_OPC_INC_M_W:
+                case CORE_OPC_INC2_M_W:
+                case CORE_OPC_IOR_M_W:
+                case CORE_OPC_LSR_M_W:
+                case CORE_OPC_MOV_M_W:
+                case CORE_OPC_NEG_M_W:
+                case CORE_OPC_RLC_M_W:
+                case CORE_OPC_RLNC_M_W:
+                case CORE_OPC_RRC_M_W:
+                case CORE_OPC_RRNC_M_W:
+                case CORE_OPC_SETM_M_W:
+                case CORE_OPC_SL_M_W:
+                case CORE_OPC_SUB_M_W:
+                case CORE_OPC_SUBB_M_W:
+                case CORE_OPC_SUBBR_M_W:
+                case CORE_OPC_SUBR_M_W:
+                case CORE_OPC_XOR_M_W:
+                    
+                    break;
+#else
                 case CORE_OPC_ADD_B40:
                     Core_ADD_B40(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
                     break;
+                    
+                case CORE_OPC_SETM_M_W0:
+                    Core_SETM_M_W0_EF8(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
+                    break;
+                    
+                case CORE_OPC_CLR_M_W0:
+                    Core_CLR_M_W0_EF0(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
+                    break;
+                    
+                case CORE_OPC_ADDC_M_W:
+                    Core_ADDC_B48(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
+                    break;
+
+                case CORE_OPC_INC_M:
+                    Core_INC_EC0(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
+                    break;
+#endif
+                    
+
                     
                 case CORE_OPC_MUL_UU:
                     Core_MUL_UU_B80(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
@@ -432,24 +471,9 @@ void  Core_Run(CORE_24F  *p_core_24f,
                     Core_SETM_WS_EB8(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
                     break;
                 
-                case CORE_OPC_SETM_M_W0:
-                    Core_SETM_M_W0_EF8(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
-                    break;
                     
                     
-                case CORE_OPC_CLR_M_W0:
-                    Core_CLR_M_W0_EF0(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
-                    break;
-                    
-                case CORE_OPC_ADDC_M_W:
-                    Core_ADDC_B48(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
-                    break;
 
-                
-
-                case CORE_OPC_INC_M:
-                    Core_INC_EC0(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
-                    break;
                     
                 case CORE_OPC_INC_W:
                 case CORE_OPC_DEC_W:
@@ -488,6 +512,9 @@ void  Core_Run(CORE_24F  *p_core_24f,
                     Core_SETM_MOV_8BL_WN_B7A(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
                     break;
                     
+                case CORE_OPC_CP0_M:
+                    Core_CP0_E20(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
+                    break;
                     
                 default:
                     found_instruction = DEF_NO;

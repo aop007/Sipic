@@ -3372,6 +3372,58 @@ void Core_CP0_E0000 (MEM_24      *p_mem_prog,
     *p_err = CORE_ERR_NONE;
 }
 
+void Core_CP0_E20 (MEM_24      *p_mem_prog,
+                   MEM         *p_mem_data,
+                   CORE_24F    *p_core,
+                   CPU_INT32U   args,
+                   CORE_ERR    *p_err)
+{
+    CPU_INT32U  size_op;
+    CPU_INT32U  addr;
+    CPU_INT32U  result;
+    CPU_INT32U  mask;
+    MEM_ERR     mem_err;
+    
+    size_op = (args & 0x004000) >> 14;
+    addr    =  args & 0x001FFF;
+    
+    mask    = Core_MaskGet(size_op, addr);
+
+    result  = Mem_Get(p_mem_data, (addr & 0xFFFE), &mem_err);
+
+    if (mem_err != MEM_ERR_NONE) {
+        *p_err = CORE_ERR_INVALID_MEM;
+        return;
+    }
+    
+    result  = Core_Align(result, mask);
+    
+    /* Update Status Register */
+                                                                /* DC */
+
+    p_core->SR &= ~(CORE_SR_DC);
+    
+    /* N */
+    p_core->SR &= ~(CORE_SR_N);
+    
+    /* OV */
+    p_core->SR &= ~(CORE_SR_OV);
+    
+    if (result == 0) {                                          /* Z */
+        p_core->SR |=   CORE_SR_Z;
+    } else {
+        p_core->SR &= ~(CORE_SR_Z);
+    }
+    
+                                                                /* C */
+    p_core->SR &= ~(CORE_SR_C);
+    
+    Core_PC_Slide(p_core, 2);
+    
+    *p_err = CORE_ERR_NONE;
+    
+}
+
 void Core_CP_E1000 (MEM_24      *p_mem_prog,
                     MEM         *p_mem_data,
                     CORE_24F    *p_core,

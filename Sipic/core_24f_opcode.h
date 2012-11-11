@@ -75,13 +75,16 @@ extern "C" {
 #define  CORE_OPC_IOR_LIT_W  0xB30000
 #define  CORE_OPC_XOR_LIT_W  0xB28000
 
+#define  CORE_OPC_ADD_M_W    0xB40000
 #define  CORE_OPC_ADDC_M_W   0xB48000
+#define  CORE_OPC_ASR_M_W    0xB58000
+#define  CORE_OPC_AND_M_W    0xB60000
 #define  CORE_OPC_MUL_UU     0xB80000
 #define  CORE_OPC_MUL_UU_LIT 0xB80060
 #define  CORE_OPC_MUL_US     0xB88000
 #define  CORE_OPC_MUL_SS     0xB98000
 #define  CORE_OPC_MOV_8BL_WN 0xB3C000
-#define  CORE_OPC_ADD_B40    0xB40000
+
 #define  CORE_OPC_MOV_WN_M   0xB7A000
 #define  CORE_OPC_MOV_M_WM   0xBF8000
 
@@ -91,7 +94,7 @@ extern "C" {
 #define  CORE_OPC_CP0_WN_SF  0xE00000
 #define  CORE_OPC_CP_W_LIT   0xE10060
 #define  CORE_OPC_CP_WB_WS   0xE10000
-//#define  CORE_OPC_DEC_WS_WD  0xE90000
+#define  CORE_OPC_CP0_M      0xE20000
 #define  CORE_OPC_SETM_WS    0xEB8000
 #define  CORE_OPC_INC_M      0xEC0000
 #define  CORE_OPC_CLR_WD     0xEB0000
