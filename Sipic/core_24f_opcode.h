@@ -33,23 +33,33 @@ extern "C" {
 #define  CORE_OPC_BRA_SA     0x0E0000
 #define  CORE_OPC_BRA_SB     0x0F0000
 
+#define  CORE_OPC_SUBR_W_LIT_W   0x100060
+#define  CORE_OPC_SUBBR_W_LIT_W  0x180060
+
 #define  CORE_OPC_MOV_L_W    0x200000
 
 #define  CORE_OPC_BRA_COND_SLIT  0x300000
 
 #define  CORE_OPC_ADD_WB_WS_WD   0x400000
+#define  CORE_OPC_ADD_W_LIT_W    0x400060
+#define  CORE_OPC_ADDC_W_LIT_W   0x480060
 #define  CORE_OPC_ADDC_WB_WS_WD  0x480000
+#define  CORE_OPC_SUB_W_LIT_W    0x500060
+#define  CORE_OPC_SUBB_W_LIT_W   0x580060
 #define  CORE_OPC_AND_WB_WS_WD   0x600000
+#define  CORE_OPC_AND_W_LIT_W    0x600060
 #define  CORE_OPC_IOR_WB_WS_WD   0x700000
+#define  CORE_OPC_IOR_W_LIT_W    0x700060
 #define  CORE_OPC_SUB_WB_WS_WD   0x500000
 #define  CORE_OPC_SUBB_WB_WS_WD  0x510000
 #define  CORE_OPC_SUBBR_WB_WS_WD 0x110000
 #define  CORE_OPC_SUBR_WB_WS_WD  0x100000
 #define  CORE_OPC_XOR_WB_WS_WD   0x680000
+#define  CORE_OPC_XOR_W_LIT_W    0x680060
     
-#define  CORE_OPC_ADDC_WB_LIT_WD 0x480060
 
-#define  CORE_OPC_LIT_WB     0x500060
+
+
 
 
 
@@ -101,6 +111,10 @@ extern "C" {
 #define  CORE_OPC_RRNC_M_W   0xD70000
 #define  CORE_OPC_RRC_M_W    0xD78000
 #define  CORE_OPC_DIV_S      0xD80000
+#define  CORE_OPC_DIV_U      0xD88000
+#define  CORE_OPC_ASR_W_L_W  0xDE8040
+#define  CORE_OPC_LSR_W_L_W  0xDE0040
+#define  CORE_OPC_SL_W_L_W   0xDD0040
 
 #define  CORE_OPC_CP0_WN_SF  0xE00000
 #define  CORE_OPC_CP_W_LIT   0xE10060
@@ -271,6 +285,13 @@ void Core_MOV_W_M_88   (MEM_24      *p_mem_prog,
                         CPU_INT32U   args,
                         CORE_ERR    *p_err);
 
+void Core_Logical_W_L_W(MEM_24      *p_mem_prog,
+                            MEM         *p_mem_data,
+                            CORE_24F    *p_core,
+                            CPU_INT32U   args,
+                            OPCODE       instruction,
+                            CORE_ERR    *p_err);
+    
 void Core_BIT_LOGIC_W  (MEM_24      *p_mem_prog,
                         MEM         *p_mem_data,
                         CORE_24F    *p_core,
@@ -363,6 +384,22 @@ void Core_Logical     (MEM_24      *p_mem_prog,
                        CPU_INT32U   args,
                        OPCODE       operation,
                        CORE_ERR    *p_err);
+    
+void Core_Logical_W_L_W  (MEM_24      *p_mem_prog,
+                          MEM         *p_mem_data,
+                          CORE_24F    *p_core,
+                          CPU_INT32U   args,
+                          OPCODE       instruction,
+                          CORE_ERR    *p_err);
+    
+void Core_Logical_Shift_W_L_W  (MEM_24      *p_mem_prog,
+                              MEM         *p_mem_data,
+                              CORE_24F    *p_core,
+                              CPU_INT32U   args,
+                              OPCODE       instruction,
+                              CORE_ERR    *p_err);
+    
+    
 
 void Core_MUL_UU_B8006 (MEM_24      *p_mem_prog,
                         MEM         *p_mem_data,
@@ -394,11 +431,12 @@ void Core_MOV_BF8 (MEM_24      *p_mem_prog,
                    CPU_INT32U   args,
                    CORE_ERR    *p_err);
 
-void Core_DIV_S_D8000 (MEM_24      *p_mem_prog,
-                       MEM         *p_mem_data,
-                       CORE_24F    *p_core,
-                       CPU_INT32U   args,
-                       CORE_ERR    *p_err);
+void Core_DIV_SU_D8000 (MEM_24      *p_mem_prog,
+                        MEM         *p_mem_data,
+                        CORE_24F    *p_core,
+                        CPU_INT32U   args,
+                        OPCODE       instruction,
+                        CORE_ERR    *p_err);
 
 void Core_DEC_E90 (MEM_24      *p_mem_prog,
                    MEM         *p_mem_data,

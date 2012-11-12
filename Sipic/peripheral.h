@@ -34,7 +34,7 @@ void Peripheral_Run(const  CORE_ERR    *p_core_err,
                            MEM         *p_mem_data,
                            CORE_24F    *p_core,
                            PERIPHERAL  *p_peri_list,
-                           PERI_ERR  *p_err);
+                           PERI_ERR    *p_err);
 
 /* ISR */
 #define  ISR_VECT_NUM_RESET0        0x00
