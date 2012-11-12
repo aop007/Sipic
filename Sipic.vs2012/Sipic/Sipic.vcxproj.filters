@@ -12,6 +12,11 @@
     <ClCompile Include="..\..\Sipic\peri_isr.c" />
     <ClCompile Include="..\..\Sipic\peripheral.c" />
     <ClCompile Include="..\..\Sipic\sim.c" />
+    <ClCompile Include="..\..\Sipic\peri_adc.c" />
+    <ClCompile Include="..\..\Sipic\hardware.c" />
+    <ClCompile Include="..\..\Sipic\hw_if.c" />
+    <ClCompile Include="..\..\Sipic\hw_osc.c" />
+    <ClCompile Include="..\..\Sipic\peri_tmr.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Sipic\core_24f.h" />

@@ -111,3 +111,9 @@ void Peri_ISR(ISR_VECT_NUM  isr_vect_num,
     
     *p_err = PERI_ERR_NONE;
 }
+
+void PostISR(ISR_VECT_NUM   vect_num,
+             PERI_ERR      *p_err)
+{
+
+}

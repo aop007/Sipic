@@ -23,9 +23,11 @@ void HW_Run(MEM         *p_mem_data,
         
         switch (p_hw_mod->Type) {
             case WH_TYPE_OSC:
-                HW_OSC_Run(p_hw_mod->p_device, p_err);
+                HW_OSC_Run((HW_OSC *)p_hw_mod->p_device, p_err);
                 break;
                 
+            case HW_TYPE_IF:
+                break;
                 
             default:
                 *p_err = HW_ERR_INVALID_HW_TYPE;

@@ -13,6 +13,7 @@
 extern "C" {
 #endif
 
+#include "hardware.h"
 #include "mem.h"
 #include "core_24f.h"
 #include "err.h"
@@ -140,6 +141,61 @@ void Peri_ADC(MEM_24       *p_mem_prog,
               CORE_24F     *p_core,
               ADC          *p_adc,
               PERI_ERR     *p_err);
+
+/* Tmr */
+#define  PERI_TYPE_TMR_A              CPU_MAKE_TYPE('T','M','R','A')
+
+#define  TMR_1_ADDR_TBL_IX            0
+#define  TMR_2_ADDR_TBL_IX            1
+#define  TMR_4_ADDR_TBL_IX            2
+
+#define  TMR_CON_TON                  DEF_BIT_15
+#define  TMR_CON_TSIDL                DEF_BIT_13
+#define  TMR_CON_TGATE                DEF_BIT_06
+#define  TMR_CON_TCKPS               (DEF_BIT_05 | DEF_BIT_04)
+#define  TMR_CON_TSYNC                DEF_BIT_02
+#define  TMR_CON_TCS                  DEF_BIT_01
+
+#define  TMR_EXT_STATE_LO               0u
+#define  TMR_EXT_STATE_HI               1u
+
+#define  TMR_EXT_HI_TO_LO_TRSH             1.60
+#define  TMR_EXT_LO_TO_HI_TRSH             1.70
+
+
+static const CPU_INT16U PERI_TMR_BASE_ADDR[] = {0x0100, 0x0106, 0x0114};
+
+static const CPU_INT16U PERI_TMR_TCKPS[]     = {1, 8, 64, 256};
+
+typedef struct tmr_data {
+    HW_IF_DATA_TYPE  *p_pin;
+    CPU_BOOLEAN       ext_input_state;
+    CPU_INT32U        inputTick;
+} TMR_DATA;
+
+typedef struct tmr_a_mem {
+    volatile  CPU_INT16U  TMR;
+    volatile  CPU_INT16U  PR;
+    volatile  CPU_INT16U  CON;
+} TMR_A_MEM;
+
+typedef struct tmr_a {
+    TMR_A_MEM  *p_mem;
+    TMR_DATA   *p_data;
+} TMR_A;
+
+TMR_A *Peri_TmrA_Init(CPU_INT32U        tmr_nbr,
+                      HW_IF_DATA_TYPE  *p_pin,
+                      MEM              *p_mem_data,
+                      PERI_ERR         *p_err);
+
+void Peri_TMR_A(MEM_24       *p_mem_prog,
+                MEM          *p_mem_data,
+                CORE_24F     *p_core,
+                TMR_A        *p_tmr,
+                PERI_ERR     *p_err);
+
+/* Core Stuff */
 
 CPU_INT32U  CallDepth;
     

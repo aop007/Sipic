@@ -33,39 +33,12 @@ void Sim_Init()
     p_hw_next            =  NULL;
     
     core_data.cycles = 0;
-    core_data.fcy    = 118662200u;
+    core_data.fcy    = FCY;
     
-    /************** ADC ***************/
-    p_peri = malloc(sizeof(PERIPHERAL));
-    
-    
-    p_peri->Type     = PERI_TYPE_ADC;
-    p_peri->p_device = Peri_ADC_Init(p_sim->p_mem_data, &peri_err);
-    p_peri->p_next   = p_peri_next;
-    
-    p_peri_next      = p_peri;
-    /************ END ADC *************/
-    
-    /************** ISR ***************/
-    p_peri = malloc(sizeof(PERIPHERAL));
-    
-    
-    p_peri->Type     = PERI_TYPE_ISR;
-    p_peri->p_device = Peri_ISR_Init(p_sim->p_mem_data, &peri_err);
-    p_peri->p_next   = p_peri_next;
-    
-    p_peri_next      = p_peri;
-    /************ END ADC *************/
-    
-    
-    p_sim->p_periph_head = p_peri_next;
-    /**********************************/
-    /**********************************/
-    /**********************************/
+
     
     /************* HW IF **************/
-    p_hw = malloc(sizeof(HW_IF));
-    
+    p_hw = (HW_MOD *)malloc(sizeof(HW_MOD));
     
     p_hw->Type     = HW_TYPE_IF;
     p_hw_if        = HW_IF_Init(&hw_err);
@@ -77,8 +50,7 @@ void Sim_Init()
     
     
     /************** OSC ***************/
-    p_hw = malloc(sizeof(HW_OSC));
-    
+    p_hw = (HW_MOD *)malloc(sizeof(HW_MOD));
     
     p_hw->Type     = WH_TYPE_OSC;
     p_hw->p_device = HW_OSC_Init(RTCC_OSC_PERIOD, RTCC_OSC_AMP, RTCC_OSC_OFFSET, &p_hw_if->RC14, &hw_err);
@@ -88,6 +60,49 @@ void Sim_Init()
     /************ END OSC *************/
     
     p_sim->p_hw_head = p_hw_next;
+
+    /**********************************/
+    /**********************************/
+    /**********************************/
+
+    /************** ADC ***************/
+    p_peri = (PERIPHERAL *)malloc(sizeof(PERIPHERAL));
+    
+    
+    p_peri->Type     = PERI_TYPE_ADC;
+    p_peri->p_device = Peri_ADC_Init(p_sim->p_mem_data, &peri_err);
+    p_peri->p_next   = p_peri_next;
+    
+    p_peri_next      = p_peri;
+    /************ END ADC *************/
+
+    
+
+    /************* TMR A **************/
+    p_peri = (PERIPHERAL *)malloc(sizeof(PERIPHERAL));
+    
+    
+    p_peri->Type     = PERI_TYPE_TMR_A;
+    p_peri->p_device = Peri_TmrA_Init(TMR_1_ADDR_TBL_IX, &p_hw_if->RC14, p_sim->p_mem_data, &peri_err);
+    p_peri->p_next   = p_peri_next;
+    
+    p_peri_next      = p_peri;
+    /*********** END TMR A ************/
+    
+    /************** ISR ***************/
+    p_peri = (PERIPHERAL *)malloc(sizeof(PERIPHERAL));
+    
+    
+    p_peri->Type     = PERI_TYPE_ISR;
+    p_peri->p_device = Peri_ISR_Init(p_sim->p_mem_data, &peri_err);
+    p_peri->p_next   = p_peri_next;
+    
+    p_peri_next      = p_peri;
+    /************ END ADC *************/
+    
+    
+    p_sim->p_periph_head = p_peri_next;
+
 }
 
 void Sim_Run()

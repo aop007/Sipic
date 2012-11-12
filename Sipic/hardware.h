@@ -16,6 +16,9 @@ extern "C" {
 #include "cpu.h"
 #include "mem.h"
     
+#define  MAIN_PLL_FREQ  118662200
+#define  FCY            (MAIN_PLL_FREQ / 4)
+
 struct hw_mod;
     
 typedef  struct  hw_mod {
@@ -90,7 +93,7 @@ typedef  struct  hw_mod {
     
 #define  WH_TYPE_OSC    CPU_MAKE_TYPE('O','S','C',' ')
 
-#define  RTCC_OSC_PERIOD  (118662200 / 32768)
+#define  RTCC_OSC_PERIOD  (FCY / 32768)
 #define  RTCC_OSC_AMP     (3.3)
 #define  RTCC_OSC_OFFSET  (RTCC_OSC_AMP / 2)
     
