@@ -41,7 +41,7 @@ extern "C" {
 #define  DEF_BIT_00     0x0001
 #define  DEF_BIT_NONE   0x0000
 
-
+#define  PI             3.1415926535897932384626433
 /*
  ********** TYPE DEFINITION *********
  */

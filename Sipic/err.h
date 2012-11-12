@@ -88,6 +88,20 @@ enum peri_err {
 };
 
 typedef enum peri_err PERI_ERR;
+    
+/*
+ * HW_ERR ERRORS
+ */
+    
+enum hw_err {
+    HW_ERR_NONE               = 6000u,
+    HW_ERR_INVALID_MEM        = 6001u,
+    HW_ERR_INVALID_CORE_OP    = 6002u,
+    HW_ERR_ALLOC              = 6003u,
+    HW_ERR_INVALID_HW_TYPE    = 6004u
+};
+    
+typedef enum hw_err HW_ERR;
 
 #ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
 }

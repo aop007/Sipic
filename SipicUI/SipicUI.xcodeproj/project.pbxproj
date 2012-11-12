@@ -30,6 +30,9 @@
 		690D64B91648D0FA008CB35B /* coff_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D64AE1648D0F9008CB35B /* coff_parser.c */; };
 		690D64BA1648D0FA008CB35B /* ascii.c in Sources */ = {isa = PBXBuildFile; fileRef = 690D64AF1648D0F9008CB35B /* ascii.c */; };
 		6929603116502D7B00B07386 /* peri_adc.c in Sources */ = {isa = PBXBuildFile; fileRef = 6929603016502D7B00B07386 /* peri_adc.c */; };
+		6929603416509E3400B07386 /* hw_osc.c in Sources */ = {isa = PBXBuildFile; fileRef = 6929603316509E3400B07386 /* hw_osc.c */; };
+		692960361650A89C00B07386 /* hardware.c in Sources */ = {isa = PBXBuildFile; fileRef = 692960351650A89C00B07386 /* hardware.c */; };
+		6929603A1650BAA800B07386 /* hw_if.c in Sources */ = {isa = PBXBuildFile; fileRef = 692960391650BAA700B07386 /* hw_if.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -92,6 +95,9 @@
 		690D64C41648D105008CB35B /* main.tre */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.tre; sourceTree = "<group>"; };
 		690D64C51648D105008CB35B /* main.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.txt; sourceTree = "<group>"; };
 		6929603016502D7B00B07386 /* peri_adc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = peri_adc.c; path = ../Sipic/peri_adc.c; sourceTree = "<group>"; };
+		6929603316509E3400B07386 /* hw_osc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = hw_osc.c; path = ../Sipic/hw_osc.c; sourceTree = "<group>"; };
+		692960351650A89C00B07386 /* hardware.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = hardware.c; path = ../Sipic/hardware.c; sourceTree = "<group>"; };
+		692960391650BAA700B07386 /* hw_if.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = hw_if.c; path = ../Sipic/hw_if.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,6 +206,7 @@
 				690D649F1648D0F9008CB35B /* cpu.c */,
 				690D64A01648D0F9008CB35B /* cpu.h */,
 				690D64A11648D0F9008CB35B /* err.h */,
+				6929603316509E3400B07386 /* hw_osc.c */,
 				690D64A21648D0F9008CB35B /* hardware.h */,
 				690D64A31648D0F9008CB35B /* hex_cfg.h */,
 				690D64A41648D0F9008CB35B /* hex_parser.c */,
@@ -215,6 +222,8 @@
 				690D64AD1648D0F9008CB35B /* sipic_cfg.h */,
 				690D64AE1648D0F9008CB35B /* coff_parser.c */,
 				690D64AF1648D0F9008CB35B /* ascii.c */,
+				692960351650A89C00B07386 /* hardware.c */,
+				692960391650BAA700B07386 /* hw_if.c */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -320,6 +329,9 @@
 				690D64B91648D0FA008CB35B /* coff_parser.c in Sources */,
 				690D64BA1648D0FA008CB35B /* ascii.c in Sources */,
 				6929603116502D7B00B07386 /* peri_adc.c in Sources */,
+				6929603416509E3400B07386 /* hw_osc.c in Sources */,
+				692960361650A89C00B07386 /* hardware.c in Sources */,
+				6929603A1650BAA800B07386 /* hw_if.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

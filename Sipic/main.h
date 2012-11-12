@@ -37,6 +37,7 @@ extern "C" {
 
 SIM         sim_struct;
 CORE_DATA   core_data;
+HW_ERR      hw_static_err;
 PERI_ERR    peri_static_err;
 CORE_ERR    core_static_err;
 

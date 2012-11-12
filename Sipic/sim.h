@@ -15,6 +15,7 @@ extern "C" {
 
 #include "core_24f.h"
 #include "peripheral.h"
+#include "hardware.h"
 #include "cpu.h"
 #include "sipic_cfg.h"
 
@@ -23,6 +24,7 @@ typedef  struct  sim {
     MEM_24      *p_mem_prog;
     MEM         *p_mem_data;
     PERIPHERAL  *p_periph_head;
+    HW_MOD      *p_hw_head;
     CORE_DATA   *p_core_data;
 } SIM;
 

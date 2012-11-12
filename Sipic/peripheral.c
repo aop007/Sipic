@@ -17,7 +17,6 @@ void Peripheral_Run(const  CORE_ERR    *p_core_err,
                            PERIPHERAL  *p_peri_list,
                            PERI_ERR    *p_err)
 {
-#if 1
     PERIPHERAL  *p_peri;
     
     
@@ -49,11 +48,6 @@ void Peripheral_Run(const  CORE_ERR    *p_core_err,
         
         p_peri = p_peri->p_next;
     }
-    
-#else
-    // Process Interrupt Engine
-    
-#endif
 }
 
 void Peripheral_ISR(const  CORE_ERR    *p_core_err,
