@@ -828,9 +828,13 @@ void  Core_PC_Set (CORE_24F    *p_core,
     
     memcpy(&PC, (const void *)&p_core->PC[0], sizeof(PC));
     
-    PC = value;
+    //PC = value;
     
-    memcpy((void *)&p_core->PC[0], &PC, sizeof(PC));
+    memcpy((void *)&p_core->PC[0], &value, sizeof(PC));
+    
+    if (PC >= 0x4000) {
+        printf("\r\nPC out of bound!");
+    }
 }
 
 CPU_INT32U  Core_PC_Get (CORE_24F    *p_core)

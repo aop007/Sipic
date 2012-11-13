@@ -201,6 +201,10 @@ void Peri_ISR_FromVect(CPU_INT32U    isr_vect_addr,
     MEM_ERR     mem_err;
     
     
+    if (Call_Depth == 0) {
+        printf("\r\nPrecarious Call_Depth.");
+    }
+    
     PC      = Core_PC_Get(p_core) + 2;
     SR      = (p_core->SR & 0x00FF);
     CORCON  = (p_core->CORCON & CORE_CORECON_IPL3);
@@ -229,6 +233,8 @@ void Peri_ISR_FromVect(CPU_INT32U    isr_vect_addr,
     
 #if 1
     printf("\r\nISR = 0x%x with ipl %d at Call_Depth %d at cycle %lu",ISR_addr, ipl, Call_Depth, core_data.cycles);
+    
+    
 #endif
     
     p_core->SR     &= ~0x00FF;

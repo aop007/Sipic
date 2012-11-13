@@ -285,8 +285,8 @@ void Core_BRA_3 (MEM_24      *p_mem_prog,
             return;
             
         case CORE_OPC_BRA_LEU:
-            *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
-            return;
+            result = !Core_GetC(p_core)||Core_GetZ(p_core);
+            break;
             
         case CORE_OPC_BRA_UNC:
             result = DEF_YES;
