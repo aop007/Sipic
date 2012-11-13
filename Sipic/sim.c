@@ -78,7 +78,7 @@ void Sim_Init()
 
     
 
-    /************* TMR A **************/
+    /************* TMR 1 **************/
     p_peri = (PERIPHERAL *)malloc(sizeof(PERIPHERAL));
     
     
@@ -91,7 +91,39 @@ void Sim_Init()
     p_peri->p_next   = p_peri_next;
     
     p_peri_next      = p_peri;
-    /*********** END TMR A ************/
+    /*********** END TMR 1 ************/
+
+    /************ TMR 2/3 *************/
+    p_peri = (PERIPHERAL *)malloc(sizeof(PERIPHERAL));
+    
+    
+    p_peri->Type     = PERI_TYPE_TMR_BC;
+    p_peri->p_device = Peri_TmrBC_Init(TMR_2_ADDR_TBL_IX,
+                                      &p_hw_if->RC14,
+                                       ISR_VECT_NUM_T2,
+                                       ISR_VECT_NUM_T3,
+                                       p_sim->p_mem_data,
+                                      &peri_err);
+    p_peri->p_next   = p_peri_next;
+    
+    p_peri_next      = p_peri;
+    /********** END TMR 2/3 ***********/
+
+    /************ TMR 4/5 *************/
+    p_peri = (PERIPHERAL *)malloc(sizeof(PERIPHERAL));
+    
+    
+    p_peri->Type     = PERI_TYPE_TMR_BC;
+    p_peri->p_device = Peri_TmrBC_Init(TMR_4_ADDR_TBL_IX,
+                                      &p_hw_if->RC14,
+                                       ISR_VECT_NUM_T4,
+                                       ISR_VECT_NUM_T5,
+                                       p_sim->p_mem_data,
+                                      &peri_err);
+    p_peri->p_next   = p_peri_next;
+    
+    p_peri_next      = p_peri;
+    /********** END TMR 4/5 ***********/
     
     /************** ISR ***************/
     p_peri = (PERIPHERAL *)malloc(sizeof(PERIPHERAL));

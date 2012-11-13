@@ -249,6 +249,7 @@ void Peri_ADC(MEM_24       *p_mem_prog,
 
 /* Tmr */
 #define  PERI_TYPE_TMR_A              CPU_MAKE_TYPE('T','M','R','A')
+#define  PERI_TYPE_TMR_BC             CPU_MAKE_TYPE('T','M','B','C')
 
 #define  TMR_1_ADDR_TBL_IX            0
 #define  TMR_2_ADDR_TBL_IX            1
@@ -258,6 +259,7 @@ void Peri_ADC(MEM_24       *p_mem_prog,
 #define  TMR_CON_TSIDL                DEF_BIT_13
 #define  TMR_CON_TGATE                DEF_BIT_06
 #define  TMR_CON_TCKPS               (DEF_BIT_05 | DEF_BIT_04)
+#define  TMR_CON_T32                  DEF_BIT_03
 #define  TMR_CON_TSYNC                DEF_BIT_02
 #define  TMR_CON_TCS                  DEF_BIT_01
 
@@ -274,9 +276,11 @@ static const CPU_INT16U PERI_TMR_TCKPS[]     = {1, 8, 64, 256};
 
 typedef struct tmr_data {
     ISR_VECT_NUM      isr_vect_num;
+    ISR_VECT_NUM      isr_vect_num_sec;
     HW_IF_DATA_TYPE  *p_pin;
     CPU_BOOLEAN       ext_input_state;
     CPU_INT32U        inputTick;
+    CPU_INT32U        inputTick_sec;
 } TMR_DATA;
 
 typedef struct tmr_a_mem {
@@ -290,6 +294,7 @@ typedef struct tmr_a {
     TMR_DATA   *p_data;
 } TMR_A;
 
+
 TMR_A *Peri_TmrA_Init(CPU_INT32U        tmr_nbr,
                           HW_IF_DATA_TYPE  *p_pin,
                           ISR_VECT_NUM      isr_vect_num,
@@ -302,6 +307,67 @@ void Peri_TMR_A(MEM_24       *p_mem_prog,
                 TMR_A        *p_tmr,
                 PERI_ERR     *p_err);
 
+typedef struct tmr_bc_mem {
+    CPU_INT16U  TMR2;
+    CPU_INT16U  TMR3HLD;
+    CPU_INT16U  TMR3;
+    CPU_INT16U  PR2;
+    CPU_INT16U  PR3;
+    CPU_INT16U  CON2;
+    CPU_INT16U  CON3;
+} TMR_BC_MEM;
+
+typedef struct tmr_b_mem {
+    CPU_INT16U  TMR;
+    CPU_INT16U  Reserved0[2];
+    CPU_INT16U  PR;
+    CPU_INT16U  Reserved1;
+    CPU_INT16U  CON;
+    CPU_INT16U  Reserved2;
+} TMR_B_MEM;
+
+typedef struct tmr_c_mem {
+    CPU_INT16U  TMRHLD;
+    CPU_INT16U  TMR;
+    CPU_INT16U  Reserved0;
+    CPU_INT16U  PR;
+    CPU_INT16U  Reserved1;
+    CPU_INT16U  CON;
+} TMR_C_MEM;
+
+typedef struct tmr_bc {
+    TMR_BC_MEM  *p_mem;
+    TMR_DATA    *p_data;
+} TMR_BC;
+
+typedef struct tmr_b {
+    TMR_B_MEM   *p_mem;
+    TMR_DATA    *p_data;
+} TMR_B;
+
+typedef struct tmr_c {
+    TMR_C_MEM   *p_mem;
+    TMR_DATA    *p_data;
+} TMR_C;
+
+TMR_BC *Peri_TmrBC_Init(CPU_INT32U        tmr_nbr,
+                        HW_IF_DATA_TYPE  *p_pin,
+                        ISR_VECT_NUM      isr_vect_num_b,
+                        ISR_VECT_NUM      isr_vect_num_c,
+                        MEM              *p_mem_data,
+                        PERI_ERR         *p_err);
+
+void Peri_TMR_B(MEM_24       *p_mem_prog,
+                MEM          *p_mem_data,
+                CORE_24F     *p_core,
+                TMR_B        *p_tmr,
+                PERI_ERR     *p_err);
+
+void Peri_TMR_C(MEM_24       *p_mem_prog,
+                MEM          *p_mem_data,
+                CORE_24F     *p_core,
+                TMR_C        *p_tmr,
+                PERI_ERR     *p_err);
 /* Core Stuff */
 
 CPU_INT32U  CallDepth;

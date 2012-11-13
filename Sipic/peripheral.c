@@ -48,6 +48,14 @@ void Peripheral_Run(const  CORE_ERR    *p_core_err,
                            (TMR_A *)p_peri->p_device,
                                     p_err);
                 break;
+
+            case PERI_TYPE_TMR_BC:
+                Peri_TMR_BC(          p_mem_prog,
+                                      p_mem_data,
+                                      p_core,
+                            (TMR_BC *)p_peri->p_device,
+                                      p_err);
+                break;
                 
             default:
                 *p_err = PERI_ERR_INVALID_PERI_TYPE;
