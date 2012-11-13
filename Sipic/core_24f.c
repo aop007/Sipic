@@ -94,9 +94,11 @@ void  Core_Run(CORE_24F  *p_core_24f,
             }
         }
 
-#ifdef  CORE_CFG_CYCLE_CNTR
-        CORE_TRACE_DEBUG(("\r\nPC = %004x\tOPC = %006x\tCYCLE = %d |", Core_PC_Get(p_core_24f), opcode, (CPU_INT32U)p_core_24f->CYCLE));
-#else
+#if 0
+        if (EnableDebugPrintf == 1) {
+        printf("\r\nPC = %004x\tOPC = %006x", Core_PC_Get(p_core_24f), opcode);
+        }
+
         CORE_TRACE_DEBUG(("\r\n"));
         for (ix = 0 ; ix < Call_Depth ; ix++) {
             CORE_TRACE_DEBUG(("-"));
@@ -108,7 +110,8 @@ void  Core_Run(CORE_24F  *p_core_24f,
             uncaught_instructions *= 1;
             CORE_TRACE_DEBUG((""));
         }
-        
+#endif
+#if 0
         if (p_core_24f->W[15] == 0) {
             CORE_TRACE_DEBUG((""));
         }

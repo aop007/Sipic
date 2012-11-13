@@ -41,6 +41,8 @@ ISR        *p_isr_static;
 HW_ERR      hw_static_err;
 PERI_ERR    peri_static_err;
 CORE_ERR    core_static_err;
+    
+//CPU_BOOLEAN    EnableDebugPrintf;
 
 #if 0
 int  main (int argc, const char * argv[]);

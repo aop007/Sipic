@@ -178,6 +178,7 @@ void Peri_ISR(MEM_24      *p_mem_prog,
         
         if (highest_prio_level > current_ipl) {
             Peri_ISR_FromVect(isr_vector, highest_prio_level, p_mem_prog, p_mem_data, p_core, p_err);
+            //EnableDebugPrintf = 1;
         }
         return;
     }
