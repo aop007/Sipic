@@ -66,12 +66,14 @@ void Peripheral_Run(const  CORE_ERR    *p_core_err,
 #define  ISR_INTCON1_STKERR         ISR_TRAP_NUM_STAK
 #define  ISR_INTCON1_OSCFAIL        ISR_TRAP_NUM_OSCI
     
-#define  IST_INTCON2_ALTIVT         DEF_BIT_15
-#define  IST_INTCON2_DISI           DEF_BIT_14
-#define  IST_INTCON2_INT2EP         DEF_BIT_02
-#define  IST_INTCON2_INT1EP         DEF_BIT_01
-#define  IST_INTCON2_INT0EP         DEF_BIT_00
+#define  ISR_INTCON2_ALTIVT         DEF_BIT_15
+#define  ISR_INTCON2_DISI           DEF_BIT_14
+#define  ISR_INTCON2_INT2EP         DEF_BIT_02
+#define  ISR_INTCON2_INT1EP         DEF_BIT_01
+#define  ISR_INTCON2_INT0EP         DEF_BIT_00
 
+#define  ISR_TRAP_IPL               DEF_BIT_03
+    
 #define  ISR_TRAP_MASK             (ISR_TRAP_NUM_MATH | ISR_TRAP_NUM_STAK | ISR_TRAP_NUM_ADDR | ISR_TRAP_NUM_OSCI)
     
 #define  ISR_VECT_NUM_INT0              0u
@@ -167,12 +169,14 @@ typedef struct isr {
 ISR *Peri_ISR_Init(MEM       *p_mem_data,
                    PERI_ERR  *p_err);
     
-void Peri_ISR(MEM_24        *p_mem_prog,
-              MEM           *p_mem_data,
-              CORE_24F      *p_core,
-              PERI_ERR      *p_err);
+    void Peri_ISR(MEM_24      *p_mem_prog,
+                  MEM         *p_mem_data,
+                  CORE_24F    *p_core,
+                  ISR         *p_isr,
+                  PERI_ERR    *p_err);
     
 void Peri_ISR_FromVect(CPU_INT32U    isr_vect_addr,
+                       CPU_INT08U    ipl,
                        MEM_24       *p_mem_prog,
                        MEM          *p_mem_data,
                        CORE_24F     *p_core,
@@ -301,12 +305,6 @@ void Peri_TMR_A(MEM_24       *p_mem_prog,
 /* Core Stuff */
 
 CPU_INT32U  CallDepth;
-    
-void Peripheral_ISR(MEM_24      *p_mem_prog,
-                    MEM         *p_mem_data,
-                    CORE_24F    *p_core,
-                    ISR         *p_isr,
-                    PERI_ERR    *p_err);
     
 #ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
 }

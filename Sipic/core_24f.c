@@ -103,8 +103,8 @@ void  Core_Run(CORE_24F  *p_core_24f,
         }
         CORE_TRACE_DEBUG(("PC = %004x\tOPC = %006x\t |", Core_PC_Get(p_core_24f), opcode));
 #endif
-#if 0
-        if ((Core_PC_Get(p_core_24f) == 0x93C)) { // && (p_core_24f->W[0] == 0)){
+#if 1
+        if ((Core_PC_Get(p_core_24f) == 0x0796)) { // && (p_core_24f->W[0] == 0)){
             uncaught_instructions *= 1;
             CORE_TRACE_DEBUG((""));
         }
@@ -315,7 +315,8 @@ void  Core_Run(CORE_24F  *p_core_24f,
             
             switch (instruction) {
                 case CORE_OPC_CP_WB_WS:
-                    Core_CP_E1000(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
+                case CORE_OPC_CPB_WB_WS:
+                    Core_CP_WS_WB(p_mem_prog, p_mem_data, p_core_24f, args, instruction, p_err);
                     break;
                     
                 default:
@@ -576,6 +577,19 @@ void  Core_Run(CORE_24F  *p_core_24f,
                     Core_BTSC_AF(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
                     break;
                     
+                    
+                default:
+                    found_instruction = DEF_NO;
+                    break;
+            }
+        }
+        
+        if (found_instruction == DEF_NO) {
+            instruction = opcode & 0xFF0001;
+            args        = opcode & 0x00FFFE;
+            found_instruction = DEF_YES;
+            
+            switch (instruction) {
                 case CORE_OPC_PUSH_F8:
                     Core_PUSH_F8(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
                     break;
@@ -583,8 +597,6 @@ void  Core_Run(CORE_24F  *p_core_24f,
                 case CORE_OPC_POP_F9:
                     Core_POP_F9(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
                     break;
-                    
-                    
                     
                 default:
                     found_instruction = DEF_NO;
@@ -625,11 +637,12 @@ void  Core_Run(CORE_24F  *p_core_24f,
                 case CORE_OPC_MOV_W_M:
                     Core_MOV_W_M_88(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
                     break;
-#if 0
-                case CORE_OPC_ADDC_WB_WS_WD:
-                    Core_ADDC_48(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
+
+                case CORE_OPC_MOV_WS_OFF_WD:
+                case CORE_OPC_MOV_WS_WD_OFF:
+                    Core_MOV_WS_WD_OFF(p_mem_prog, p_mem_data, p_core_24f, args, instruction, p_err);
                     break;
-#endif
+                    
                 default:
                     found_instruction = DEF_NO;
                     break;

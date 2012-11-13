@@ -51,8 +51,8 @@ extern "C" {
 #define  CORE_OPC_IOR_WB_WS_WD   0x700000
 #define  CORE_OPC_IOR_W_LIT_W    0x700060
 #define  CORE_OPC_SUB_WB_WS_WD   0x500000
-#define  CORE_OPC_SUBB_WB_WS_WD  0x510000
-#define  CORE_OPC_SUBBR_WB_WS_WD 0x110000
+#define  CORE_OPC_SUBB_WB_WS_WD  0x580000
+#define  CORE_OPC_SUBBR_WB_WS_WD 0x180000
 #define  CORE_OPC_SUBR_WB_WS_WD  0x100000
 #define  CORE_OPC_XOR_WB_WS_WD   0x680000
 #define  CORE_OPC_XOR_W_LIT_W    0x680060
@@ -68,6 +68,9 @@ extern "C" {
 #define  CORE_OPC_MOV_M_W    0x800000
 #define  CORE_OPC_MOV_W_M    0x880000
 
+#define  CORE_OPC_MOV_WS_OFF_WD  0x900000
+#define  CORE_OPC_MOV_WS_WD_OFF  0x980000
+    
 #define  CORE_OPC_BSET_W     0xA00000
 #define  CORE_OPC_BCLR_W     0xA10000
 #define  CORE_OPC_BTG_W      0xA20000
@@ -119,6 +122,7 @@ extern "C" {
 #define  CORE_OPC_CP0_WN_SF  0xE00000
 #define  CORE_OPC_CP_W_LIT   0xE10060
 #define  CORE_OPC_CP_WB_WS   0xE10000
+#define  CORE_OPC_CPB_WB_WS  0xE18000
 #define  CORE_OPC_CP0_M      0xE20000
 #define  CORE_OPC_SETM_WS    0xEB8000
 #define  CORE_OPC_INC_M_W    0xEC0000
@@ -242,6 +246,13 @@ void Core_MATH_WN_LIT  (MEM_24       *p_mem_prog,
                         OPCODE        math_opc,
                         CORE_ERR     *p_err);
 
+    void Core_MOV_WS_WD_OFF (MEM_24       *p_mem_prog,
+                             MEM          *p_mem_data,
+                             CORE_24F     *p_core,
+                             CPU_INT32U    args,
+                             OPCODE        instruction,
+                             CORE_ERR     *p_err);
+    
 void Core_MATH_WS_WD   (MEM_24        *p_mem_prog,
                         MEM           *p_mem_data,
                         CORE_24F      *p_core,
@@ -450,10 +461,11 @@ void Core_CP0_E0000 (MEM_24      *p_mem_prog,
                      CPU_INT32U   args,
                      CORE_ERR    *p_err);
 
-void Core_CP_E1000 (MEM_24      *p_mem_prog,
+void Core_CP_WS_WB (MEM_24      *p_mem_prog,
                         MEM         *p_mem_data,
                         CORE_24F    *p_core,
                         CPU_INT32U   args,
+                        OPCODE       instruction,
                         CORE_ERR    *p_err);
     
 void Core_CP0_E20 (MEM_24      *p_mem_prog,

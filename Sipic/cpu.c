@@ -49,3 +49,17 @@ CPU_INT32S  CPU_SignExt08 (CPU_INT32U val)
     
     return (return_val);
 }
+
+CPU_INT32S  CPU_SignExt10 (CPU_INT32U val)
+{
+    CPU_INT32S  return_val;
+    
+    
+    if ((val & 0x200) == 0x200) {
+        return_val = 0xFFFFFC00 | (val & 0x000003FF);
+    } else {
+        return_val = val;
+    }
+    
+    return (return_val);
+}

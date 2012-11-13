@@ -317,8 +317,8 @@ void Core_BRA_3 (MEM_24      *p_mem_prog,
             break;
             
         case CORE_OPC_BRA_GTU:
-            *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
-            return;
+            result = Core_GetC(p_core) && !Core_GetZ(p_core);
+            break;
             
         default:
             *p_err = CORE_ERR_INVALID_OPC_ARG;
@@ -449,6 +449,73 @@ void Core_MATH_WN_LIT  (MEM_24       *p_mem_prog,
         } else {
             p_core->SR &= ~(CORE_SR_C);
         }
+    }
+    
+    Core_PC_Slide(p_core, 2);
+    *p_err = CORE_ERR_NONE;
+}
+
+void Core_MOV_WS_WD_OFF (MEM_24       *p_mem_prog,
+                         MEM          *p_mem_data,
+                         CORE_24F     *p_core,
+                         CPU_INT32U    args,
+                         OPCODE        instruction,
+                         CORE_ERR     *p_err)
+{
+    CPU_INT16U   lit;
+    CPU_INT16S   slit;
+    CPU_INT32U   size_op;
+    CPU_INT32U   dst_w;
+    CPU_INT32U   src_w;
+    CPU_INT32U   value;
+    CPU_INT32U   addr;
+    MEM_ERR      mem_err;
+    
+    lit     = ((args & 0x078000) >>  9) |
+              ((args & 0x003800) >>  8) |
+              ((args & 0x000070) >>  4);
+    size_op =  (args & 0x004000) >> 14;
+    dst_w   =  (args & 0x000780) >>  7;
+    src_w   =   args & 0x00000F;
+    
+    if (size_op != 0) {
+        *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+        return;
+    }
+    
+    slit   = CPU_SignExt10(lit);
+    
+    switch (instruction) {
+        case CORE_OPC_MOV_WS_OFF_WD:
+            addr      = p_core->W[src_w] + slit;
+            value = Mem_Get(p_mem_data, addr, &mem_err);
+            
+            if (mem_err != MEM_ERR_NONE) {
+                *p_err = CORE_ERR_INVALID_MEM;
+                return;
+            }
+            
+            p_core->W[dst_w] = value;
+            
+            break;
+            
+        case CORE_OPC_MOV_WS_WD_OFF:
+            
+            value = p_core->W[src_w];
+            
+            addr  = p_core->W[dst_w] + slit;
+            
+            Mem_Set(p_mem_data, addr, value, &mem_err);
+            
+            if (mem_err != MEM_ERR_NONE) {
+                *p_err = CORE_ERR_INVALID_MEM;
+                return;
+            }
+            break;
+            
+        default:
+            *p_err = CORE_ERR_INVALID_OPC_ARG;
+            return;
     }
     
     Core_PC_Slide(p_core, 2);
@@ -615,6 +682,12 @@ void Core_MATH_WS_WD   (MEM_24       *p_mem_prog,
             break;
 
         case CORE_OPC_SUBB_WB_WS_WD:
+            result = operand_1 - operand_2;
+            if (!Core_GetC(p_core)) {
+                result--;
+            }
+            break;
+            
         case CORE_OPC_SUBBR_WB_WS_WD:
         case CORE_OPC_SUBR_WB_WS_WD:
             *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
@@ -3851,10 +3924,11 @@ void Core_CP0_E20 (MEM_24      *p_mem_prog,
     
 }
 
-void Core_CP_E1000 (MEM_24      *p_mem_prog,
+void Core_CP_WS_WB (MEM_24      *p_mem_prog,
                     MEM         *p_mem_data,
                     CORE_24F    *p_core,
                     CPU_INT32U   args,
+                    OPCODE       instruction,
                     CORE_ERR    *p_err)
 {
     CPU_INT32U  src_w;
@@ -3915,7 +3989,22 @@ void Core_CP_E1000 (MEM_24      *p_mem_prog,
         return;
     }
     
-    result = operand1 - operand2;
+    switch (instruction) {
+        case CORE_OPC_CP_WB_WS:
+            result = operand1 - operand2;
+            break;
+            
+        case CORE_OPC_CPB_WB_WS:
+            result = operand1 - operand2;
+            if (!Core_GetC(p_core)) {
+                result--;
+            }
+            break;
+            
+        default:
+            break;
+    }
+    
     
     /* Update Status Register */
     if (((operand1 & 0x00000080) &&                              /* DC */
