@@ -84,7 +84,9 @@ enum peri_err {
     PERI_ERR_INVALID_MEM        = 5001u,
     PERI_ERR_INVALID_CORE_OP    = 5002u,
     PERI_ERR_ALLOC              = 5003u,
-    PERI_ERR_INVALID_PERI_TYPE  = 5004u
+    PERI_ERR_INVALID_PERI_TYPE  = 5004u,
+    PERI_ERR_INVALID_PTR        = 5005u,
+    PERI_ERR_INVALID_ISR_NUM    = 5006u
 };
 
 typedef enum peri_err PERI_ERR;

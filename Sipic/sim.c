@@ -83,7 +83,11 @@ void Sim_Init()
     
     
     p_peri->Type     = PERI_TYPE_TMR_A;
-    p_peri->p_device = Peri_TmrA_Init(TMR_1_ADDR_TBL_IX, &p_hw_if->RC14, p_sim->p_mem_data, &peri_err);
+    p_peri->p_device = Peri_TmrA_Init(TMR_1_ADDR_TBL_IX,
+                                     &p_hw_if->RC14,
+                                      ISR_VECT_NUM_T1,
+                                      p_sim->p_mem_data,
+                                     &peri_err);
     p_peri->p_next   = p_peri_next;
     
     p_peri_next      = p_peri;

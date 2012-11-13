@@ -75,6 +75,7 @@ void  Core_Run(CORE_24F  *p_core_24f,
                           &mem_err);
 
         if (mem_err != MEM_ERR_NONE) {
+             
             *p_err = CORE_ERR_ADDR_ERROR_TRAP;
             return;
         }

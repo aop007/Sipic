@@ -10,12 +10,14 @@
 #include "hardware.h"
 #include "mem.h"
 #include "cpu.h"
+#include "main.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 TMR_A *Peri_TmrA_Init(CPU_INT32U        tmr_nbr,
                       HW_IF_DATA_TYPE  *p_pin,
+                      ISR_VECT_NUM      isr_vect_num,
                       MEM              *p_mem_data,
                       PERI_ERR         *p_err)
 {
@@ -33,7 +35,8 @@ TMR_A *Peri_TmrA_Init(CPU_INT32U        tmr_nbr,
     
     memset(p_data, 0x00, sizeof(TMR_DATA));
 
-    p_data->p_pin = p_pin;
+    p_data->p_pin        = p_pin;
+    p_data->isr_vect_num = isr_vect_num;
     
     p_mem = (TMR_A_MEM *)Mem_GetAddr(p_mem_data,
                                      PERI_TMR_BASE_ADDR[tmr_nbr],
@@ -86,7 +89,6 @@ void Peri_TMR_A(MEM_24       *p_mem_prog,
             if (*p_tmr_data->p_pin >= TMR_EXT_LO_TO_HI_TRSH) {
                 p_tmr_data->ext_input_state = TMR_EXT_STATE_HI;
                 p_tmr_data->inputTick++;
-                printf("\r\nTick");
             }
         } else {
             if (*p_tmr_data->p_pin <= TMR_EXT_HI_TO_LO_TRSH) {
@@ -110,7 +112,13 @@ void Peri_TMR_A(MEM_24       *p_mem_prog,
         p_tmr_mem->TMR = 0;
 
         /* Interrupt posting */
-#error "No Interrupt Flag Provided"
+        ISR_Post(p_tmr_data->isr_vect_num, p_err);
+        
+        printf("\r\n%lu", core_data.cycles);
+        
+        if (*p_err != PERI_ERR_NONE) {
+            return;
+        }
     }
 
     *p_err = PERI_ERR_NONE;

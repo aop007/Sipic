@@ -3062,8 +3062,6 @@ void Core_Logical (MEM_24      *p_mem_prog,
         offset = 2;
     } else {
         offset = 1;
-        //*p_err = CORE_ERR_STAK_ERROR_TRAP;
-        //return;
     }
     
     mem_err = MEM_ERR_NONE;
@@ -4362,6 +4360,7 @@ void Core_CLR_M_W0_EF0 (MEM_24      *p_mem_prog,
     CPU_INT32U  val;
     CPU_INT32U  reg_val;
     MEM_ERR     mem_err;
+    PERI_ERR    peri_err;
     
     size_op = args & 0x004000;
     dest    = args & 0x002000;
@@ -4378,8 +4377,8 @@ void Core_CLR_M_W0_EF0 (MEM_24      *p_mem_prog,
     } else {
         if ((DEF_FIELD_IS_SET(addr,    0x000001)  &&
              DEF_FIELD_IS_CLR(size_op, 0x004000))) {
-            
-            /* Provoque an address error trap isr */
+
+            Trap_Post(ISR_TRAP_NUM_ADDR, &peri_err);
             *p_err = CORE_ERR_ADDR_ERROR_TRAP;
             return;
         }

@@ -35,6 +35,8 @@ extern "C" {
 #define  CORE_SR_SA    0x2000
 #define  CORE_SR_OB    0x4000
 #define  CORE_SR_OA    0x8000
+    
+#define  CORE_SR_IPL_MAKS  (CORE_SR_IPL2 | CORE_SR_IPL1 | CORE_SR_IPL0)
 
 #define  CORE_CORECON_IPL3 0x0008
 

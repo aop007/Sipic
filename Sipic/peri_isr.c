@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include "peripheral.h"
+#include "main.h"
 
 
 ISR *Peri_ISR_Init(MEM       *p_mem_data,
@@ -63,15 +64,24 @@ ISR *Peri_ISR_Init(MEM       *p_mem_data,
     p_isr->p_mem  = p_mem;
     p_isr->p_data = p_data;
     
+    p_isr_static = p_isr;
     *p_err = PERI_ERR_NONE;
     return p_isr;
 }
 
-void Peri_ISR(ISR_VECT_NUM  isr_vect_num,
-              MEM_24       *p_mem_prog,
+void Peri_ISR(MEM_24       *p_mem_prog,
               MEM          *p_mem_data,
               CORE_24F     *p_core,
               PERI_ERR     *p_err)
+{
+    
+}
+
+void Peri_ISR_FromVect(CPU_INT32U    isr_vect_addr,
+                       MEM_24       *p_mem_prog,
+                       MEM          *p_mem_data,
+                       CORE_24F     *p_core,
+                       PERI_ERR     *p_err)
 {
     CPU_INT32U  PC;
     CPU_INT32U  SR;
@@ -99,7 +109,7 @@ void Peri_ISR(ISR_VECT_NUM  isr_vect_num,
         *p_err = PERI_ERR_INVALID_CORE_OP;
     }
     
-    ISR_addr = Mem_Get24(p_mem_prog, isr_vect_num, &mem_err);
+    ISR_addr = Mem_Get24(p_mem_prog, isr_vect_addr, &mem_err);
     
     if (mem_err != MEM_ERR_NONE) {
         *p_err = PERI_ERR_INVALID_MEM;
@@ -112,8 +122,158 @@ void Peri_ISR(ISR_VECT_NUM  isr_vect_num,
     *p_err = PERI_ERR_NONE;
 }
 
-void PostISR(ISR_VECT_NUM   vect_num,
-             PERI_ERR      *p_err)
+void ISR_Post(ISR_VECT_NUM   vect_num,
+              PERI_ERR      *p_err)
 {
+    ISR_MEM  *p_isr_mem;
+    
+    
+    if (p_isr_static == NULL) {
+        *p_err = PERI_ERR_INVALID_PTR;
+        return;
+    }
+    
+    p_isr_mem = p_isr_static->p_mem;
+    
+    switch(vect_num) {
+        case ISR_VECT_NUM_INT0:
+            p_isr_mem->IFS[0] |= DEF_BIT_00;
+            break;
+            
+        case ISR_VECT_NUM_IC1:
+            p_isr_mem->IFS[0] |= DEF_BIT_01;
+            break;
+            
+        case ISR_VECT_NUM_OC1:
+            p_isr_mem->IFS[0] |= DEF_BIT_02;
+            break;
+            
+        case ISR_VECT_NUM_T1:
+            p_isr_mem->IFS[0] |= DEF_BIT_03;
+            break;
+            
+        case ISR_VECT_NUM_IC2:
+            p_isr_mem->IFS[0] |= DEF_BIT_04;
+            break;
+            
+        case ISR_VECT_NUM_OC2:
+            p_isr_mem->IFS[0] |= DEF_BIT_05;
+            break;
+            
+        case ISR_VECT_NUM_T2:
+            p_isr_mem->IFS[0] |= DEF_BIT_06;
+            break;
+            
+        case ISR_VECT_NUM_T3:
+            p_isr_mem->IFS[0] |= DEF_BIT_07;
+            break;
+            
+        case ISR_VECT_NUM_SPI1:
+            p_isr_mem->IFS[0] |= DEF_BIT_08;
+            break;
+            
+        case ISR_VECT_NUM_U1RX:
+            p_isr_mem->IFS[0] |= DEF_BIT_09;
+            break;
+            
+        case ISR_VECT_NUM_U1TX:
+            p_isr_mem->IFS[0] |= DEF_BIT_10;
+            break;
+            
+        case ISR_VECT_NUM_ADC:
+            p_isr_mem->IFS[0] |= DEF_BIT_11;
+            break;
+            
+        case ISR_VECT_NUM_NVM:
+            p_isr_mem->IFS[0] |= DEF_BIT_12;
+            break;
+            
+        case ISR_VECT_NUM_SI2C:
+            p_isr_mem->IFS[0] |= DEF_BIT_13;
+            break;
+            
+        case ISR_VECT_NUM_MI2C:
+            p_isr_mem->IFS[0] |= DEF_BIT_14;
+            break;
+            
+        case ISR_VECT_NUM_IC:
+            p_isr_mem->IFS[0] |= DEF_BIT_15;
+            break;
+            
+        case ISR_VECT_NUM_INT1:
+            p_isr_mem->IFS[1] |= DEF_BIT_00;
+            break;
+            
+        case ISR_VECT_NUM_IC7:
+            p_isr_mem->IFS[1] |= DEF_BIT_01;
+            break;
+            
+        case ISR_VECT_NUM_IC8:
+            p_isr_mem->IFS[1] |= DEF_BIT_02;
+            break;
+            
+        case ISR_VECT_NUM_OC3:
+            p_isr_mem->IFS[1] |= DEF_BIT_03;
+            break;
+            
+        case ISR_VECT_NUM_OC4:
+            p_isr_mem->IFS[1] |= DEF_BIT_04;
+            break;
+            
+        case ISR_VECT_NUM_T4:
+            p_isr_mem->IFS[1] |= DEF_BIT_05;
+            break;
+            
+        case ISR_VECT_NUM_T5:
+            p_isr_mem->IFS[1] |= DEF_BIT_06;
+            break;
+            
+        case ISR_VECT_NUM_INT2:
+            p_isr_mem->IFS[1] |= DEF_BIT_07;
+            break;
+            
+        case ISR_VECT_NUM_U2RX:
+            p_isr_mem->IFS[1] |= DEF_BIT_08;
+            break;
+            
+        case ISR_VECT_NUM_U2TX:
+            p_isr_mem->IFS[1] |= DEF_BIT_09;
+            break;
+            
+        case ISR_VECT_NUM_PWM:
+            p_isr_mem->IFS[2] |= DEF_BIT_07;
+            break;
+            
+        case ISR_VECT_NUM_QEI:
+            p_isr_mem->IFS[2] |= DEF_BIT_08;
+            break;
+            
+        case ISR_VECT_NUM_FLTA:
+            p_isr_mem->IFS[2] |= DEF_BIT_11;
+            break;
+            
+        default:
+            *p_err = PERI_ERR_INVALID_ISR_NUM;
+            return;
+    }
+    
+    *p_err = PERI_ERR_NONE;
+}
 
+void Trap_Post(IST_TRAP_NUM   trap_num,
+               PERI_ERR      *p_err)
+{
+    ISR_MEM  *p_isr_mem;
+    
+    
+    if (p_isr_static == NULL) {
+        *p_err = PERI_ERR_INVALID_PTR;
+        return;
+    }
+    
+    p_isr_mem = p_isr_static->p_mem;
+
+    p_isr_mem->INTCON[0] |= trap_num;
+    
+    *p_err = PERI_ERR_NONE;
 }
