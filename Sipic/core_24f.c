@@ -80,13 +80,18 @@ void  Core_Run(CORE_24F  *p_core_24f,
             return;
         }
 #if 1
-        if ((Core_PC_Get(p_core_24f) == 0x0466)) { // && (p_core_24f->W[0] == 0)){
+        if ((Core_PC_Get(p_core_24f) == 0x1B86)) {
+            EnableDebugPrintf = 1;
+        }
+        
+        if ((Core_PC_Get(p_core_24f) == 0x1BC8)) { // && (p_core_24f->W[0] == 0)){
+            printf("\r\n");
             uncaught_instructions *= 1;
             CORE_TRACE_DEBUG((""));
         }
 #endif
         
-#if 1
+#if 0
         if (opcode == 0x781FB0) {
             uncaught_instructions *= 10;
             CORE_TRACE_DEBUG(("\r\nNULL OPC \t %d", uncaught_instructions));
@@ -110,6 +115,13 @@ void  Core_Run(CORE_24F  *p_core_24f,
             printf("\tCY = %lu", core_data.cycles);
             printf("\tIPL = %d", Core_GetIPL(p_core_24f));
             
+#if 0
+            printf("\t");
+            
+            for (ix = 0; ix < 16 ; ix++) {
+                printf("%004x ", p_core_24f->W[ix]);
+            }
+#endif
         }
 
         CORE_TRACE_DEBUG(("\r\n"));
@@ -700,6 +712,16 @@ void  Core_Run(CORE_24F  *p_core_24f,
             }
         }
 
+#if 1
+        if (EnableDebugPrintf == 1) {
+            printf("\t");
+            
+            for (ix = 0; ix < 16 ; ix++) {
+                printf("%004x ", p_core_24f->W[ix]);
+            }
+            
+        }
+#endif
         
         if ((found_instruction == DEF_NO) ||
             (*p_err            != CORE_ERR_NONE)) {

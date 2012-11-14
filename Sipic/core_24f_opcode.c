@@ -3840,6 +3840,11 @@ void Core_CP_WS_WB (MEM_24      *p_mem_prog,
     addr_mode = (args & 0x000070) >> 4;
     dst_w     =  args & 0x00000F;
     
+    if (size_op != 0) {
+        *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+        return;
+    }
+    
     operand1  = p_core->W[src_w];
     
     mem_err = MEM_ERR_NONE;
