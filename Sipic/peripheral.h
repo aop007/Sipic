@@ -357,6 +357,12 @@ TMR_BC *Peri_TmrBC_Init(CPU_INT32U        tmr_nbr,
                         MEM              *p_mem_data,
                         PERI_ERR         *p_err);
 
+void Peri_TMR_BC(MEM_24       *p_mem_prog,
+                     MEM          *p_mem_data,
+                     CORE_24F     *p_core,
+                     TMR_BC       *p_tmr,
+                     PERI_ERR     *p_err);
+    
 void Peri_TMR_B(MEM_24       *p_mem_prog,
                 MEM          *p_mem_data,
                 CORE_24F     *p_core,

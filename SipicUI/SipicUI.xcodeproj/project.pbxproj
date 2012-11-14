@@ -100,6 +100,7 @@
 		692960351650A89C00B07386 /* hardware.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = hardware.c; path = ../Sipic/hardware.c; sourceTree = "<group>"; };
 		692960391650BAA700B07386 /* hw_if.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = hw_if.c; path = ../Sipic/hw_if.c; sourceTree = "<group>"; };
 		6929603B1651BFD300B07386 /* peri_tmr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = peri_tmr.c; path = ../Sipic/peri_tmr.c; sourceTree = "<group>"; };
+		6947D0BD16531FB70021C276 /* main_memory_map.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = main_memory_map.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -234,6 +235,7 @@
 		690D64BB1648D105008CB35B /* InputFiles */ = {
 			isa = PBXGroup;
 			children = (
+				6947D0BD16531FB70021C276 /* main_memory_map.txt */,
 				690D64BC1648D105008CB35B /* main.cof */,
 				690D64BD1648D105008CB35B /* main.err */,
 				690D64BE1648D105008CB35B /* main.esym */,

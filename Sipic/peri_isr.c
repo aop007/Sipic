@@ -178,7 +178,6 @@ void Peri_ISR(MEM_24      *p_mem_prog,
         
         if (highest_prio_level > current_ipl) {
             Peri_ISR_FromVect(isr_vector, highest_prio_level, p_mem_prog, p_mem_data, p_core, p_err);
-            //EnableDebugPrintf = 1;
         }
         return;
     }
@@ -201,11 +200,12 @@ void Peri_ISR_FromVect(CPU_INT32U    isr_vect_addr,
     MEM_ERR     mem_err;
     
     
-    if (Call_Depth == 0) {
+    if (Call_Depth == 7) {
         printf("\r\nPrecarious Call_Depth.");
+        EnableDebugPrintf = 1;
     }
     
-    PC      = Core_PC_Get(p_core) + 2;
+    PC      = Core_PC_Get(p_core);
     SR      = (p_core->SR & 0x00FF);
     CORCON  = (p_core->CORCON & CORE_CORECON_IPL3);
     
@@ -232,7 +232,7 @@ void Peri_ISR_FromVect(CPU_INT32U    isr_vect_addr,
     Core_PC_Set(p_core, ISR_addr);
     
 #if 1
-    printf("\r\nISR = 0x%x with ipl %d at Call_Depth %d at cycle %lu",ISR_addr, ipl, Call_Depth, core_data.cycles);
+    printf("\r\nISR = 0x%x from 0x%004x with ipl %d at Call_Depth %d at cycle %lu",ISR_addr, (PC & 0xFFFFFF), ipl, Call_Depth, core_data.cycles);
     
     
 #endif

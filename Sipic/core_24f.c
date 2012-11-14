@@ -79,13 +79,22 @@ void  Core_Run(CORE_24F  *p_core_24f,
             *p_err = CORE_ERR_ADDR_ERROR_TRAP;
             return;
         }
-
-        if (opcode == 0) {
-            CORE_TRACE_DEBUG(("\r\nNULL OPC \t %d", uncaught_instructions));
-            
+#if 1
+        if ((Core_PC_Get(p_core_24f) == 0x047C)) { // && (p_core_24f->W[0] == 0)){
+            uncaught_instructions *= 1;
+            CORE_TRACE_DEBUG((""));
         }
-
-        if ((p_core_24f->SR & CORE_SR_RA) == CORE_SR_RA) {
+#endif
+        
+#if 1
+        if (opcode == 0x781FB0) {
+            uncaught_instructions *= 10;
+            CORE_TRACE_DEBUG(("\r\nNULL OPC \t %d", uncaught_instructions));
+        }
+#endif
+        
+        if (((p_core_24f->SR     & CORE_SR_RA) == CORE_SR_RA) &&
+             (p_core_24f->RCOUNT > 0)) {
             p_core_24f->RCOUNT--;
             if (p_core_24f->RCOUNT == 0) {
                 p_core_24f->SR &= ~(CORE_SR_RA);
@@ -94,7 +103,7 @@ void  Core_Run(CORE_24F  *p_core_24f,
             }
         }
 
-#if 0
+#if 1
         if (EnableDebugPrintf == 1) {
         printf("\r\nPC = %004x\tOPC = %006x", Core_PC_Get(p_core_24f), opcode);
         }
@@ -105,12 +114,7 @@ void  Core_Run(CORE_24F  *p_core_24f,
         }
         CORE_TRACE_DEBUG(("PC = %004x\tOPC = %006x\t |", Core_PC_Get(p_core_24f), opcode));
 #endif
-#if 1
-        if ((Core_PC_Get(p_core_24f) == 0x0796)) { // && (p_core_24f->W[0] == 0)){
-            uncaught_instructions *= 1;
-            CORE_TRACE_DEBUG((""));
-        }
-#endif
+
 #if 0
         if (p_core_24f->W[15] == 0) {
             CORE_TRACE_DEBUG((""));
@@ -273,6 +277,23 @@ void  Core_Run(CORE_24F  *p_core_24f,
                     break;
             }
         }
+        
+        if (found_instruction == DEF_NO) {
+            instruction = opcode & 0xFF0780;
+            args        = opcode & 0x00F87F;
+            found_instruction = DEF_YES;
+            
+            switch (instruction) {
+                case CORE_OPC_BTST_WS_WB:
+                    Core_BTST(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
+                    break;
+                    
+                default:
+                    found_instruction = DEF_NO;
+                    break;
+            }
+        }
+        
 
         if (found_instruction == DEF_NO) {
             instruction = opcode & 0xFF0F80;
@@ -680,9 +701,9 @@ void  Core_Run(CORE_24F  *p_core_24f,
             (*p_err            != CORE_ERR_NONE)) {
             *p_err = CORE_ERR_OPC_NOTFOUND;
 #ifdef  CORE_CFG_CYCLE_CNTR
-            CORE_TRACE_INFO(("\r\nINSTRUCTION NOT FOUND. %X at %X \t@%ld cycles.", opcode, Core_PC_Get(p_core_24f), p_core_24f->CYCLE));
+            CORE_TRACE_INFO(("\r\nINSTRUCTION NOT FOUND. %X at %X \t@%ld cycles.", opcode, pc, p_core_24f->CYCLE));
 #else
-            CORE_TRACE_INFO(("\r\nINSTRUCTION Error. %X at %X.", opcode, Core_PC_Get(p_core_24f)));
+            CORE_TRACE_INFO(("\r\nINSTRUCTION Error. %X at %X.", opcode, pc));
 #endif
             return;
         }
@@ -835,6 +856,9 @@ void  Core_PC_Set (CORE_24F    *p_core,
     if (PC >= 0x4000) {
         printf("\r\nPC out of bound!");
     }
+#ifndef DEBUG_FOR_PIZZA
+    memcpy(&PC, (const void *)&p_core->PC[0], sizeof(PC));
+#endif
 }
 
 CPU_INT32U  Core_PC_Get (CORE_24F    *p_core)

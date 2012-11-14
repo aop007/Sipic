@@ -103,8 +103,13 @@ void  Core_CALL_02            (MEM_24      *p_mem_prog,
         return;
     }
     
-    Core_PC_Set(p_core, (next_word & 0x00007F) << 16 |
-                        (args      & 0x00FFFE));
+    pc = (next_word & 0x00007F) << 16 | (args & 0x00FFFE);
+    
+    if (pc >= 0x4000) {
+        printf("\r\nPC out of bounds.");
+    }
+    
+    Core_PC_Set(p_core, pc);
     
     Call_Depth++;
     
@@ -173,6 +178,7 @@ void Core_RETFIE_064 (MEM_24      *p_mem_prog,
     CPU_INT08U  IPL3;
     CPU_INT32U  word1;
     CPU_INT32U  word2;
+    CPU_INT32U  PC;
     
     word1 = Core_Pop(p_core, p_mem_data, p_err);
     
@@ -186,7 +192,13 @@ void Core_RETFIE_064 (MEM_24      *p_mem_prog,
         return;
     }
     
-    Core_PC_Set(p_core, (word1 & 0x00FF) << 16 | word2);
+    PC = (word1 & 0x00FF) << 16 | word2;
+    
+    if (PC > 0x4000) {
+        printf("\r\nPC out of bounds.");
+    }
+    
+    Core_PC_Set(p_core, PC);
     
     SRL  = (word1 & 0xFF00) >> 8;
     IPL3 =  word1 & 0x00FF;
@@ -344,7 +356,7 @@ void Core_MATH_WN_LIT  (MEM_24       *p_mem_prog,
     CPU_INT32U  size_op;
     CPU_INT32U  lit;
     CPU_INT32U  w_reg;
-    CPU_INT32U  result;
+    CPU_INT32S  result;
     CPU_INT32U  initial;
     CPU_INT32U  flags;
     CPU_INT32U  mask;
@@ -1917,6 +1929,86 @@ void Core_Logical_W_L_W(MEM_24      *p_mem_prog,
     
     Core_PC_Slide(p_core, 2);
     
+    *p_err = CORE_ERR_NONE;
+}
+
+void Core_BTST (MEM_24      *p_mem_prog,
+                MEM         *p_mem_data,
+                CORE_24F    *p_core,
+                CPU_INT32U   args,
+                CORE_ERR    *p_err)
+{
+    CPU_INT32U   z_flag;
+    CPU_INT32U   test_bit;
+    CPU_INT32U   addr_mode;
+    CPU_INT32U   src_w;
+    CPU_INT32U   value;
+    CPU_INT32U   mask;
+    CPU_BOOLEAN  result;
+    MEM_ERR      mem_err;
+    
+    
+    z_flag    = (args & 0x008000) >> 15;
+    test_bit  = (args & 0x007800) >> 11;
+    addr_mode = (args & 0x000070) >>  4;
+    src_w     =  args & 0x00000F;
+    mem_err   = MEM_ERR_NONE;
+    
+    switch (addr_mode) {
+        case CORE_OPC_ADDR_MODE_DIR:
+            value = p_core->W[src_w];
+            break;
+            
+        case CORE_OPC_ADDR_MODE_IND:
+            value = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
+            break;
+            
+        case CORE_OPC_ADDR_MODE_IND_POS_DEC:
+            value = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
+            p_core->W[src_w] -= 2;
+            break;
+            
+        case CORE_OPC_ADDR_MODE_IND_POS_INC:
+            value = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
+            p_core->W[src_w] += 2;
+            break;
+            
+        case CORE_OPC_ADDR_MODE_IND_PRE_DEC:
+            p_core->W[src_w] -= 2;
+            value = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
+            break;
+            
+        case CORE_OPC_ADDR_MODE_IND_PRE_INC:
+            p_core->W[src_w] += 2;
+            value = Mem_Get(p_mem_data, p_core->W[src_w], &mem_err);
+            break;
+            
+        default:
+            *p_err = CORE_ERR_INVALID_OPC_ARG;
+            return;
+    }
+    
+    if (mem_err != MEM_ERR_NONE) {
+        *p_err = CORE_ERR_INVALID_MEM;
+        return;
+    }
+    
+    mask   = 1 << (p_core->W[test_bit]);
+    result = ((value & mask) == mask);
+    
+    if (z_flag) {
+        p_core->SR     &= CORE_SR_Z;
+        if (!result) {
+            p_core->SR |= CORE_SR_Z;
+        }
+    } else {
+        p_core->SR     &= CORE_SR_C;
+        if (result) {
+            p_core->SR |= CORE_SR_C;
+        }
+    }
+    
+    Core_PC_Slide(p_core, 2);
     *p_err = CORE_ERR_NONE;
 }
 
@@ -4678,7 +4770,7 @@ void Core_ZE_FB8        (MEM_24      *p_mem_prog,
     CPU_INT32U  dst_w;
     CPU_INT32U  src_addr_mode;
     CPU_INT32U  src_w;
-    CPU_INT32U  value;
+    CPU_INT32S  value;
     MEM_ERR     mem_err;
 
 

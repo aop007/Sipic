@@ -74,6 +74,7 @@ extern "C" {
 #define  CORE_OPC_BSET_W     0xA00000
 #define  CORE_OPC_BCLR_W     0xA10000
 #define  CORE_OPC_BTG_W      0xA20000
+#define  CORE_OPC_BTST_WS_WB 0xA50000
 #define  CORE_OPC_BTSS_W     0xA60000
 #define  CORE_OPC_BTSC_W     0xA70000
 #define  CORE_OPC_BSET_M     0xA80000
@@ -302,6 +303,12 @@ void Core_Logical_W_L_W(MEM_24      *p_mem_prog,
                             CPU_INT32U   args,
                             OPCODE       instruction,
                             CORE_ERR    *p_err);
+    
+    void Core_BTST (MEM_24      *p_mem_prog,
+                    MEM         *p_mem_data,
+                    CORE_24F    *p_core,
+                    CPU_INT32U   args,
+                    CORE_ERR    *p_err);
     
 void Core_BIT_LOGIC_W  (MEM_24      *p_mem_prog,
                         MEM         *p_mem_data,

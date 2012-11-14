@@ -186,7 +186,6 @@ void Peri_TMR_BC(MEM_24       *p_mem_prog,
     TMR_B         tmr_b;
     TMR_C         tmr_c;
     TMR_DATA     *p_tmr_data;
-    CPU_INT16U    tckps;
     
     
     p_tmr_mem  = p_tmr->p_mem;

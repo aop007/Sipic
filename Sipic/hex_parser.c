@@ -20,6 +20,13 @@ void HexParser_ReadFile(const char       *p_file_name,
                          HEX_PARSER_ERR  *p_err)
 {
     FILE        *p_file;
+#ifdef  HEX_PARSER_PRINT_MAP
+    FILE        *p_file_out;
+    CPU_CHAR     buffer_out[256];
+    CPU_INT32U   buf_len;
+    OPCODE       opcode;
+#endif
+    
     MEM_HDR_24  *p_mem_hdr;
     CPU_CHAR     sol;
     CPU_INT08U   byte_count;
@@ -29,7 +36,7 @@ void HexParser_ReadFile(const char       *p_file_name,
     CPU_INT08U   record_type;
     CPU_INT32U   block[4];
     CPU_INT08U   check_sum;
-    CPU_INT08U   ix;
+    CPU_INT32U   ix;
     CPU_BOOLEAN  eof;
     MEM_ERR      mem_err;
     
@@ -37,7 +44,10 @@ void HexParser_ReadFile(const char       *p_file_name,
     address_hi      = 0u;
     eof             = DEF_NO;
     
-    p_file = fopen(p_file_name, "r");
+    p_file     = fopen(p_file_name, "r");
+#ifdef  HEX_PARSER_PRINT_MAP
+    p_file_out = fopen("/Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/InputFiles/main_memory_map.txt", "wb");
+#endif
     
     if (p_file == NULL) {
         *p_err = HEX_PARSER_ERR_FILE_OPEN;
@@ -48,7 +58,7 @@ void HexParser_ReadFile(const char       *p_file_name,
         sol = ASCII_GetChar(p_file);
         
         if (sol == HEX_PARSER_START_OF_LINE_CHAR) {
-            byte_count  = ASCII_GetByte(p_file);
+            byte_count     = ASCII_GetByte(p_file);
             address_lo     = ASCII_GetShort(p_file);
             address_lo     = CPU_Swap16(address_lo);
             address        = (address_hi << 16) | address_lo;
@@ -120,6 +130,16 @@ void HexParser_ReadFile(const char       *p_file_name,
             
         }
     }
+#ifdef  HEX_PARSER_PRINT_MAP
+    for (ix = 0 ; ix < 0x4000 ; ix += 2) {
+        opcode  = Mem_Get24(p_mem, ix, &mem_err);
+        buf_len = sprintf(&buffer_out[0], "\r\n%004x\t%006x", ix, opcode);
+        fwrite(&buffer_out, 1, buf_len, p_file_out);
+    }
+    fclose(p_file_out);
+#endif
+    fclose(p_file);
+    
     
     *p_err = HEX_PARSER_ERR_NONE;
 }
