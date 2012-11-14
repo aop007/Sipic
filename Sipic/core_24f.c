@@ -703,11 +703,10 @@ void  Core_Run(CORE_24F  *p_core_24f,
         
         if ((found_instruction == DEF_NO) ||
             (*p_err            != CORE_ERR_NONE)) {
-            *p_err = CORE_ERR_OPC_NOTFOUND;
 #ifdef  CORE_CFG_CYCLE_CNTR
             CORE_TRACE_INFO(("\r\nINSTRUCTION NOT FOUND. %X at %X \t@%ld cycles.", opcode, pc, p_core_24f->CYCLE));
 #else
-            CORE_TRACE_INFO(("\r\nINSTRUCTION Error. %X at %X.", opcode, pc));
+            CORE_TRACE_INFO(("\r\nINSTRUCTION Error %d. %X at %X.",*p_err, opcode, pc));
 #endif
             return;
         }

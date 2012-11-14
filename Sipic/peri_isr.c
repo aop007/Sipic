@@ -234,8 +234,10 @@ void Peri_ISR_FromVect(CPU_INT32U    isr_vect_addr,
     Core_PC_Set(p_core, ISR_addr);
     
 #if 1
-    printf("\r\nISR = 0x%x from 0x%004x with ipl %d/%d at Call_Depth %d at cycle %lu",ISR_addr, (PC & 0xFFFFFF), ipl, ipl_old, Call_Depth, core_data.cycles);
     
+    if (isr_vect_addr == (ISR_VECT_NUM_T1 * 2 + ISR_VECT_BASE)) {
+        printf("\r\nISR = 0x%x from 0x%004x with ipl %d/%d at Call_Depth %d at cycle %lu",ISR_addr, (PC & 0xFFFFFF), ipl, ipl_old, Call_Depth, core_data.cycles);
+    }
     
 #endif
     
