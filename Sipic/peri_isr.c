@@ -199,12 +199,13 @@ void Peri_ISR_FromVect(CPU_INT32U    isr_vect_addr,
     CORE_ERR    core_err;
     MEM_ERR     mem_err;
     
-    
+#if 0
     if (core_data.cycles == 17377091) {
         core_data.cycles  = 0u;
         printf("\r\nPrecarious Call_Depth.");
         EnableDebugPrintf = 1;
     }
+#endif
     
     PC      = Core_PC_Get(p_core);
     SR      = (p_core->SR & 0x00FF);

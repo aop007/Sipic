@@ -1997,14 +1997,14 @@ void Core_BTST (MEM_24      *p_mem_prog,
     result = ((value & mask) == mask);
     
     if (z_flag) {
-        p_core->SR     &= CORE_SR_Z;
+        p_core->SR     &= ~CORE_SR_Z;
         if (!result) {
-            p_core->SR |= CORE_SR_Z;
+            p_core->SR |=  CORE_SR_Z;
         }
     } else {
-        p_core->SR     &= CORE_SR_C;
+        p_core->SR     &= ~CORE_SR_C;
         if (result) {
-            p_core->SR |= CORE_SR_C;
+            p_core->SR |=  CORE_SR_C;
         }
     }
     
