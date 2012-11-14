@@ -79,7 +79,7 @@ void  Core_Run(CORE_24F  *p_core_24f,
             *p_err = CORE_ERR_ADDR_ERROR_TRAP;
             return;
         }
-#if 1
+#if 0
         if ((Core_PC_Get(p_core_24f) == 0x1B86)) {
             EnableDebugPrintf = 1;
         }

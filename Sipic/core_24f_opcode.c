@@ -3832,6 +3832,7 @@ void Core_CP_WS_WB (MEM_24      *p_mem_prog,
     CPU_INT32U  result;
     CPU_INT32U  operand1;
     CPU_INT32U  operand2;
+    CPU_INT32U  mask;
     MEM_ERR     mem_err;
     
     
@@ -3841,41 +3842,53 @@ void Core_CP_WS_WB (MEM_24      *p_mem_prog,
     dst_w     =  args & 0x00000F;
     
     if (size_op != 0) {
-        *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
-        return;
+        mask = 0xFF;
+    } else {
+        mask = 0xFFFF;
     }
     
-    operand1  = p_core->W[src_w];
+    operand1  = p_core->W[src_w] & mask;
     
     mem_err = MEM_ERR_NONE;
     
     switch (addr_mode) {
         case CORE_OPC_ADDR_MODE_DIR:
-            operand2 = p_core->W[dst_w];
+            mask     = Core_MaskGet(size_op, 0);
+            operand2 = p_core->W[dst_w] & mask;
             break;
             
         case CORE_OPC_ADDR_MODE_IND:
-            operand2 = Mem_Get(p_mem_data, p_core->W[dst_w], &mem_err);
+            mask     = Core_MaskGet(size_op, p_core->W[dst_w]);
+            operand2 = Mem_Get(p_mem_data, (p_core->W[dst_w] & 0xFFFE), &mem_err);
+            operand2 = Core_Align(operand2, mask);
             break;
             
         case CORE_OPC_ADDR_MODE_IND_POS_DEC:
-            operand2 = Mem_Get(p_mem_data, p_core->W[dst_w], &mem_err);
+            mask     = Core_MaskGet(size_op, p_core->W[dst_w]);
+            operand2 = Mem_Get(p_mem_data, (p_core->W[dst_w] & 0xFFFE), &mem_err);
+            operand2 = Core_Align(operand2, mask);
             p_core->W[src_w] -= 2;
             break;
             
         case CORE_OPC_ADDR_MODE_IND_POS_INC:
-            operand2 = Mem_Get(p_mem_data, p_core->W[dst_w], &mem_err);
+            mask     = Core_MaskGet(size_op, p_core->W[dst_w]);
+            operand2 = Mem_Get(p_mem_data, (p_core->W[dst_w] & 0xFFFE), &mem_err);
+            operand2 = Core_Align(operand2, mask);
             p_core->W[src_w] += 2;
             break;
             
         case CORE_OPC_ADDR_MODE_IND_PRE_DEC:
             p_core->W[src_w] -= 2;
-            operand2 = Mem_Get(p_mem_data, p_core->W[dst_w], &mem_err);
+            mask     = Core_MaskGet(size_op, p_core->W[dst_w]);
+            operand2 = Mem_Get(p_mem_data, (p_core->W[dst_w] & 0xFFFE), &mem_err);
+            operand2 = Core_Align(operand2, mask);
             break;
             
         case CORE_OPC_ADDR_MODE_IND_PRE_INC:
             p_core->W[src_w] += 2;
-            operand2 = Mem_Get(p_mem_data, p_core->W[dst_w], &mem_err);
+            mask     = Core_MaskGet(size_op, p_core->W[dst_w]);
+            operand2 = Mem_Get(p_mem_data, (p_core->W[dst_w] & 0xFFFE), &mem_err);
+            operand2 = Core_Align(operand2, mask);
             break;
             
         default:
