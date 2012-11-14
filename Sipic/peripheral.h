@@ -177,6 +177,7 @@ ISR *Peri_ISR_Init(MEM       *p_mem_data,
     
 void Peri_ISR_FromVect(CPU_INT32U    isr_vect_addr,
                        CPU_INT08U    ipl,
+                       CPU_INT08U    ipl_old,
                        MEM_24       *p_mem_prog,
                        MEM          *p_mem_data,
                        CORE_24F     *p_core,

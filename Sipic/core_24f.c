@@ -80,7 +80,7 @@ void  Core_Run(CORE_24F  *p_core_24f,
             return;
         }
 #if 1
-        if ((Core_PC_Get(p_core_24f) == 0x047C)) { // && (p_core_24f->W[0] == 0)){
+        if ((Core_PC_Get(p_core_24f) == 0x0466)) { // && (p_core_24f->W[0] == 0)){
             uncaught_instructions *= 1;
             CORE_TRACE_DEBUG((""));
         }
@@ -105,7 +105,11 @@ void  Core_Run(CORE_24F  *p_core_24f,
 
 #if 1
         if (EnableDebugPrintf == 1) {
-        printf("\r\nPC = %004x\tOPC = %006x", Core_PC_Get(p_core_24f), opcode);
+            printf("\r\nPC = %004x\tOPC = %006x", Core_PC_Get(p_core_24f), opcode);
+            printf("\tRA = %d", p_core_24f->RCOUNT);
+            printf("\tCY = %lu", core_data.cycles);
+            printf("\tIPL = %d", Core_GetIPL(p_core_24f));
+            
         }
 
         CORE_TRACE_DEBUG(("\r\n"));
@@ -917,6 +921,16 @@ CPU_INT32U  Core_Merge   (CPU_INT32U    value_original,
             printf("\r\n***\r\nUnsupported mask\r\n***");
             return 0;
     }
+}
+
+CPU_INT08U  Core_GetIPL(CORE_24F  *p_core)
+{
+    CPU_INT32U  ipl;
+
+    ipl = ((p_core->SR     & CORE_SR_IPL_MAKS) >> 5) |
+           (p_core->CORCON & CORE_CORECON_IPL3);
+    
+    return (ipl);
 }
 
 

@@ -194,7 +194,6 @@
 		690D64931648D0E5008CB35B /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				6929603B1651BFD300B07386 /* peri_tmr.c */,
 				690D64BB1648D105008CB35B /* InputFiles */,
 				690D64941648D0F9008CB35B /* main.c */,
 				690D64951648D0F9008CB35B /* main.h */,
@@ -210,8 +209,6 @@
 				690D649F1648D0F9008CB35B /* cpu.c */,
 				690D64A01648D0F9008CB35B /* cpu.h */,
 				690D64A11648D0F9008CB35B /* err.h */,
-				6929603316509E3400B07386 /* hw_osc.c */,
-				690D64A21648D0F9008CB35B /* hardware.h */,
 				690D64A31648D0F9008CB35B /* hex_cfg.h */,
 				690D64A41648D0F9008CB35B /* hex_parser.c */,
 				690D64A51648D0F9008CB35B /* hex_parser.h */,
@@ -221,13 +218,16 @@
 				690D64A91648D0F9008CB35B /* mem.h */,
 				6929603016502D7B00B07386 /* peri_adc.c */,
 				690D64AA1648D0F9008CB35B /* peri_isr.c */,
+				6929603B1651BFD300B07386 /* peri_tmr.c */,
 				690D64AB1648D0F9008CB35B /* peripheral.c */,
 				690D64AC1648D0F9008CB35B /* peripheral.h */,
 				690D64AD1648D0F9008CB35B /* sipic_cfg.h */,
 				690D64AE1648D0F9008CB35B /* coff_parser.c */,
 				690D64AF1648D0F9008CB35B /* ascii.c */,
-				692960351650A89C00B07386 /* hardware.c */,
 				692960391650BAA700B07386 /* hw_if.c */,
+				6929603316509E3400B07386 /* hw_osc.c */,
+				692960351650A89C00B07386 /* hardware.c */,
+				690D64A21648D0F9008CB35B /* hardware.h */,
 			);
 			name = Core;
 			sourceTree = "<group>";

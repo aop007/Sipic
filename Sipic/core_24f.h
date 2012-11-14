@@ -121,6 +121,8 @@ CPU_INT32U  Core_Align   (CPU_INT32U    value,
 CPU_INT32U  Core_Merge   (CPU_INT32U    value_original,
                           CPU_INT32U    value,
                           CPU_INT32U    mask);
+    
+CPU_INT08U  Core_GetIPL  (CORE_24F     *p_core);
 
 /* 2                    opcode      mask
  CALL EXPR           0x020000 /  0xFF0001

@@ -106,22 +106,22 @@ void Peri_ISR(MEM_24      *p_mem_prog,
     /* Check for trap first */
     if (p_isr_mem->INTCON[0] & ISR_TRAP_MASK) {
         if (p_isr_mem->INTCON[0] & ISR_TRAP_NUM_OSCI) {
-            Peri_ISR_FromVect(ISR_VECT_NUM_OSCI_TRAP, ISR_TRAP_IPL, p_mem_prog, p_mem_data, p_core, p_err);
+            Peri_ISR_FromVect(ISR_VECT_NUM_OSCI_TRAP, ISR_TRAP_IPL, Core_GetIPL(p_core), p_mem_prog, p_mem_data, p_core, p_err);
             return;
         }
         
         if (p_isr_mem->INTCON[0] & ISR_TRAP_NUM_ADDR) {
-            Peri_ISR_FromVect(ISR_VECT_NUM_ADDR_TRAP, ISR_TRAP_IPL, p_mem_prog, p_mem_data, p_core, p_err);
+            Peri_ISR_FromVect(ISR_VECT_NUM_ADDR_TRAP, ISR_TRAP_IPL, Core_GetIPL(p_core), p_mem_prog, p_mem_data, p_core, p_err);
             return;
         }
         
         if (p_isr_mem->INTCON[0] & ISR_TRAP_NUM_STAK) {
-            Peri_ISR_FromVect(ISR_VECT_NUM_STAK_TRAP, ISR_TRAP_IPL, p_mem_prog, p_mem_data, p_core, p_err);
+            Peri_ISR_FromVect(ISR_VECT_NUM_STAK_TRAP, ISR_TRAP_IPL, Core_GetIPL(p_core), p_mem_prog, p_mem_data, p_core, p_err);
             return;
         }
         
         if (p_isr_mem->INTCON[0] & ISR_TRAP_NUM_MATH) {
-            Peri_ISR_FromVect(ISR_VECT_NUM_MATH_TRAP, ISR_TRAP_IPL, p_mem_prog, p_mem_data, p_core, p_err);
+            Peri_ISR_FromVect(ISR_VECT_NUM_MATH_TRAP, ISR_TRAP_IPL, Core_GetIPL(p_core), p_mem_prog, p_mem_data, p_core, p_err);
             return;
         }
     }
@@ -168,8 +168,7 @@ void Peri_ISR(MEM_24      *p_mem_prog,
         
         isr_vector  = highest_prio * 2 + ISR_VECT_BASE;
         
-        current_ipl = ((p_core->SR     & CORE_SR_IPL_MAKS) >> 5) |
-                       (p_core->CORCON & CORE_CORECON_IPL3);
+        current_ipl = Core_GetIPL(p_core);
         
         if ((current_ipl > 0) && (p_isr_mem->INTCON[0] & ISR_INTCON1_NSTDIS)) {     /* Interrupt prevented if nested disabled and interrupt currently occuring. */
             *p_err = PERI_ERR_NONE;
@@ -177,7 +176,7 @@ void Peri_ISR(MEM_24      *p_mem_prog,
         }
         
         if (highest_prio_level > current_ipl) {
-            Peri_ISR_FromVect(isr_vector, highest_prio_level, p_mem_prog, p_mem_data, p_core, p_err);
+            Peri_ISR_FromVect(isr_vector, highest_prio_level, current_ipl, p_mem_prog, p_mem_data, p_core, p_err);
         }
         return;
     }
@@ -187,6 +186,7 @@ void Peri_ISR(MEM_24      *p_mem_prog,
 
 void Peri_ISR_FromVect(CPU_INT32U    isr_vect_addr,
                        CPU_INT08U    ipl,
+                       CPU_INT08U    ipl_old,
                        MEM_24       *p_mem_prog,
                        MEM          *p_mem_data,
                        CORE_24F     *p_core,
@@ -200,7 +200,8 @@ void Peri_ISR_FromVect(CPU_INT32U    isr_vect_addr,
     MEM_ERR     mem_err;
     
     
-    if (Call_Depth == 7) {
+    if (core_data.cycles == 17377091) {
+        core_data.cycles  = 0u;
         printf("\r\nPrecarious Call_Depth.");
         EnableDebugPrintf = 1;
     }
@@ -232,7 +233,7 @@ void Peri_ISR_FromVect(CPU_INT32U    isr_vect_addr,
     Core_PC_Set(p_core, ISR_addr);
     
 #if 1
-    printf("\r\nISR = 0x%x from 0x%004x with ipl %d at Call_Depth %d at cycle %lu",ISR_addr, (PC & 0xFFFFFF), ipl, Call_Depth, core_data.cycles);
+    printf("\r\nISR = 0x%x from 0x%004x with ipl %d/%d at Call_Depth %d at cycle %lu",ISR_addr, (PC & 0xFFFFFF), ipl, ipl_old, Call_Depth, core_data.cycles);
     
     
 #endif
