@@ -267,8 +267,8 @@ void Peri_ADC(MEM_24       *p_mem_prog,
 #define  TMR_EXT_STATE_LO               0u
 #define  TMR_EXT_STATE_HI               1u
 
-#define  TMR_EXT_HI_TO_LO_TRSH             1.60
-#define  TMR_EXT_LO_TO_HI_TRSH             1.70
+#define  TMR_EXT_HI_TO_LO_TRSH             HW_SCHMITT_LO_TRIG
+#define  TMR_EXT_LO_TO_HI_TRSH             HW_SCHMITT_HI_TRIG
 
 
 static const CPU_INT16U PERI_TMR_BASE_ADDR[] = {0x0100, 0x0106, 0x0114};

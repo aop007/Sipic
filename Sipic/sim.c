@@ -52,11 +52,21 @@ void Sim_Init()
     p_hw = (HW_MOD *)malloc(sizeof(HW_MOD));
     
     p_hw->Type     = WH_TYPE_OSC;
-    p_hw->p_device = HW_OSC_Init(RTCC_OSC_PERIOD, RTCC_OSC_AMP, RTCC_OSC_OFFSET, &p_hw_if->RC14, &hw_err);
+    p_hw->p_device = HW_OSC_Init(LINE_120V_OSC_PERIOD, LINE_120V_OSC_AMP, LINE_120V_OSC_OFFSET, &p_hw_if->RB3, &hw_err);
     p_hw->p_next   = p_hw_next;
     
     p_hw_next      = p_hw;
     /************ END OSC *************/
+
+    /*********** 120V SYNC ************/
+    p_hw = (HW_MOD *)malloc(sizeof(HW_MOD));
+    
+    p_hw->Type     = WH_TYPE_OSC;
+    p_hw->p_device = HW_OSC_Init(RTCC_OSC_PERIOD, RTCC_OSC_AMP, RTCC_OSC_OFFSET, &p_hw_if->RC14, &hw_err);
+    p_hw->p_next   = p_hw_next;
+    
+    p_hw_next      = p_hw;
+    /********* END 120V SYNC **********/
     
     p_sim->p_hw_head = p_hw_next;
 

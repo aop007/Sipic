@@ -65,7 +65,7 @@ void HW_OSC_Run(HW_OSC  *p_hw_osc,
     
     p_osc_data->phase++;
     
-    *p_pin = (HW_IF_DATA_TYPE)sin(2 * PI * p_osc_data->phase / p_osc_data->period) * p_osc_data->amplitude / 2 + p_osc_data->offset;
+    *p_pin = (HW_IF_DATA_TYPE)sin(2 * PI * p_osc_data->phase / p_osc_data->period) * p_osc_data->amplitude + p_osc_data->offset;
     
     if (p_osc_data->phase > p_osc_data->period) {
         p_osc_data->phase = 0;

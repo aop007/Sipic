@@ -18,6 +18,11 @@ extern "C" {
     
 #define  MAIN_PLL_FREQ  118662200
 #define  FCY            (MAIN_PLL_FREQ / 4)
+#define  HW_VDD_VOLT               3.3
+#define  HW_VSS_VOLT               0.0
+
+#define  HW_SCHMITT_LO_TRIG       (0.2 * HW_VDD_VOLT)
+#define  HW_SCHMITT_HI_TRIG       (0.8 * HW_VDD_VOLT)
 
 struct hw_mod;
     
@@ -94,8 +99,12 @@ typedef  struct  hw_mod {
 #define  WH_TYPE_OSC    CPU_MAKE_TYPE('O','S','C',' ')
 
 #define  RTCC_OSC_PERIOD  (FCY / 32768)
-#define  RTCC_OSC_AMP     (3.3)
-#define  RTCC_OSC_OFFSET  (RTCC_OSC_AMP / 2)
+#define  RTCC_OSC_AMP     (3.3 / 2)
+#define  RTCC_OSC_OFFSET  RTCC_OSC_AMP
+
+#define  LINE_120V_OSC_PERIOD  (FCY / 60)
+#define  LINE_120V_OSC_AMP     (120)
+#define  LINE_120V_OSC_OFFSET   0
     
 typedef struct osc_data {
     CPU_INT32U        period;
