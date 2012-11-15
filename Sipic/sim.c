@@ -32,10 +32,9 @@ void Sim_Init()
     p_peri_next          =  NULL;
     p_hw_next            =  NULL;
     
-    core_data.cycles = 0;
-    core_data.fcy    = FCY;
-    
-
+    core_data.cycles         = 0;
+    core_data.fcy            = FCY;
+    core_data.p_context_head = NULL;
     
     /************* HW IF **************/
     p_hw = (HW_MOD *)malloc(sizeof(HW_MOD));

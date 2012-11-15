@@ -207,6 +207,10 @@ void Peri_ISR_FromVect(CPU_INT32U    isr_vect_addr,
     }
 #endif
     
+#if  (CORE_INTEGRITY_CHECK == DEF_ENABLED)
+    Core_PushContext(p_core);
+#endif
+    
     PC      = Core_PC_Get(p_core);
     SR      = (p_core->SR & 0x00FF);
     CORCON  = (p_core->CORCON & CORE_CORECON_IPL3);

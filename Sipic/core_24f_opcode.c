@@ -221,12 +221,21 @@ void Core_REPEAT_LIT14(MEM_24      *p_mem_prog,
                        CORE_ERR    *p_err)
 {
     CPU_INT32U  iterations;
+    OPCODE      next_opc;
+    CPU_INT32U  PC;
+    MEM_ERR     mem_err;
     
     
     iterations = args & 0x003FFF;
+    PC         = Core_PC_Get(p_core) + 2;
+    next_opc   = Mem_Get24(p_mem_prog, PC, &mem_err);
+
+#if 0
+    Core_InsertRA_OPC(&core_data, next_opc);
+#endif
     
     p_core->RCOUNT  = iterations;
-    Core_PC_Slide(p_core, 2);
+    Core_PC_Slide(p_core, 4);
     p_core->SR     |= CORE_SR_RA;
     
     *p_err = CORE_ERR_NONE;

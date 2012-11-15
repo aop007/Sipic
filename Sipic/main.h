@@ -34,6 +34,8 @@ extern "C" {
 #else
 #define CORE_TRACE_DEBUG(x) 
 #endif
+    
+#define  CORE_INTEGRITY_CHECK   DEF_ENABLED
 
 SIM         sim_struct;
 CORE_DATA   core_data;

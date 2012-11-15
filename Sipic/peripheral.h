@@ -377,7 +377,7 @@ void Peri_TMR_C(MEM_24       *p_mem_prog,
                 PERI_ERR     *p_err);
 /* Core Stuff */
 
-CPU_INT32U  CallDepth;
+//CPU_INT32U  CallDepth;
     
 #ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
 }

@@ -73,9 +73,18 @@ typedef struct core_24f {
     
 } CORE_24F;
 
+    struct core_context;
+    
+typedef struct core_context {
+    struct core_context  *p_next;
+           CORE_24F       context;
+} CORE_CONTEXT;
+    
 typedef struct core_data {
-    CPU_INT64U  cycles;
-    CPU_INT32U  fcy;
+    CPU_INT64U     cycles;
+    CPU_INT32U     fcy;
+    CORE_CONTEXT  *p_context_head;
+    OPCODE         ra_opc;
 } CORE_DATA;
 
 CORE_24F * Core_Init(MEM         *p_mem_data,
@@ -124,19 +133,33 @@ CPU_INT32U  Core_Merge   (CPU_INT32U    value_original,
     
 CPU_INT08U  Core_GetIPL  (CORE_24F     *p_core);
 
-/* 2                    opcode      mask
- CALL EXPR           0x020000 /  0xFF0001
- DO   #lit14, Expr   0x080000 /  0xFFC000
- DO   Wn,     Expr   0x088000 /  0xFFFFF0
- GOTO Wn             0x014000 /  0xFFFFF0
- */
-
-/* 1
- Otherwise
- */
-
 CPU_INT32U  Core_OPC_Words (OPCODE  opc);
+    
+void        Core_InsertRA_OPC(CORE_DATA  *p_core_data,
+                              OPCODE      opc);
+    
+#if  (CORE_INTEGRITY_CHECK == DEF_ENABLED)
+void        Core_PushContext     (CORE_24F  *p_core);
+void        Core_PopCheckContext (CORE_24F  *p_core);
+#endif
 
-extern  CPU_INT32S  Call_Depth;
+extern  CPU_INT32S   Call_Depth;
+#ifdef WRITE_REPORT
+  FILE        *p_out;
+  CPU_CHAR     file_buffer[512];
+  CPU_INT32U   file_buffer_len;
+#endif
 
+#define  RA_METHOD_OLD   0u
+#define  RA_METHOD_NEW   1u
+    
+    
+#define  RA_METHOD      RA_METHOD_NEW
+    
+#if 0
+#define CONSOLE_AND_FILE(x)     do { \
+                                    file_buffer_len = sprintf(file_buffer, x); \
+                                    fwrite(file_buffer, 1, file_buffer_len, p_out);                  \
+                                    } while (0)    
+#endif
 #endif

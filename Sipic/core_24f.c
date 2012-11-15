@@ -40,7 +40,9 @@ CORE_24F * Core_Init(MEM         *p_mem_data,
     /* Write protection */
     
     Mem_SetAccess(p_mem_data, 0x0042, 0x01EF, &mem_err);        /* Protect SR SRF */
-    
+#ifdef WRITE_REPORT
+    p_out = fopen("/Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/InputFiles/old_RA.txt", "wb");
+#endif
     return (p_core);
 }
 
@@ -65,10 +67,13 @@ void  Core_Run(CORE_24F  *p_core_24f,
     uncaught_instructions = 0;
     //memset(p_core_24f, 0, sizeof(CORE_24F));
     
+    //EnableDebugPrintf = 1;
     
 #if 0
     while (1) {
 #endif
+        
+#if (RA_METHOD == RA_METHOD_OLD)
         pc     = Core_PC_Get(p_core_24f);
         opcode = Mem_Get24(p_mem_prog,
                            pc,
@@ -79,12 +84,53 @@ void  Core_Run(CORE_24F  *p_core_24f,
             *p_err = CORE_ERR_ADDR_ERROR_TRAP;
             return;
         }
+        
+        if (((p_core_24f->SR & CORE_SR_RA) == CORE_SR_RA) &&
+            (p_core_24f->RCOUNT > 0)) {
+            p_core_24f->RCOUNT--;
+            if (p_core_24f->RCOUNT == 0) {
+                p_core_24f->SR &= ~(CORE_SR_RA);
+            } else {
+                Core_PC_Slide(p_core_24f, -2);
+            }
+        }
+#elif (RA_METHOD == RA_METHOD_NEW)
+        if ((p_core_24f->SR & CORE_SR_RA) == CORE_SR_RA) {
+            
+            if (p_core_24f->RCOUNT == 0) {
+                p_core_24f->SR &= ~CORE_SR_RA;
+            } else {
+                p_core_24f->RCOUNT -= 1;
+            }
+        }
+        
+        pc = Core_PC_Get(p_core_24f);
+        
+        opcode = Mem_Get24(p_mem_prog,
+                           pc,
+                           &mem_err);
+#else
+#error RA_METHOD not specified
+#endif
+        
 #if 0
-        if ((Core_PC_Get(p_core_24f) == 0x1B86)) {
+        if (core_data.cycles == (2825 - 0)) {
+#ifdef WRITE_REPORT
+            fflush(p_out);
+#endif
             EnableDebugPrintf = 1;
         }
         
-        if ((Core_PC_Get(p_core_24f) == 0x1BC8)) { // && (p_core_24f->W[0] == 0)){
+        if ((Core_PC_Get(p_core_24f) == 0x2F00)) { // && (p_core_24f->W[0] == 0)){
+            printf("\r\n");
+            uncaught_instructions *= 1;
+#ifdef WRITE_REPORT
+            fflush(p_out);
+#endif
+            CORE_TRACE_DEBUG((""));
+        }
+        
+        if (core_data.cycles == 177) { // && (p_core_24f->W[0] == 0)){
             printf("\r\n");
             uncaught_instructions *= 1;
             CORE_TRACE_DEBUG((""));
@@ -97,23 +143,6 @@ void  Core_Run(CORE_24F  *p_core_24f,
             CORE_TRACE_DEBUG(("\r\nNULL OPC \t %d", uncaught_instructions));
         }
 #endif
-        
-        if (((p_core_24f->SR     & CORE_SR_RA) == CORE_SR_RA) &&
-             (p_core_24f->RCOUNT > 0)) {
-            p_core_24f->RCOUNT--;
-            if (p_core_24f->RCOUNT == 0) {
-                p_core_24f->SR &= ~(CORE_SR_RA);
-            } else {
-                Core_PC_Slide(p_core_24f, -2);
-            }
-        }
-
-#if 1
-        if (EnableDebugPrintf == 1) {
-            printf("\r\nPC = %004x\tOPC = %006x", Core_PC_Get(p_core_24f), opcode);
-            printf("\tRA = %d", p_core_24f->RCOUNT);
-            printf("\tCY = %lu", core_data.cycles);
-            printf("\tIPL = %d", Core_GetIPL(p_core_24f));
             
 #if 0
             printf("\t");
@@ -122,8 +151,8 @@ void  Core_Run(CORE_24F  *p_core_24f,
                 printf("%004x ", p_core_24f->W[ix]);
             }
 #endif
-        }
-
+        
+#if 0
         CORE_TRACE_DEBUG(("\r\n"));
         for (ix = 0 ; ix < Call_Depth ; ix++) {
             CORE_TRACE_DEBUG(("-"));
@@ -151,6 +180,9 @@ void  Core_Run(CORE_24F  *p_core_24f,
                     
                 case CORE_OPC_RETFIE:
                     Core_RETFIE_064(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
+#if  (CORE_INTEGRITY_CHECK == DEF_ENABLED)
+                    Core_PopCheckContext(p_core_24f);
+#endif
                     break;
                     
                     
@@ -711,13 +743,48 @@ void  Core_Run(CORE_24F  *p_core_24f,
                     break;
             }
         }
+    
+#if 1
+    if (EnableDebugPrintf == 1) {
+        printf("\r\nPC = %004x\tOPC = %006x", pc, opcode);
+        printf("\tRA = %d", p_core_24f->RCOUNT);
+        printf("\tCY = %lu", core_data.cycles);
+        printf("\tIPL = %d", Core_GetIPL(p_core_24f));
+        printf("\tCD = %d", Call_Depth);
+#ifdef WRITE_REPORT
+        file_buffer_len = sprintf(file_buffer, "\r\nPC = %004x\tOPC = %006x", Core_PC_Get(p_core_24f), opcode);
+        fwrite(file_buffer, 1, file_buffer_len, p_out);
+        file_buffer_len = sprintf(file_buffer, "\tRA = %d", p_core_24f->RCOUNT);
+        fwrite(file_buffer, 1, file_buffer_len, p_out);
+        file_buffer_len = sprintf(file_buffer, "\tCY = %lu", core_data.cycles);
+        fwrite(file_buffer, 1, file_buffer_len, p_out);
+        file_buffer_len = sprintf(file_buffer, "\tIPL = %d", Core_GetIPL(p_core_24f));
+        fwrite(file_buffer, 1, file_buffer_len, p_out);
+        file_buffer_len = sprintf(file_buffer, "\tCD = %d", Call_Depth);
+        fwrite(file_buffer, 1, file_buffer_len, p_out);
+#endif
+    }
+#endif
+        
+#if (RA_METHOD == RA_METHOD_NEW)
+        if ((p_core_24f->SR & CORE_SR_RA) == CORE_SR_RA) {
+            Core_PC_Slide(p_core_24f, -2);
+        }
+#endif
 
 #if 1
         if (EnableDebugPrintf == 1) {
             printf("\t");
-            
+#ifdef WRITE_REPORT
+            file_buffer_len = sprintf(file_buffer, "\t");
+            fwrite(file_buffer, 1, file_buffer_len, p_out);
+#endif
             for (ix = 0; ix < 16 ; ix++) {
                 printf("%004x ", p_core_24f->W[ix]);
+#ifdef WRITE_REPORT
+                file_buffer_len = sprintf(file_buffer, "%004x ", p_core_24f->W[ix]);
+                fwrite(file_buffer, 1, file_buffer_len, p_out);
+#endif
             }
             
         }
@@ -954,6 +1021,74 @@ CPU_INT08U  Core_GetIPL(CORE_24F  *p_core)
     return (ipl);
 }
 
+void Core_InsertRA_OPC(CORE_DATA  *p_core_data,
+                       OPCODE      opc)
+{
+    p_core_data->ra_opc = opc;
+}
+
+#if  (CORE_INTEGRITY_CHECK == DEF_ENABLED)
+void Core_PushContext(CORE_24F  *p_core)
+{
+    CORE_CONTEXT  *p_core_to_push;
+    
+    
+    p_core_to_push = malloc(sizeof(CORE_CONTEXT));
+    
+    if (p_core_to_push == NULL) {
+        return;
+    }
+    
+    memccpy(&p_core_to_push->context, p_core, 1, sizeof(CORE_24F));
+    
+    p_core_to_push->p_next   = core_data.p_context_head;
+    core_data.p_context_head = p_core_to_push;
+}
+#endif
+
+#if  (CORE_INTEGRITY_CHECK == DEF_ENABLED)
+void Core_PopCheckContext(CORE_24F  *p_core)
+{
+    CORE_CONTEXT  *p_core_to_pop;
+    CORE_24F      *p_core_pop;
+    CPU_INT32S     ix;
+    CPU_BOOLEAN    corruption;
+    
+    
+    corruption               = DEF_NO;
+    p_core_to_pop            = core_data.p_context_head;
+    core_data.p_context_head = core_data.p_context_head->p_next;
+    
+    if (p_core_to_pop == NULL) {
+        return;
+    }
+    
+    p_core_pop = &p_core_to_pop->context;
+    
+    for (ix = 0 ; ix < 16 ; ix++) {
+        if (p_core_pop->W[ix] != p_core->W[ix]) {
+            //printf("W%d corrupted.", ix);
+            corruption = DEF_YES;
+        }
+    }
+    
+    if (corruption == DEF_YES) {
+        printf("\r\n");
+        
+        for (ix = 0; ix < 16 ; ix++) {
+            printf("%004x ", p_core->W[ix]);
+        }
+        
+        printf("\r\n");
+        
+        for (ix = 0; ix < 16 ; ix++) {
+            printf("%004x ", p_core_pop->W[ix]);
+        }
+    }
+    
+    free(p_core_to_pop);
+}
+#endif
 
 
 
