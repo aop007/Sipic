@@ -390,8 +390,9 @@ typedef struct cni_mem {
 
 typedef struct cni_data {
     ISR_VECT_NUM      isr_num;
-    CPU_INT32U        prevous state;
-    HW_IF_DATA_TYPE  *pin_tbl[32];
+    HW_IF_DATA_TYPE   previous_pin_level[CNI_PIN_CNT];
+    CPU_BOOLEAN       previous_pin_state[CNI_PIN_CNT];
+    HW_IF_DATA_TYPE  *pin_tbl[CNI_PIN_CNT];
 } CNI_DATA;
 
 typedef struct cni {
