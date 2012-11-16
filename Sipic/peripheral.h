@@ -91,7 +91,7 @@ void Peripheral_Run(const  CORE_ERR    *p_core_err,
 #define  ISR_VECT_NUM_NVM              12u
 #define  ISR_VECT_NUM_SI2C             13u
 #define  ISR_VECT_NUM_MI2C             14u
-#define  ISR_VECT_NUM_IC               15u
+#define  ISR_VECT_NUM_CNIF             15u
 #define  ISR_VECT_NUM_INT1             16u
 #define  ISR_VECT_NUM_IC7              17u
 #define  ISR_VECT_NUM_IC8              18u
@@ -375,6 +375,36 @@ void Peri_TMR_C(MEM_24       *p_mem_prog,
                 CORE_24F     *p_core,
                 TMR_C        *p_tmr,
                 PERI_ERR     *p_err);
+                
+
+/* Change Notification Peripheral */
+
+#define  PERI_CNI_BASE_ADDR  0x00C0
+#define  CNI_PIN_CNT             10u
+#define  PERI_TYPE_CNI       CPU_MAKE_TYPE('C','N','I',' ')
+
+typedef struct cni_mem {
+    CPU_INT16U  CNEN[2];
+    CPU_INT16U  CNPU[2];
+} CNI_MEM;
+
+typedef struct cni_data {
+    ISR_VECT_NUM      isr_num;
+    CPU_INT32U        prevous state;
+    HW_IF_DATA_TYPE  *pin_tbl[32];
+} CNI_DATA;
+
+typedef struct cni {
+    CNI_MEM     *p_mem;
+    CNI_DATA    *p_data;
+} CNI;
+
+CNI *Peri_CNI_Init(HW_IF_DATA_TYPE **p_pin_tbl,
+                   CPU_INT16U        pin_cnt,
+                   ISR_VECT_NUM      isr_vect_num,
+                   MEM              *p_mem_data,
+                   PERI_ERR         *p_err);
+
 /* Core Stuff */
 
 //CPU_INT32U  CallDepth;

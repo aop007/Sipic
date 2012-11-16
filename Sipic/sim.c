@@ -15,14 +15,15 @@
 
 void Sim_Init()
 {
-    SIM         *p_sim;
-    PERIPHERAL  *p_peri;
-    PERIPHERAL  *p_peri_next;
-    HW_MOD      *p_hw;
-    HW_MOD      *p_hw_next;
-    PERI_ERR     peri_err;
-    HW_IF       *p_hw_if;
-    HW_ERR       hw_err;
+    SIM              *p_sim;
+    PERIPHERAL       *p_peri;
+    PERIPHERAL       *p_peri_next;
+    HW_MOD           *p_hw;
+    HW_MOD           *p_hw_next;
+    PERI_ERR          peri_err;
+    HW_IF            *p_hw_if;
+    HW_IF_DATA_TYPE  *CNI_Pins_Tbl[CNI_PIN_CNT];
+    HW_ERR            hw_err;
     
     
     p_sim                = &sim_struct;
@@ -133,6 +134,33 @@ void Sim_Init()
     
     p_peri_next      = p_peri;
     /********** END TMR 4/5 ***********/
+    
+    /************** CNI ***************/
+    p_peri = (PERIPHERAL *)malloc(sizeof(PERIPHERAL));
+    
+    
+    
+    CNI_Pins_Tbl[0] = &p_hw_if->RC14;   //CN0
+    CNI_Pins_Tbl[1] = &p_hw_if->RC13    //CN1
+    CNI_Pins_Tbl[2] = &p_hw_if->RB0;    //CN2
+    CNI_Pins_Tbl[3] = &p_hw_if->RB1;    //CN3
+    CNI_Pins_Tbl[4] = &p_hw_if->RB2;    //CN4
+    CNI_Pins_Tbl[5] = &p_hw_if->RB3;    //CN5
+    CNI_Pins_Tbl[6] = &p_hw_if->RB4;    //CN6
+    CNI_Pins_Tbl[7] = &p_hw_if->RB5;    //CN7
+    CNI_Pins_Tbl[8] = &p_hw_if->RF4;    //CN17
+    CNI_Pins_Tbl[9] = &p_hw_if->RF5;    //CN18
+    
+    p_peri->Type     = PERI_TYPE_CNI;
+    p_peri->p_device = Peri_CNI_Init(&CNI_Pins_Tbl,
+                                      CNI_PIN_CNT,
+                                      ISR_VECT_NUM_CNIF,
+                                      p_sim->p_mem_data,
+                                      &peri_err);
+    p_peri->p_next   = p_peri_next;
+    
+    p_peri_next      = p_peri;
+    /************ END CNI *************/
     
     /************** ISR ***************/
     p_peri = (PERIPHERAL *)malloc(sizeof(PERIPHERAL));

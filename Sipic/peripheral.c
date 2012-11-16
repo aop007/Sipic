@@ -57,6 +57,14 @@ void Peripheral_Run(const  CORE_ERR    *p_core_err,
                                       p_err);
                 break;
                 
+            case PERI_TYPE_CNI:
+                Peri_CNI(       p_mem_prog,
+                                p_mem_data,
+                                p_core,
+                         (CNI *)p_peri->p_device,
+                                p_err);
+                break;
+                
             default:
                 *p_err = PERI_ERR_INVALID_PERI_TYPE;
                 return;
