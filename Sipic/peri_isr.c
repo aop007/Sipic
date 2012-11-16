@@ -329,7 +329,7 @@ void ISR_Post(ISR_VECT_NUM   vect_num,
             p_isr_mem->IFS[0] |= DEF_BIT_14;
             break;
             
-        case ISR_VECT_NUM_IC:
+        case ISR_VECT_NUM_CNIF:
             p_isr_mem->IFS[0] |= DEF_BIT_15;
             break;
             

@@ -1,6 +1,7 @@
 #include "peripheral.h"
 
 CNI *Peri_CNI_Init(HW_IF_DATA_TYPE **p_pin_tbl,
+                   CPU_INT08U       *p_bit_tbl,
                    CPU_INT16U        pin_cnt,
                    ISR_VECT_NUM      isr_vect_num,
                    MEM              *p_mem_data,
@@ -19,6 +20,9 @@ CNI *Peri_CNI_Init(HW_IF_DATA_TYPE **p_pin_tbl,
     }
     
     memset(p_data, 0x00, sizeof(CNI_DATA));
+    memcpy(p_data->pin_tbl, p_pin_tbl, sizeof(HW_IF_DATA_TYPE *) * pin_cnt);
+    memcpy(p_data->bit_tbl, p_bit_tbl, sizeof(CPU_INT08U       ) * pin_cnt);
+
     
     p_mem = Mem_GetAddr(p_mem_data,
                         PERI_CNI_BASE_ADDR,
@@ -47,16 +51,6 @@ CNI *Peri_CNI_Init(HW_IF_DATA_TYPE **p_pin_tbl,
     return p_cni;
 }
 
-/*
-typedef struct cni_data {
-    ISR_VECT_NUM      isr_num;
-    HW_IF_DATA_TYPE   previous_pin_level[CNI_PIN_CNT];
-    CPU_BOOLEAN       previous_pin_state[CNI_PIN_CNT];
-    HW_IF_DATA_TYPE  *pin_tbl[CNI_PIN_CNT];
-} CNI_DATA;
-
-*/
-
 void Peri_CNI(MEM_24       *p_mem_prog,
               MEM          *p_mem_data,
               CORE_24F     *p_core,
@@ -70,6 +64,11 @@ void Peri_CNI(MEM_24       *p_mem_prog,
     p_data = (CNI_DATA *)p_cni->p_data;
     
     for (ix = 0 ; ix < CNI_PIN_CNT ; ix++) {
-        if (previous_pin_state == 0) && (*pin_tbl[i] )    
+        if ((p_data->previous_pin_state[ix] == 0) && (*p_data->pin_tbl[ix] >= HW_SCHMITT_HI_TRIG))
+        {
+            p_data->previous_pin_state[ix] = 1;
+
+
+        }
     }
 }

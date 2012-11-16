@@ -23,6 +23,7 @@ void Sim_Init()
     PERI_ERR          peri_err;
     HW_IF            *p_hw_if;
     HW_IF_DATA_TYPE  *CNI_Pins_Tbl[CNI_PIN_CNT];
+    CPU_INT08U        CNI_Bits_Tbl[CNI_PIN_CNT];
     HW_ERR            hw_err;
     
     
@@ -141,7 +142,7 @@ void Sim_Init()
     
     
     CNI_Pins_Tbl[0] = &p_hw_if->RC14;   //CN0
-    CNI_Pins_Tbl[1] = &p_hw_if->RC13    //CN1
+    CNI_Pins_Tbl[1] = &p_hw_if->RC13;   //CN1
     CNI_Pins_Tbl[2] = &p_hw_if->RB0;    //CN2
     CNI_Pins_Tbl[3] = &p_hw_if->RB1;    //CN3
     CNI_Pins_Tbl[4] = &p_hw_if->RB2;    //CN4
@@ -150,13 +151,26 @@ void Sim_Init()
     CNI_Pins_Tbl[7] = &p_hw_if->RB5;    //CN7
     CNI_Pins_Tbl[8] = &p_hw_if->RF4;    //CN17
     CNI_Pins_Tbl[9] = &p_hw_if->RF5;    //CN18
+
+    CNI_Bits_Tbl[0] =  0u;
+    CNI_Bits_Tbl[1] =  1u;
+    CNI_Bits_Tbl[2] =  2u;
+    CNI_Bits_Tbl[3] =  3u;
+    CNI_Bits_Tbl[4] =  4u;
+    CNI_Bits_Tbl[5] =  5u;
+    CNI_Bits_Tbl[6] =  6u;
+    CNI_Bits_Tbl[7] =  7u;
+
+    CNI_Bits_Tbl[8] = 17u;
+    CNI_Bits_Tbl[9] = 18u;
     
     p_peri->Type     = PERI_TYPE_CNI;
-    p_peri->p_device = Peri_CNI_Init(&CNI_Pins_Tbl,
+    p_peri->p_device = Peri_CNI_Init( CNI_Pins_Tbl,
+                                     &CNI_Bits_Tbl[0],
                                       CNI_PIN_CNT,
                                       ISR_VECT_NUM_CNIF,
                                       p_sim->p_mem_data,
-                                      &peri_err);
+                                     &peri_err);
     p_peri->p_next   = p_peri_next;
     
     p_peri_next      = p_peri;

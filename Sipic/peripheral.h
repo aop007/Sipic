@@ -126,7 +126,7 @@ static const CPU_INT08U ISR_VECT_TBL[] = {
     ISR_VECT_NUM_NVM,
     ISR_VECT_NUM_SI2C,
     ISR_VECT_NUM_MI2C,
-    ISR_VECT_NUM_IC,
+    ISR_VECT_NUM_CNIF,
     ISR_VECT_NUM_INT1,
     ISR_VECT_NUM_IC7,
     ISR_VECT_NUM_IC8,
@@ -393,6 +393,7 @@ typedef struct cni_data {
     HW_IF_DATA_TYPE   previous_pin_level[CNI_PIN_CNT];
     CPU_BOOLEAN       previous_pin_state[CNI_PIN_CNT];
     HW_IF_DATA_TYPE  *pin_tbl[CNI_PIN_CNT];
+    CPU_INT08U        bit_tbl[CNI_PIN_CNT];
 } CNI_DATA;
 
 typedef struct cni {
@@ -401,6 +402,7 @@ typedef struct cni {
 } CNI;
 
 CNI *Peri_CNI_Init(HW_IF_DATA_TYPE **p_pin_tbl,
+                   CPU_INT08U       *p_bit_tbl,
                    CPU_INT16U        pin_cnt,
                    ISR_VECT_NUM      isr_vect_num,
                    MEM              *p_mem_data,
