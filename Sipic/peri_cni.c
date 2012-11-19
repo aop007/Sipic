@@ -58,17 +58,40 @@ void Peri_CNI(MEM_24       *p_mem_prog,
               PERI_ERR     *p_err)
 {
     CNI_DATA         *p_data;
+    CNI_MEM          *p_mem;
     HW_IF_DATA_TYPE  *p_pin;
     CPU_INT32U        ix;
+    CPU_BOOLEAN       pin_as_changed;
+    CPU_BOOLEAN       issue_isr;
+    CPU_INT16U        reg;
+    CPU_INT16U        bit;
     
+    
+    p_mem  = (CNI_MEM  *)p_cni->p_mem;
     p_data = (CNI_DATA *)p_cni->p_data;
+    issue_isr = DEF_NO;
+    
     
     for (ix = 0 ; ix < CNI_PIN_CNT ; ix++) {
-        if ((p_data->previous_pin_state[ix] == 0) && (*p_data->pin_tbl[ix] >= HW_SCHMITT_HI_TRIG))
-        {
+        reg = p_data->bit_tbl[ix] / 16;
+        btt = p_data->bit_tbl[ix] % 16;
+        pin_as_changed = DEF_NO;
+        
+        if ((p_data->previous_pin_state[ix] == 0) && (*p_data->pin_tbl[ix] >= HW_SCHMITT_HI_TRIG)) {
             p_data->previous_pin_state[ix] = 1;
-
-
+            pin_as_changed = DEF_YES;
+        } else if ((p_data->previous_pin_state[ix] == 1) && (*p_data->pin_tbl[ix] <= HW_SCHMITT_LO_TRIG)) {
+            p_data->previous_pin_state[ix] = 0;
+            pin_as_changed = DEF_YES;
         }
+        
+        if ((p_mem->CNEN[reg] & (1 << bit)) && (pin_as_changed == DEF_YES)) {
+            issue_isr = DEF_YES;
+        }
+        
+    }
+    
+    if (issue_isr == DEF_YES) {
+        ISR_Post(p_data->isr_num, p_err);
     }
 }
