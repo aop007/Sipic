@@ -21,3 +21,5 @@
 
 Sipic.vs2012/Debug/
 Sipic.vs2012/Sipic/Debug/
+
+*.c9revisions*
