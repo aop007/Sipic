@@ -15,13 +15,16 @@ extern "C" {
 
 #include "err.h"
 
-#define  DEF_NO     0u
-#define  DEF_FAIL   0u
-#define  DEF_FALSE  0u
+#define  DEF_NO        0u
+#define  DEF_FAIL      0u
+#define  DEF_FALSE     0u
+#define  DEF_DISABLED  0u
 
-#define  DEF_YES    1u
-#define  DEF_OK     1u
-#define  DEF_TRUE   1u
+#define  DEF_YES       1u
+#define  DEF_OK        1u
+#define  DEF_TRUE      1u
+#define  DEF_ENABLED   1u
+
     
 #define  DEF_BIT_15     0x8000
 #define  DEF_BIT_14     0x4000

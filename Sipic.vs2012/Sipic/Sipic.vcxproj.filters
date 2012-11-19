@@ -18,6 +18,7 @@
     <ClCompile Include="..\..\Sipic\hw_osc.c" />
     <ClCompile Include="..\..\Sipic\peri_tmr.c" />
     <ClCompile Include="..\..\Sipic\peri_cni.c" />
+    <ClCompile Include="..\..\Sipic\peri_io.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Sipic\core_24f.h" />

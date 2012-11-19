@@ -145,6 +145,10 @@ void Peri_ISR(MEM_24      *p_mem_prog,
         highest_prio       =  0;
         
         while (--prio_scanner >= 0) {
+            if (prio_scanner == 15) {
+                printf("");
+            }
+
             int_prio = ISR_VECT_TBL[prio_scanner];
             ifs_ix = int_prio / 16;
             iec_ix = int_prio / 16;

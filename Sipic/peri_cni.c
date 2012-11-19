@@ -10,9 +10,10 @@ CNI *Peri_CNI_Init(HW_IF_DATA_TYPE **p_pin_tbl,
     CNI       *p_cni;
     CNI_MEM   *p_mem;
     CNI_DATA  *p_data;
-    MEM_ERR   mem_err;
+    MEM_ERR    mem_err;
     
-    p_data = malloc(sizeof(CNI_DATA));
+
+    p_data = (CNI_DATA *)malloc(sizeof(CNI_DATA));
     
     if (p_data == NULL) {
         *p_err = PERI_ERR_ALLOC;
@@ -20,9 +21,11 @@ CNI *Peri_CNI_Init(HW_IF_DATA_TYPE **p_pin_tbl,
     }
     
     memset(p_data, 0x00, sizeof(CNI_DATA));
+
     memcpy(p_data->pin_tbl, p_pin_tbl, sizeof(HW_IF_DATA_TYPE *) * pin_cnt);
     memcpy(p_data->bit_tbl, p_bit_tbl, sizeof(CPU_INT08U       ) * pin_cnt);
-
+    p_data->isr_num = isr_vect_num;
+    p_data->pin_cnt = pin_cnt;
     
     p_mem = Mem_GetAddr(p_mem_data,
                         PERI_CNI_BASE_ADDR,
@@ -36,7 +39,7 @@ CNI *Peri_CNI_Init(HW_IF_DATA_TYPE **p_pin_tbl,
     
     memset(p_mem, 0x00, sizeof(CNI_MEM));
     
-    p_cni = malloc(sizeof(CNI));
+    p_cni = (CNI *)malloc(sizeof(CNI));
     
     if (p_cni == NULL) {
         free(p_data);
@@ -59,7 +62,6 @@ void Peri_CNI(MEM_24       *p_mem_prog,
 {
     CNI_DATA         *p_data;
     CNI_MEM          *p_mem;
-    HW_IF_DATA_TYPE  *p_pin;
     CPU_INT32U        ix;
     CPU_BOOLEAN       pin_as_changed;
     CPU_BOOLEAN       issue_isr;
@@ -72,9 +74,9 @@ void Peri_CNI(MEM_24       *p_mem_prog,
     issue_isr = DEF_NO;
     
     
-    for (ix = 0 ; ix < CNI_PIN_CNT ; ix++) {
+    for (ix = 0 ; ix < p_data->pin_cnt ; ix++) {
         reg = p_data->bit_tbl[ix] / 16;
-        btt = p_data->bit_tbl[ix] % 16;
+        bit = p_data->bit_tbl[ix] % 16;
         pin_as_changed = DEF_NO;
         
         if ((p_data->previous_pin_state[ix] == 0) && (*p_data->pin_tbl[ix] >= HW_SCHMITT_HI_TRIG)) {

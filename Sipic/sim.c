@@ -22,8 +22,13 @@ void Sim_Init()
     HW_MOD           *p_hw_next;
     PERI_ERR          peri_err;
     HW_IF            *p_hw_if;
+    
     HW_IF_DATA_TYPE  *CNI_Pins_Tbl[CNI_PIN_CNT];
     CPU_INT08U        CNI_Bits_Tbl[CNI_PIN_CNT];
+
+    HW_IF_DATA_TYPE  *IO_Pins_Tbl[PERI_IO_CNT];
+    IO_PORT_BIT       IO_Bits_Tbl[PERI_IO_CNT];
+
     HW_ERR            hw_err;
     
     
@@ -75,6 +80,7 @@ void Sim_Init()
     /**********************************/
     /**********************************/
     /**********************************/
+
 
     /************** ADC ***************/
     p_peri = (PERIPHERAL *)malloc(sizeof(PERIPHERAL));
@@ -175,6 +181,57 @@ void Sim_Init()
     
     p_peri_next      = p_peri;
     /************ END CNI *************/
+
+    /*************** IO ***************/
+    p_peri = (PERIPHERAL *)malloc(sizeof(PERIPHERAL));
+    
+    IO_Pins_Tbl[0x00] = &p_hw_if->RB0;  IO_Bits_Tbl[0x00].bit  =  0;  IO_Bits_Tbl[0x00].port = PERI_IO_PORTB;
+    IO_Pins_Tbl[0x01] = &p_hw_if->RB1;  IO_Bits_Tbl[0x01].bit  =  1;  IO_Bits_Tbl[0x01].port = PERI_IO_PORTB;
+    IO_Pins_Tbl[0x02] = &p_hw_if->RB2;  IO_Bits_Tbl[0x02].bit  =  2;  IO_Bits_Tbl[0x02].port = PERI_IO_PORTB;
+    IO_Pins_Tbl[0x03] = &p_hw_if->RB3;  IO_Bits_Tbl[0x03].bit  =  3;  IO_Bits_Tbl[0x03].port = PERI_IO_PORTB;
+    IO_Pins_Tbl[0x04] = &p_hw_if->RB4;  IO_Bits_Tbl[0x04].bit  =  4;  IO_Bits_Tbl[0x04].port = PERI_IO_PORTB;
+    IO_Pins_Tbl[0x05] = &p_hw_if->RB5;  IO_Bits_Tbl[0x05].bit  =  5;  IO_Bits_Tbl[0x05].port = PERI_IO_PORTB;
+    IO_Pins_Tbl[0x06] = &p_hw_if->RB6;  IO_Bits_Tbl[0x06].bit  =  6;  IO_Bits_Tbl[0x06].port = PERI_IO_PORTB;
+    IO_Pins_Tbl[0x07] = &p_hw_if->RB7;  IO_Bits_Tbl[0x07].bit  =  7;  IO_Bits_Tbl[0x07].port = PERI_IO_PORTB;
+    IO_Pins_Tbl[0x08] = &p_hw_if->RB8;  IO_Bits_Tbl[0x08].bit  =  8;  IO_Bits_Tbl[0x08].port = PERI_IO_PORTB;
+
+    IO_Pins_Tbl[0x09] = &p_hw_if->RC13; IO_Bits_Tbl[0x09].bit  = 13;  IO_Bits_Tbl[0x09].port = PERI_IO_PORTC;
+    IO_Pins_Tbl[0x0A] = &p_hw_if->RC14; IO_Bits_Tbl[0x0A].bit  = 13;  IO_Bits_Tbl[0x0A].port = PERI_IO_PORTC;
+    IO_Pins_Tbl[0x0B] = &p_hw_if->RC15; IO_Bits_Tbl[0x0B].bit  = 13;  IO_Bits_Tbl[0x0B].port = PERI_IO_PORTC;
+
+    IO_Pins_Tbl[0x0C] = &p_hw_if->RD0;  IO_Bits_Tbl[0x0C].bit  =  0;  IO_Bits_Tbl[0x0C].port = PERI_IO_PORTD;
+    IO_Pins_Tbl[0x0D] = &p_hw_if->RD1;  IO_Bits_Tbl[0x0D].bit  =  1;  IO_Bits_Tbl[0x0D].port = PERI_IO_PORTD;
+    IO_Pins_Tbl[0x0E] = &p_hw_if->RD2;  IO_Bits_Tbl[0x0E].bit  =  2;  IO_Bits_Tbl[0x0E].port = PERI_IO_PORTD;
+    IO_Pins_Tbl[0x0F] = &p_hw_if->RD3;  IO_Bits_Tbl[0x0F].bit  =  3;  IO_Bits_Tbl[0x0F].port = PERI_IO_PORTD;
+
+    IO_Pins_Tbl[0x10] = &p_hw_if->RE0;  IO_Bits_Tbl[0x10].bit  =  0;  IO_Bits_Tbl[0x10].port = PERI_IO_PORTE;
+    IO_Pins_Tbl[0x11] = &p_hw_if->RE1;  IO_Bits_Tbl[0x11].bit  =  1;  IO_Bits_Tbl[0x11].port = PERI_IO_PORTE;
+    IO_Pins_Tbl[0x12] = &p_hw_if->RE2;  IO_Bits_Tbl[0x12].bit  =  2;  IO_Bits_Tbl[0x12].port = PERI_IO_PORTE;
+    IO_Pins_Tbl[0x13] = &p_hw_if->RE3;  IO_Bits_Tbl[0x13].bit  =  3;  IO_Bits_Tbl[0x13].port = PERI_IO_PORTE;
+    IO_Pins_Tbl[0x14] = &p_hw_if->RE4;  IO_Bits_Tbl[0x14].bit  =  4;  IO_Bits_Tbl[0x14].port = PERI_IO_PORTE;
+    IO_Pins_Tbl[0x15] = &p_hw_if->RE5;  IO_Bits_Tbl[0x15].bit  =  5;  IO_Bits_Tbl[0x15].port = PERI_IO_PORTE;
+    IO_Pins_Tbl[0x16] = &p_hw_if->RE8;  IO_Bits_Tbl[0x16].bit  =  8;  IO_Bits_Tbl[0x16].port = PERI_IO_PORTE;
+
+    IO_Pins_Tbl[0x17] = &p_hw_if->RF0;  IO_Bits_Tbl[0x17].bit  =  0;  IO_Bits_Tbl[0x17].port = PERI_IO_PORTF;
+    IO_Pins_Tbl[0x18] = &p_hw_if->RF1;  IO_Bits_Tbl[0x18].bit  =  1;  IO_Bits_Tbl[0x18].port = PERI_IO_PORTF;
+    IO_Pins_Tbl[0x19] = &p_hw_if->RF2;  IO_Bits_Tbl[0x19].bit  =  2;  IO_Bits_Tbl[0x19].port = PERI_IO_PORTF;
+    IO_Pins_Tbl[0x1A] = &p_hw_if->RF3;  IO_Bits_Tbl[0x1A].bit  =  3;  IO_Bits_Tbl[0x1A].port = PERI_IO_PORTF;
+    IO_Pins_Tbl[0x1B] = &p_hw_if->RF4;  IO_Bits_Tbl[0x1B].bit  =  4;  IO_Bits_Tbl[0x1B].port = PERI_IO_PORTF;
+    IO_Pins_Tbl[0x1C] = &p_hw_if->RF5;  IO_Bits_Tbl[0x1C].bit  =  5;  IO_Bits_Tbl[0x1C].port = PERI_IO_PORTF;
+    IO_Pins_Tbl[0x1D] = &p_hw_if->RF6;  IO_Bits_Tbl[0x1D].bit  =  6;  IO_Bits_Tbl[0x1D].port = PERI_IO_PORTF;
+
+    
+    
+    p_peri->Type     = PERI_TYPE_IO;
+    p_peri->p_device = Peri_IO_Init( IO_Pins_Tbl,
+                                    &IO_Bits_Tbl[0],
+                                     PERI_IO_CNT,
+                                     p_sim->p_mem_data,
+                                    &peri_err);
+    p_peri->p_next   = p_peri_next;
+    
+    p_peri_next      = p_peri;
+    /************* END IO *************/
     
     /************** ISR ***************/
     p_peri = (PERIPHERAL *)malloc(sizeof(PERIPHERAL));

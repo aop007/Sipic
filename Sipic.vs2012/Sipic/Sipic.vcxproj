@@ -25,6 +25,7 @@
     <ClCompile Include="..\..\Sipic\peripheral.c" />
     <ClCompile Include="..\..\Sipic\peri_adc.c" />
     <ClCompile Include="..\..\Sipic\peri_cni.c" />
+    <ClCompile Include="..\..\Sipic\peri_io.c" />
     <ClCompile Include="..\..\Sipic\peri_isr.c" />
     <ClCompile Include="..\..\Sipic\peri_tmr.c" />
     <ClCompile Include="..\..\Sipic\sim.c" />

@@ -394,6 +394,7 @@ typedef struct cni_data {
     CPU_BOOLEAN       previous_pin_state[CNI_PIN_CNT];
     HW_IF_DATA_TYPE  *pin_tbl[CNI_PIN_CNT];
     CPU_INT08U        bit_tbl[CNI_PIN_CNT];
+    CPU_INT16U        pin_cnt;
 } CNI_DATA;
 
 typedef struct cni {
@@ -407,6 +408,75 @@ CNI *Peri_CNI_Init(HW_IF_DATA_TYPE **p_pin_tbl,
                    ISR_VECT_NUM      isr_vect_num,
                    MEM              *p_mem_data,
                    PERI_ERR         *p_err);
+
+void Peri_CNI(MEM_24       *p_mem_prog,
+              MEM          *p_mem_data,
+              CORE_24F     *p_core,
+              CNI          *p_cni,
+              PERI_ERR     *p_err);
+
+/* IO */
+#define  PERI_IO_BASE_ADDR      0x02C6
+
+#define  PERI_TYPE_IO       CPU_MAKE_TYPE('I','O',' ',' ')
+
+#define  PERI_IO_CNT                30
+
+#define  PERI_IO_PORTB               0
+#define  PERI_IO_PORTC               1
+#define  PERI_IO_PORTD               2
+#define  PERI_IO_PORTE               3
+#define  PERI_IO_PORTF               4
+
+#define  PERI_IO_TRISB_INIT         0x01FF
+#define  PERI_IO_TRISC_INIT         0xE000
+#define  PERI_IO_TRISD_INIT         0x000F
+#define  PERI_IO_TRISE_INIT         0x011F
+#define  PERI_IO_TRISF_INIT         0x007F
+
+typedef  struct  port_io_mem {
+    CPU_INT16U  TRIS;
+    CPU_INT16U  PORT;
+    CPU_INT16U  LAT;
+} PORT_IO_MEM;
+
+typedef struct io_mem {
+    PORT_IO_MEM  PortB;
+    PORT_IO_MEM  PortC;
+    PORT_IO_MEM  PortD;
+    PORT_IO_MEM  PortE;
+    CPU_INT16U   Reserved[16];
+    PORT_IO_MEM  PortF;
+} IO_MEM;
+
+typedef  struct  io_port_bit {
+    CPU_INT08U  port;
+    CPU_INT08U  bit;
+} IO_PORT_BIT;
+
+typedef struct io_data {
+    CPU_BOOLEAN       pin_state[PERI_IO_CNT];
+    HW_IF_DATA_TYPE  *pin_tbl[PERI_IO_CNT];
+    IO_PORT_BIT       bit_tbl[PERI_IO_CNT];
+    CPU_INT32U        pin_cnt;
+} IO_DATA;
+
+typedef struct io {
+    IO_MEM   *p_mem;
+    IO_DATA  *p_data;
+} IO;
+
+IO *Peri_IO_Init(HW_IF_DATA_TYPE **p_pin_tbl,
+                 IO_PORT_BIT      *p_bit_tbl,
+                 CPU_INT16U        pin_cnt,
+                 MEM              *p_mem_data,
+                 PERI_ERR         *p_err);
+
+void Peri_IO(MEM_24       *p_mem_prog,
+              MEM          *p_mem_data,
+              CORE_24F     *p_core,
+              IO           *p_io,
+              PERI_ERR     *p_err);
 
 /* Core Stuff */
 
