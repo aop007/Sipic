@@ -101,6 +101,12 @@ void        Mem_SetAccess(MEM         *p_mem_data,
                           CPU_INT32U   addr,
                           CPU_INT16U   write_mask,
                           MEM_ERR     *p_err);
+    
+    void Mem_Load(void       *buffer,
+                  CPU_INT32U  addr,
+                  CPU_INT32U  len,
+                  MEM         *p_mem_data,
+                  MEM_ERR     *p_err);
 
 #ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
 }

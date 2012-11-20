@@ -415,3 +415,25 @@ void        Mem_SetAccess(MEM         *p_mem,
     
     *p_err = MEM_ERR_INVALID_LOC;
 }
+
+void Mem_Load(void       *buffer,
+              CPU_INT32U  addr,
+              CPU_INT32U  len,
+              MEM         *p_mem_data,
+              MEM_ERR     *p_err)
+{
+    CPU_INT32U   ix;
+    CPU_INT16U  *p_ptr;
+    
+    p_ptr = (CPU_INT16U *)buffer;
+    
+    for (ix = addr; ix < (addr + len) ; ix += 2) {
+       *p_ptr = (CPU_INT16U)Mem_Get(p_mem_data, ix, p_err);
+        
+        if (*p_err != MEM_ERR_NONE) {
+            return;
+        }
+        
+        p_ptr++;
+    }
+}

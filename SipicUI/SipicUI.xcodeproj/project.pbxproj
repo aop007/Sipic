@@ -34,6 +34,8 @@
 		692960361650A89C00B07386 /* hardware.c in Sources */ = {isa = PBXBuildFile; fileRef = 692960351650A89C00B07386 /* hardware.c */; };
 		6929603A1650BAA800B07386 /* hw_if.c in Sources */ = {isa = PBXBuildFile; fileRef = 692960391650BAA700B07386 /* hw_if.c */; };
 		6929603C1651BFD300B07386 /* peri_tmr.c in Sources */ = {isa = PBXBuildFile; fileRef = 6929603B1651BFD300B07386 /* peri_tmr.c */; };
+		69CF4C45165B007F003186FA /* peri_cni.c in Sources */ = {isa = PBXBuildFile; fileRef = 69CF4C43165B007F003186FA /* peri_cni.c */; };
+		69CF4C46165B007F003186FA /* peri_io.c in Sources */ = {isa = PBXBuildFile; fileRef = 69CF4C44165B007F003186FA /* peri_io.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -101,6 +103,37 @@
 		692960391650BAA700B07386 /* hw_if.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = hw_if.c; path = ../Sipic/hw_if.c; sourceTree = "<group>"; };
 		6929603B1651BFD300B07386 /* peri_tmr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = peri_tmr.c; path = ../Sipic/peri_tmr.c; sourceTree = "<group>"; };
 		6947D0BD16531FB70021C276 /* main_memory_map.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = main_memory_map.txt; sourceTree = "<group>"; };
+		69C61281165B31AB00558B6C /* Chime.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = Chime.c; path = "../../../../dsPIC workspace/Chime.c"; sourceTree = "<group>"; };
+		69C61282165B31AB00558B6C /* Chime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Chime.h; path = "../../../../dsPIC workspace/Chime.h"; sourceTree = "<group>"; };
+		69C61283165B31AB00558B6C /* customTime.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = customTime.c; path = "../../../../dsPIC workspace/customTime.c"; sourceTree = "<group>"; };
+		69C61284165B31AB00558B6C /* def_time.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = def_time.h; path = "../../../../dsPIC workspace/def_time.h"; sourceTree = "<group>"; };
+		69C61285165B31AB00558B6C /* EEPROM.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = EEPROM.c; path = "../../../../dsPIC workspace/EEPROM.c"; sourceTree = "<group>"; };
+		69C61286165B31AB00558B6C /* EEPROM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EEPROM.h; path = "../../../../dsPIC workspace/EEPROM.h"; sourceTree = "<group>"; };
+		69C61287165B31AB00558B6C /* i2c.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = i2c.c; path = "../../../../dsPIC workspace/i2c.c"; sourceTree = "<group>"; };
+		69C61288165B31AB00558B6C /* i2c.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = i2c.h; path = "../../../../dsPIC workspace/i2c.h"; sourceTree = "<group>"; };
+		69C61289165B31AB00558B6C /* includes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = includes.h; path = "../../../../dsPIC workspace/includes.h"; sourceTree = "<group>"; };
+		69C6128A165B31AB00558B6C /* LCDDriver.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = LCDDriver.c; path = "../../../../dsPIC workspace/LCDDriver.c"; sourceTree = "<group>"; };
+		69C6128B165B31AB00558B6C /* LCDDriver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LCDDriver.h; path = "../../../../dsPIC workspace/LCDDriver.h"; sourceTree = "<group>"; };
+		69C6128C165B31AB00558B6C /* LoadControl.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = LoadControl.c; path = "../../../../dsPIC workspace/LoadControl.c"; sourceTree = "<group>"; };
+		69C6128D165B31AB00558B6C /* LoadControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LoadControl.h; path = "../../../../dsPIC workspace/LoadControl.h"; sourceTree = "<group>"; };
+		69C6128E165B31AB00558B6C /* LumMonitor.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = LumMonitor.c; path = "../../../../dsPIC workspace/LumMonitor.c"; sourceTree = "<group>"; };
+		69C6128F165B31AB00558B6C /* LumMonitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LumMonitor.h; path = "../../../../dsPIC workspace/LumMonitor.h"; sourceTree = "<group>"; };
+		69C61290165B31AB00558B6C /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = main.c; path = "../../../../dsPIC workspace/main.c"; sourceTree = "<group>"; };
+		69C61291165B31AB00558B6C /* main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = main.h; path = "../../../../dsPIC workspace/main.h"; sourceTree = "<group>"; };
+		69C61292165B31AB00558B6C /* Menu.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = Menu.c; path = "../../../../dsPIC workspace/Menu.c"; sourceTree = "<group>"; };
+		69C61293165B31AB00558B6C /* Menu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Menu.h; path = "../../../../dsPIC workspace/Menu.h"; sourceTree = "<group>"; };
+		69C61294165B31AB00558B6C /* Menu2.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = Menu2.c; path = "../../../../dsPIC workspace/Menu2.c"; sourceTree = "<group>"; };
+		69C61295165B31AB00558B6C /* Menu2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Menu2.h; path = "../../../../dsPIC workspace/Menu2.h"; sourceTree = "<group>"; };
+		69C61296165B31AB00558B6C /* RBGLighting.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = RBGLighting.c; path = "../../../../dsPIC workspace/RBGLighting.c"; sourceTree = "<group>"; };
+		69C61297165B31AB00558B6C /* RBGLighting.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RBGLighting.h; path = "../../../../dsPIC workspace/RBGLighting.h"; sourceTree = "<group>"; };
+		69C61298165B31AB00558B6C /* RTCC.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = RTCC.c; path = "../../../../dsPIC workspace/RTCC.c"; sourceTree = "<group>"; };
+		69C61299165B31AB00558B6C /* RTCC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RTCC.h; path = "../../../../dsPIC workspace/RTCC.h"; sourceTree = "<group>"; };
+		69C6129A165B31AB00558B6C /* uart.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = uart.c; path = "../../../../dsPIC workspace/uart.c"; sourceTree = "<group>"; };
+		69C6129B165B31AB00558B6C /* uart.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = uart.h; path = "../../../../dsPIC workspace/uart.h"; sourceTree = "<group>"; };
+		69C6129C165B31AB00558B6C /* UserInput.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = UserInput.c; path = "../../../../dsPIC workspace/UserInput.c"; sourceTree = "<group>"; };
+		69C6129D165B31AB00558B6C /* UserInput.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UserInput.h; path = "../../../../dsPIC workspace/UserInput.h"; sourceTree = "<group>"; };
+		69CF4C43165B007F003186FA /* peri_cni.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = peri_cni.c; path = ../Sipic/peri_cni.c; sourceTree = "<group>"; };
+		69CF4C44165B007F003186FA /* peri_io.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = peri_io.c; path = ../Sipic/peri_io.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -216,6 +249,8 @@
 				690D64A71648D0F9008CB35B /* mem_cfg.h */,
 				690D64A81648D0F9008CB35B /* mem.c */,
 				690D64A91648D0F9008CB35B /* mem.h */,
+				69CF4C43165B007F003186FA /* peri_cni.c */,
+				69CF4C44165B007F003186FA /* peri_io.c */,
 				6929603016502D7B00B07386 /* peri_adc.c */,
 				690D64AA1648D0F9008CB35B /* peri_isr.c */,
 				6929603B1651BFD300B07386 /* peri_tmr.c */,
@@ -235,6 +270,7 @@
 		690D64BB1648D105008CB35B /* InputFiles */ = {
 			isa = PBXGroup;
 			children = (
+				69C61280165B314900558B6C /* Source */,
 				6947D0BD16531FB70021C276 /* main_memory_map.txt */,
 				690D64BC1648D105008CB35B /* main.cof */,
 				690D64BD1648D105008CB35B /* main.err */,
@@ -249,6 +285,42 @@
 			);
 			name = InputFiles;
 			path = ../Sipic/InputFiles;
+			sourceTree = "<group>";
+		};
+		69C61280165B314900558B6C /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				69C61281165B31AB00558B6C /* Chime.c */,
+				69C61282165B31AB00558B6C /* Chime.h */,
+				69C61283165B31AB00558B6C /* customTime.c */,
+				69C61284165B31AB00558B6C /* def_time.h */,
+				69C61285165B31AB00558B6C /* EEPROM.c */,
+				69C61286165B31AB00558B6C /* EEPROM.h */,
+				69C61287165B31AB00558B6C /* i2c.c */,
+				69C61288165B31AB00558B6C /* i2c.h */,
+				69C61289165B31AB00558B6C /* includes.h */,
+				69C6128A165B31AB00558B6C /* LCDDriver.c */,
+				69C6128B165B31AB00558B6C /* LCDDriver.h */,
+				69C6128C165B31AB00558B6C /* LoadControl.c */,
+				69C6128D165B31AB00558B6C /* LoadControl.h */,
+				69C6128E165B31AB00558B6C /* LumMonitor.c */,
+				69C6128F165B31AB00558B6C /* LumMonitor.h */,
+				69C61290165B31AB00558B6C /* main.c */,
+				69C61291165B31AB00558B6C /* main.h */,
+				69C61292165B31AB00558B6C /* Menu.c */,
+				69C61293165B31AB00558B6C /* Menu.h */,
+				69C61294165B31AB00558B6C /* Menu2.c */,
+				69C61295165B31AB00558B6C /* Menu2.h */,
+				69C61296165B31AB00558B6C /* RBGLighting.c */,
+				69C61297165B31AB00558B6C /* RBGLighting.h */,
+				69C61298165B31AB00558B6C /* RTCC.c */,
+				69C61299165B31AB00558B6C /* RTCC.h */,
+				69C6129A165B31AB00558B6C /* uart.c */,
+				69C6129B165B31AB00558B6C /* uart.h */,
+				69C6129C165B31AB00558B6C /* UserInput.c */,
+				69C6129D165B31AB00558B6C /* UserInput.h */,
+			);
+			name = Source;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -338,6 +410,8 @@
 				692960361650A89C00B07386 /* hardware.c in Sources */,
 				6929603A1650BAA800B07386 /* hw_if.c in Sources */,
 				6929603C1651BFD300B07386 /* peri_tmr.c in Sources */,
+				69CF4C45165B007F003186FA /* peri_cni.c in Sources */,
+				69CF4C46165B007F003186FA /* peri_io.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
