@@ -29,6 +29,7 @@
     <ClCompile Include="..\..\Sipic\peri_isr.c" />
     <ClCompile Include="..\..\Sipic\peri_tmr.c" />
     <ClCompile Include="..\..\Sipic\sim.c" />
+    <ClCompile Include="..\..\Sipic\unit_testing.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Sipic\ascii.h" />
@@ -48,6 +49,7 @@
     <ClInclude Include="..\..\Sipic\peripheral.h" />
     <ClInclude Include="..\..\Sipic\sim.h" />
     <ClInclude Include="..\..\Sipic\sipic_cfg.h" />
+    <ClInclude Include="..\..\Sipic\unit_testing.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4DC4A7DA-521E-4F16-B3D7-6D87CF9C4216}</ProjectGuid>

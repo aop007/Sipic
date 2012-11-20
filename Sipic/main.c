@@ -13,7 +13,12 @@ int main(int argc, const char * argv[])
 {
     init_sipic();
 
+#if  (SIPIC_UNIT_TESTING == DEF_ENABLED)
+    UT_DIV_U(&sim_struct);
+    UT_DIV_S(&sim_struct);
+#else
     Sim_Run(&sim_struct);
+#endif
 }
 #endif
 

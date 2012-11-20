@@ -19,6 +19,7 @@
     <ClCompile Include="..\..\Sipic\peri_tmr.c" />
     <ClCompile Include="..\..\Sipic\peri_cni.c" />
     <ClCompile Include="..\..\Sipic\peri_io.c" />
+    <ClCompile Include="..\..\Sipic\unit_testing.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Sipic\core_24f.h" />
@@ -38,5 +39,6 @@
     <ClInclude Include="..\..\Sipic\hardware.h" />
     <ClInclude Include="..\..\Sipic\peripheral.h" />
     <ClInclude Include="..\..\Sipic\main.h" />
+    <ClInclude Include="..\..\Sipic\unit_testing.h" />
   </ItemGroup>
 </Project>

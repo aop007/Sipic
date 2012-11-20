@@ -2852,11 +2852,11 @@ void Core_Logical_M_W (MEM_24      *p_mem_prog,
     MEM_ERR     mem_err;
     
     
-    size_op = args & 0x004000;
-    dest    = args & 0x002000;
-    addr    = args & 0x001FFF;
-    flags   = CORE_SR_NONE;
-    mask    = Core_MaskGet(size_op, addr);
+    size_op = (args & 0x004000) >> 14;
+    dest    = (args & 0x002000) >> 13;
+    addr    =  args & 0x001FFF;
+    flags   =  CORE_SR_NONE;
+    mask    =  Core_MaskGet(size_op, addr);
     
     value_0 = Mem_Get(p_mem_data, (addr & 0xFFFE), &mem_err);
     
@@ -2944,6 +2944,7 @@ void Core_Logical_M_W (MEM_24      *p_mem_prog,
     
     if (dest == 0) {
         value_original = p_core->W[0];
+        mask = Core_MaskGet(size_op, 0);
         p_core->W[0] = Core_Merge(value_original, value_1, mask);
     } else {
         value_original    = Mem_Get(p_mem_data, (addr & 0xFFFE), &mem_err);
@@ -3633,47 +3634,61 @@ void Core_DIV_SU_D8000 (MEM_24      *p_mem_prog,
         *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
         return;
     }
+
+    if ((p_core->RCOUNT == 0) && ((p_core->SR & CORE_SR_RA) == CORE_SR_RA)) {
     
-    p_core->W[0] = p_core->W[lsw];
+        p_core->W[0] = p_core->W[lsw];
     
-    switch (instruction) {
-        case CORE_OPC_DIV_S:
-            if ((p_core->W[lsw] & 0x8000) == 0) {
-                p_core->W[1] = 0x0000;
-            } else {
-                p_core->W[1] = 0xFFFF;
-            }
-            break;
+        switch (instruction) {
+            case CORE_OPC_DIV_S:
+                if ((p_core->W[lsw] & 0x8000) == 0) {
+                    p_core->W[1] = 0x0000;
+                } else {
+                    p_core->W[1] = 0xFFFF;
+                }
+                break;
      
-        case CORE_OPC_DIV_U:
-            p_core->W[1] = 0x0000;
-            break;
-    }
-    
-    operand1 = (p_core->W[1]   << 8) | p_core->W[0];
-    operand2 = (p_core->W[msw] << 8) | p_core->W[lsw];
-    
-    if (operand2 != 0) {
-        result   =  operand1 / operand2;
-        modulo   =  operand1 % operand2;
-    
-    
-        if (result < 0) {                                           /* N */
-            p_core->SR |=   CORE_SR_N;
-        } else {
-            p_core->SR &= ~(CORE_SR_N);
+            case CORE_OPC_DIV_U:
+                p_core->W[1] = 0x0000;
+                break;
         }
-        
-        if (result == 0) {                                          /* Z */
-            p_core->SR |=   CORE_SR_Z;
-        } else {
-            p_core->SR &= ~(CORE_SR_Z);
-        }
-        
-    } else {
-        p_core->SR |=   CORE_SR_OV;                             /* OV */
-    }
     
+        operand1 = (p_core->W[1]   << 16) | p_core->W[0];
+        operand2 =  p_core->W[div_w];
+
+    
+        if (operand2 != 0) {
+            result   =  operand1 / operand2;
+            modulo   =  operand1 % operand2;
+
+            if (size_op == 0) {
+                p_core->W[0] = result & 0xFFFF;
+                p_core->W[1] = modulo & 0xFFFF;
+            } else {
+                *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
+                return;
+            }
+    
+            if (result < 0) {                                           /* N */
+                p_core->SR |=   CORE_SR_N;
+            } else {
+                p_core->SR &= ~(CORE_SR_N);
+            }
+        
+            if (modulo == 0) {                                          /* Z */
+                p_core->SR |=   CORE_SR_Z;
+            } else {
+                p_core->SR &= ~(CORE_SR_Z);
+            }
+        
+            p_core->SR &=   ~CORE_SR_OV;
+
+        } else {
+            p_core->SR |=   CORE_SR_OV;                             /* OV */
+        }
+    
+    }
+
     Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;

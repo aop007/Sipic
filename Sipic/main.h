@@ -11,6 +11,7 @@ extern "C" {
 #include "core_24f.h"
 #include "core_24f_opcode.h"
 #include "mem_cfg_24f3011.h"
+#include "unit_testing.h"
 #include "sim.h"
 
 #if    (SIPIC_CFG_PARSE_METHOD == SIPIC_PARSE_METHOD_COFF)
@@ -50,6 +51,8 @@ CPU_BOOLEAN    EnableDebugPrintf;
 int  main (int argc, const char * argv[]);
 #endif
     
+#define  SIPIC_UNIT_TESTING    DEF_DISABLED
+
 //void DLL_API C_STD_CALL init (void);
 void DLL_API C_STD_CALL init_sipic(void);
 void DLL_API C_STD_CALL run  (void);

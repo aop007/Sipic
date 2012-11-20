@@ -114,14 +114,15 @@ void  Core_Run(CORE_24F  *p_core_24f,
 #endif
         
 #if 0
-        if (core_data.cycles == (2825 - 0)) {
+        if (core_data.cycles == (0x04d629 - 400)) {
 #ifdef WRITE_REPORT
             fflush(p_out);
 #endif
             EnableDebugPrintf = 1;
         }
-        
-        if ((Core_PC_Get(p_core_24f) == 0x2F00)) { // && (p_core_24f->W[0] == 0)){
+#endif
+#if 1
+        if ((Core_PC_Get(p_core_24f) == 0x08AA)) { // && (p_core_24f->W[0] == 0)){
             printf("\r\n");
             uncaught_instructions *= 1;
 #ifdef WRITE_REPORT
@@ -129,7 +130,8 @@ void  Core_Run(CORE_24F  *p_core_24f,
 #endif
             CORE_TRACE_DEBUG((""));
         }
-        
+#endif
+#if 0  
         if (core_data.cycles == 177) { // && (p_core_24f->W[0] == 0)){
             printf("\r\n");
             uncaught_instructions *= 1;

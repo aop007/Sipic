@@ -10,17 +10,7 @@
 #include "peripheral.h"
 #include "main.h"
 
-typedef struct {
-    CPU_INT16U tm_sec;		/* seconds after the minute - [0,59]   */
-    CPU_INT16U tm_min;		/* minutes after the hour   - [0,59]   */
-    CPU_INT16U tm_hour;	/* hours since midnight     - [0,23]   */
-    CPU_INT16U tm_mday;	/* day of the month         - [1,31]   */
-    CPU_INT16U tm_mon;		/* months since January     - [0,11]   */
-    CPU_INT16U tm_year;	/* years since 1900					   */
-    CPU_INT16U tm_wday;	/* days since Sunday         - [0,6]   */
-    CPU_INT16U tm_yday;	/* days since January 1      - [0,365] */
-    CPU_INT16U tm_isdst;	/* daylight savings time flag NOT USED */
-} tm_struct;
+
 
 
 ISR *Peri_ISR_Init(MEM       *p_mem_data,
@@ -256,11 +246,13 @@ void Peri_ISR_FromVect(CPU_INT32U    isr_vect_addr,
     
     Core_PC_Set(p_core, ISR_addr);
     
-#if 1
+#if 0
     
     if (isr_vect_addr == (ISR_VECT_NUM_T1 * 2 + ISR_VECT_BASE)) {
+#endif
         printf("\r\nISR = 0x%x from 0x%004x with ipl %d/%d at Call_Depth %d at cycle %lu",ISR_addr, (PC & 0xFFFFFF), ipl, ipl_old, Call_Depth, core_data.cycles);
-#ifndef  DONT_PRINT_TIME
+#if 0
+#ifdef  DONT_PRINT_TIME
         //928-939 CurrentTime
         Mem_Load((void *)&time_buffer, 0x0928, 18, p_mem_data, &mem_err);
         
