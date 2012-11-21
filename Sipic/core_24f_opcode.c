@@ -3351,7 +3351,7 @@ void Core_MUL_UU_B80 (MEM_24      *p_mem_prog,
     result = operand0 * operand1;
     
     p_core->W[dest_reg]     = (result & 0x0000FFFF);
-    p_core->W[dest_reg + 1] = (result & 0xFFFF0000);
+    p_core->W[dest_reg + 1] = (result & 0xFFFF0000) >> 16;
     Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;

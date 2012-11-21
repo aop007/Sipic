@@ -34,6 +34,7 @@
 		692960361650A89C00B07386 /* hardware.c in Sources */ = {isa = PBXBuildFile; fileRef = 692960351650A89C00B07386 /* hardware.c */; };
 		6929603A1650BAA800B07386 /* hw_if.c in Sources */ = {isa = PBXBuildFile; fileRef = 692960391650BAA700B07386 /* hw_if.c */; };
 		6929603C1651BFD300B07386 /* peri_tmr.c in Sources */ = {isa = PBXBuildFile; fileRef = 6929603B1651BFD300B07386 /* peri_tmr.c */; };
+		69C612A0165D8CD500558B6C /* unit_testing.c in Sources */ = {isa = PBXBuildFile; fileRef = 69C6129E165D8CD500558B6C /* unit_testing.c */; };
 		69CF4C45165B007F003186FA /* peri_cni.c in Sources */ = {isa = PBXBuildFile; fileRef = 69CF4C43165B007F003186FA /* peri_cni.c */; };
 		69CF4C46165B007F003186FA /* peri_io.c in Sources */ = {isa = PBXBuildFile; fileRef = 69CF4C44165B007F003186FA /* peri_io.c */; };
 /* End PBXBuildFile section */
@@ -132,6 +133,8 @@
 		69C6129B165B31AB00558B6C /* uart.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = uart.h; path = "../../../../dsPIC workspace/uart.h"; sourceTree = "<group>"; };
 		69C6129C165B31AB00558B6C /* UserInput.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = UserInput.c; path = "../../../../dsPIC workspace/UserInput.c"; sourceTree = "<group>"; };
 		69C6129D165B31AB00558B6C /* UserInput.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UserInput.h; path = "../../../../dsPIC workspace/UserInput.h"; sourceTree = "<group>"; };
+		69C6129E165D8CD500558B6C /* unit_testing.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = unit_testing.c; path = ../Sipic/unit_testing.c; sourceTree = "<group>"; };
+		69C6129F165D8CD500558B6C /* unit_testing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = unit_testing.h; path = ../Sipic/unit_testing.h; sourceTree = "<group>"; };
 		69CF4C43165B007F003186FA /* peri_cni.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = peri_cni.c; path = ../Sipic/peri_cni.c; sourceTree = "<group>"; };
 		69CF4C44165B007F003186FA /* peri_io.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = peri_io.c; path = ../Sipic/peri_io.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -151,6 +154,8 @@
 		690D63A21648A9EC008CB35B = {
 			isa = PBXGroup;
 			children = (
+				69C6129E165D8CD500558B6C /* unit_testing.c */,
+				69C6129F165D8CD500558B6C /* unit_testing.h */,
 				690D64931648D0E5008CB35B /* Core */,
 				690D64071648AA43008CB35B /* Products */,
 				690D63B71648A9EC008CB35B /* SipicUI */,
@@ -412,6 +417,7 @@
 				6929603C1651BFD300B07386 /* peri_tmr.c in Sources */,
 				69CF4C45165B007F003186FA /* peri_cni.c in Sources */,
 				69CF4C46165B007F003186FA /* peri_io.c in Sources */,
+				69C612A0165D8CD500558B6C /* unit_testing.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
