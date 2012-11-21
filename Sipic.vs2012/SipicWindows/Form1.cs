@@ -351,13 +351,7 @@ namespace SipicWindows
         }
 
         private void InitCodeTable()
-        { 
-            StreamReader sr = new StreamReader(@"C:\Users\alexis01.micrium01\Projects\Sipic\Sipic\InputFiles\main.lst");
-            string readLine = sr.ReadLine();
-            List<AssemblyLine> assemblyFile = new List<AssemblyLine>();
-            int idx = 0;
-
-
+        {
             this.codeGridView.ReadOnly = true;
             this.codeGridView.RowHeadersVisible = false;
             this.codeGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -370,21 +364,45 @@ namespace SipicWindows
             dgvtbc.DefaultCellStyle.Font = new Font("Courier New", 9);
 
             codeGridView.Columns.Add(dgvtbc);
-            
+
+            StreamReader sr = new StreamReader(@"C:\Users\alexis01.micrium01\Projects\Sipic\Sipic\InputFiles\main.lst");
+            string readLine = sr.ReadLine();
+            List<AssemblyLine> assemblyFile = new List<AssemblyLine>();
+            int idx = 0;         
 
             while(readLine != null) {
-                AssemblyLine al = new AssemblyLine(readLine, idx);
+                AssemblyLine al = new AssemblyLine(readLine, idx, 0);
 
                 if (al.Type == AssemblyLineType.Code) {
                     addrMap.Add(al.Addr, al);
                 }
 
                 assemblyFile.Add(al);
-                
-               
-                codeGridView.Rows.Add(new object[] { al.Text });
-                
 
+                codeGridView.Rows.Add(new object[] { al.Text });
+
+                readLine = sr.ReadLine();
+                idx++;
+            }
+
+            sr = new StreamReader(@"C:\Users\alexis01.micrium01\Projects\Sipic\Sipic\InputFiles\main.txt");
+            readLine = sr.ReadLine();
+
+            while (readLine != null)
+            {
+                AssemblyLine al = new AssemblyLine(readLine, idx, 1);
+
+                if (al.Type == AssemblyLineType.Code)
+                {
+                    if (!addrMap.ContainsKey(al.Addr))
+                    {
+                        addrMap.Add(al.Addr, al);
+                    }
+                }
+
+                assemblyFile.Add(al);
+
+                codeGridView.Rows.Add(new object[] { al.Text });
 
                 readLine = sr.ReadLine();
                 idx++;

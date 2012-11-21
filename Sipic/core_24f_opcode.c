@@ -2181,7 +2181,7 @@ void  Core_BTSC_W (MEM_24      *p_mem_prog,
     }
     
     
-    if ((value & bit) == 0u) {
+    if ((value & (1 << bit)) == 0u) {
         
         
         opc = Mem_Get24(p_mem_prog, Core_PC_Get(p_core), &mem_err);

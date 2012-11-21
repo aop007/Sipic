@@ -246,13 +246,13 @@ void Peri_ISR_FromVect(CPU_INT32U    isr_vect_addr,
     
     Core_PC_Set(p_core, ISR_addr);
     
-#if 0
+#if 1
     
     if (isr_vect_addr == (ISR_VECT_NUM_T1 * 2 + ISR_VECT_BASE)) {
 #endif
         printf("\r\nISR = 0x%x from 0x%004x with ipl %d/%d at Call_Depth %d at cycle %lu",ISR_addr, (PC & 0xFFFFFF), ipl, ipl_old, Call_Depth, core_data.cycles);
-#if 0
-#ifdef  DONT_PRINT_TIME
+#if 1
+#ifndef  DONT_PRINT_TIME
         //928-939 CurrentTime
         Mem_Load((void *)&time_buffer, 0x0928, 18, p_mem_data, &mem_err);
         
@@ -271,7 +271,7 @@ void Peri_ISR_FromVect(CPU_INT32U    isr_vect_addr,
         .................... } tm_struct;
 #endif
         
-        printf("\r\n%d/%d/%d\t%d:%d:%d",time_buffer.tm_mday,time_buffer.tm_mon,time_buffer.tm_yday + 1900, time_buffer.tm_hour,time_buffer.tm_min,time_buffer.tm_sec);
+        printf("\r\n%d/%d/%d\t%d:%d:%d",time_buffer.tm_mday,time_buffer.tm_mon,time_buffer.tm_year + 1900, time_buffer.tm_hour,time_buffer.tm_min,time_buffer.tm_sec);
 #endif
     }
     

@@ -1,44 +1,104 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\..\Sipic\core_24f.c" />
-    <ClCompile Include="..\..\Sipic\core_24f_opcode.c" />
-    <ClCompile Include="..\..\Sipic\cpu.c" />
     <ClCompile Include="..\..\Sipic\hex_parser.c" />
     <ClCompile Include="..\..\Sipic\main.c" />
-    <ClCompile Include="..\..\Sipic\mem.c" />
     <ClCompile Include="..\..\Sipic\ascii.c" />
     <ClCompile Include="..\..\Sipic\coff_parser.c" />
-    <ClCompile Include="..\..\Sipic\peri_isr.c" />
-    <ClCompile Include="..\..\Sipic\peripheral.c" />
-    <ClCompile Include="..\..\Sipic\sim.c" />
-    <ClCompile Include="..\..\Sipic\peri_adc.c" />
-    <ClCompile Include="..\..\Sipic\hardware.c" />
-    <ClCompile Include="..\..\Sipic\hw_if.c" />
-    <ClCompile Include="..\..\Sipic\hw_osc.c" />
-    <ClCompile Include="..\..\Sipic\peri_tmr.c" />
-    <ClCompile Include="..\..\Sipic\peri_cni.c" />
-    <ClCompile Include="..\..\Sipic\peri_io.c" />
     <ClCompile Include="..\..\Sipic\unit_testing.c" />
+    <ClCompile Include="..\..\Sipic\core_24f.c">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sipic\core_24f_opcode.c">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sipic\cpu.c">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sipic\hardware.c">
+      <Filter>Hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sipic\hw_if.c">
+      <Filter>Hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sipic\hw_osc.c">
+      <Filter>Hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sipic\peri_adc.c">
+      <Filter>Peripheral</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sipic\peri_cni.c">
+      <Filter>Peripheral</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sipic\peri_io.c">
+      <Filter>Peripheral</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sipic\peri_isr.c">
+      <Filter>Peripheral</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sipic\peri_tmr.c">
+      <Filter>Peripheral</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sipic\peripheral.c">
+      <Filter>Peripheral</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sipic\mem.c">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sipic\sim.c">
+      <Filter>Sim</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Sipic\core_24f.h" />
-    <ClInclude Include="..\..\Sipic\core_24f_opcode.h" />
-    <ClInclude Include="..\..\Sipic\cpu.h" />
     <ClInclude Include="..\..\Sipic\err.h" />
     <ClInclude Include="..\..\Sipic\hex_cfg.h" />
     <ClInclude Include="..\..\Sipic\hex_parser.h" />
-    <ClInclude Include="..\..\Sipic\mem.h" />
-    <ClInclude Include="..\..\Sipic\mem_cfg.h" />
-    <ClInclude Include="..\..\Sipic\mem_cfg_24f3011.h" />
     <ClInclude Include="..\..\Sipic\sipic_cfg.h" />
     <ClInclude Include="..\..\Sipic\ascii.h" />
     <ClInclude Include="..\..\Sipic\coff_cfg.h" />
     <ClInclude Include="..\..\Sipic\coff_parser.h" />
-    <ClInclude Include="..\..\Sipic\sim.h" />
-    <ClInclude Include="..\..\Sipic\hardware.h" />
-    <ClInclude Include="..\..\Sipic\peripheral.h" />
     <ClInclude Include="..\..\Sipic\main.h" />
     <ClInclude Include="..\..\Sipic\unit_testing.h" />
+    <ClInclude Include="..\..\Sipic\core_24f.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sipic\core_24f_opcode.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sipic\cpu.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sipic\hardware.h">
+      <Filter>Hardware</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sipic\peripheral.h">
+      <Filter>Peripheral</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sipic\mem.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sipic\mem_cfg.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sipic\mem_cfg_24f3011.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sipic\sim.h">
+      <Filter>Sim</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Peripheral">
+      <UniqueIdentifier>{6dfa09cb-144a-4988-9b19-86e8a18b342f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{3087b7f1-293c-4338-b073-b4f3489e83e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hardware">
+      <UniqueIdentifier>{c7cf1414-c1c1-4e81-8ed8-b75c3b7cd4cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sim">
+      <UniqueIdentifier>{b871f39a-d6b8-47cd-8341-19869dfc6396}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

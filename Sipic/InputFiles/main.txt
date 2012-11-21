@@ -273,6 +273,7 @@
   0504  7812CF     mov.w [--0x001e],[0x000a--]
   0506  7802CF     mov.w [--0x001e],0x000a
   0508  060000     return
+
   050A  781F85     mov.w 0x000a,[0x001e++]
   050C  2000C5     mov.w #0xc,0x000a
   050E  090003     repeat #3
@@ -297,6 +298,7 @@
   0534  7812CF     mov.w [--0x001e],[0x000a--]
   0536  7802CF     mov.w [--0x001e],0x000a
   0538  060000     return
+
   08DC  781F85     mov.w 0x000a,[0x001e++]
   08DE  2000C5     mov.w #0xc,0x000a
   08E0  090003     repeat #3

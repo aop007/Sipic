@@ -14,27 +14,56 @@ namespace SipicWindows
         private string           directive;
         private int              addr;
         
-        public AssemblyLine(string readLine, int line)
+        public AssemblyLine(string readLine, int line, int asm_type)
         {
             this.text = readLine;
             this.lineNumber = line;
 
-            type = GetAsmType(text);
+            type = GetAsmType(text, asm_type);
 
             if (type == AssemblyLineType.Code) {
-                string addr_string = text.Substring(0, 4);
-                directive = text.Substring(7);
-                addr = int.Parse(addr_string, System.Globalization.NumberStyles.HexNumber);
+                if (asm_type == 0)
+                {
+                    string addr_string = text.Substring(0, 4);
+                    directive = text.Substring(7);
+                    addr = int.Parse(addr_string, System.Globalization.NumberStyles.HexNumber);
+                }
+                else {
+                    string addr_string = text.Substring(2, 4);
+                    directive = text.Substring(19);
+                    addr = int.Parse(addr_string, System.Globalization.NumberStyles.HexNumber);
+                }
             }
         }
-    
-        public static AssemblyLineType GetAsmType(string text)
-        {
-            int comaIdx = text.IndexOf(':');
 
-            if (comaIdx == 4)
+        public static AssemblyLineType GetAsmType(string text, int asm_type)
+        {
+            if (asm_type == 0)
             {
-                return AssemblyLineType.Code;
+                int comaIdx = text.IndexOf(':');
+
+                if (comaIdx == 4)
+                {
+                    return AssemblyLineType.Code;
+                }
+                else
+                {
+                    return AssemblyLineType.Comment;
+                }
+            }
+            else if (asm_type == 1)
+            {
+                if (text.Length <= 1) {
+                    return AssemblyLineType.Ignore;
+                }
+                else if ((text[0] == ' ') && (text[1] == ' '))
+                {
+                    return AssemblyLineType.Code;
+                }
+                else
+                {
+                    return AssemblyLineType.Comment;
+                }
             }
             else {
                 return AssemblyLineType.Comment;
@@ -52,6 +81,7 @@ namespace SipicWindows
 
     public enum AssemblyLineType{
         Comment,
-        Code
+        Code,
+        Ignore
     }
 }

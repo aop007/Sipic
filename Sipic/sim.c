@@ -266,7 +266,7 @@ void Sim_Run()
     while (1) {
         p_core_data->cycles++;
         
-        //UT_Testting(p_sim);
+        UT_Testting(p_sim);
 
         /* Process HW */
         HW_Run(p_sim->p_mem_data,

@@ -259,7 +259,7 @@ void Peri_TMR_B(MEM_24       *p_mem_prog,
     }
 
     /* Register Compare */
-    if (p_tmr_mem->TMR >= p_tmr_mem->PR) {
+    if ((p_tmr_mem->TMR >= p_tmr_mem->PR) && (p_tmr_mem->PR > 0))  {
         p_tmr_mem->TMR = 0;
 
         /* Interrupt posting */

@@ -14,17 +14,36 @@ CPU_INT32U  time_binary_before;
 CPU_INT32U  time_binary_after;
 
 //0x0862-0x0863 CurrentTimeBinary 
-#define  TIME_BINARY_BASE_ADDR  0x0862
+#define  TIME_BINARY_BASE_ADDR  0x0866
 #define  TIME_BINARY_BASE_SIZE  0x0004
 
 #define  TIME_STRUCT_BASE_ADDR  0x0928
 #define  TIME_STRUCT_BASE_SIZE  0x0012
+
+CPU_INT32U DaysToMonth[13] = {0,31,59,90,120,151,181,212,243,273,304,334,365}; 
+
+CPU_INT32U DS1371_DateToBinary(tm_struct *datetime) { 
+    CPU_INT32U iday; 
+    CPU_INT32U val; 
+    
+    
+    iday = 365 * (datetime->tm_year - 70) + DaysToMonth[datetime->tm_mon] + (datetime->tm_mday - 1); 
+    iday = iday + (datetime->tm_year - 69) / 4; 
+    
+    if ((datetime->tm_mon > 1) && ((datetime->tm_year % 4) == 0)) { 
+        iday++; 
+    } 
+    
+    val = datetime->tm_sec + 60 * datetime->tm_min + 3600 * (datetime->tm_hour + 24 * iday); 
+    return val; 
+}
 
 void  UT_Testting(SIM  *p_sim)
 {
     CORE_24F    *p_core;
     MEM         *p_mem;
     CPU_INT32U   pc;
+    CPU_INT32U   time_binary;
     MEM_ERR      mem_err;
     CORE_ERR     core_err;
 
@@ -45,9 +64,11 @@ void  UT_Testting(SIM  *p_sim)
             time_buffer_before.tm_min,
             time_buffer_before.tm_sec,
             time_binary_before);
+
+        time_binary = DS1371_DateToBinary(&time_buffer_before);
     }
 
-    if (pc == 0x0A62) {
+    if (pc == 0x0AAA) {
         Mem_Load((void *)&time_buffer_after, TIME_STRUCT_BASE_ADDR, TIME_STRUCT_BASE_SIZE, p_mem, &mem_err);
         Mem_Load((void *)&time_binary_after, TIME_BINARY_BASE_ADDR, TIME_BINARY_BASE_SIZE, p_mem, &mem_err);
         printf("\r\n%d/%d/%d\t%d:%d:%d\t%d",
@@ -58,6 +79,8 @@ void  UT_Testting(SIM  *p_sim)
             time_buffer_after.tm_min,
             time_buffer_after.tm_sec,
             time_binary_after);
+
+        time_binary = DS1371_DateToBinary(&time_buffer_after);
     }
 
 }
