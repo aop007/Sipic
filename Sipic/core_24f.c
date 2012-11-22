@@ -148,9 +148,9 @@ void  Core_Run(CORE_24F  *p_core_24f,
         }
 #endif
 
-#if 0
-        if ((Core_PC_Get(p_core_24f) == 0x0538)) { // && (p_core_24f->W[0] == 0)){
-            printf("\r\nReturnNReset");
+#if 1
+        if ((Core_PC_Get(p_core_24f) == 0x04D6)) { // && (p_core_24f->W[0] == 0)){
+            printf("");
             uncaught_instructions *= 1;
 #ifdef WRITE_REPORT
             fflush(p_out);
