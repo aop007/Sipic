@@ -144,6 +144,11 @@ void        Core_PopCheckContext (CORE_24F  *p_core);
 #endif
 
 extern  CPU_INT32S   Call_Depth;
+
+#if    (WRITE_REPORT_EN == DEF_ENABLED)
+#define WRITE_REPORT
+#endif
+
 #ifdef WRITE_REPORT
   FILE        *p_out;
   CPU_CHAR     file_buffer[512];

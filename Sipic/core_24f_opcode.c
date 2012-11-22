@@ -230,12 +230,8 @@ void Core_REPEAT_LIT14(MEM_24      *p_mem_prog,
     PC         = Core_PC_Get(p_core) + 2;
     next_opc   = Mem_Get24(p_mem_prog, PC, &mem_err);
 
-#if 0
-    Core_InsertRA_OPC(&core_data, next_opc);
-#endif
-    
     p_core->RCOUNT  = iterations;
-    Core_PC_Slide(p_core, 4);
+    Core_PC_Slide(p_core, 2);
     p_core->SR     |= CORE_SR_RA;
     
     *p_err = CORE_ERR_NONE;
@@ -3257,7 +3253,7 @@ void Core_MUL_UU_B8006 (MEM_24      *p_mem_prog,
     result = p_core->W[base_w] * operand1;
     
     p_core->W[dest_w]     = (result & 0x0000FFFF);
-    p_core->W[dest_w + 1] = (result & 0xFFFF0000);
+    p_core->W[dest_w + 1] = (result & 0xFFFF0000) >> 16;
     
     Core_PC_Slide(p_core, 2);
     
@@ -3444,7 +3440,7 @@ void Core_MUL_SS_B88 (MEM_24      *p_mem_prog,
     result = operand0 * operand1;
     
     p_core->W[dest_reg]     = (result & 0x0000FFFF);
-    p_core->W[dest_reg + 1] = (result & 0xFFFF0000);
+    p_core->W[dest_reg + 1] = (result & 0xFFFF0000) >> 16;
     Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;
@@ -3537,7 +3533,7 @@ void Core_MUL_SS_B98 (MEM_24      *p_mem_prog,
     result = operand0 * operand1;
     
     p_core->W[dest_reg]     = (result & 0x0000FFFF);
-    p_core->W[dest_reg + 1] = (result & 0xFFFF0000);
+    p_core->W[dest_reg + 1] = (result & 0xFFFF0000) >> 16;
     Core_PC_Slide(p_core, 2);
     
     *p_err = CORE_ERR_NONE;

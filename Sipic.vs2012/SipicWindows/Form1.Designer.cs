@@ -49,6 +49,9 @@
             this.condAddr = new System.Windows.Forms.NumericUpDown();
             this.condMask = new System.Windows.Forms.NumericUpDown();
             this.condValue = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.memoryView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BPupdown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPC)).BeginInit();
@@ -336,11 +339,42 @@
             0,
             0});
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(853, 28);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(52, 13);
+            this.label2.TabIndex = 10;
+            this.label2.Text = "MemAddr";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(921, 28);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(33, 13);
+            this.label4.TabIndex = 10;
+            this.label4.Text = "Mask";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(989, 28);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(34, 13);
+            this.label5.TabIndex = 10;
+            this.label5.Text = "Value";
+            this.label5.Click += new System.EventHandler(this.label5_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1133, 552);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.condCheck);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.statusStrip1);
@@ -398,6 +432,9 @@
         private System.Windows.Forms.NumericUpDown condAddr;
         private System.Windows.Forms.NumericUpDown condMask;
         private System.Windows.Forms.NumericUpDown condValue;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
     }
 }
 

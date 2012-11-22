@@ -15,6 +15,10 @@
 #include "cpu.h"
 #include "main.h"
 
+#ifndef AOP_DEBUG
+CPU_INT32U  RCOUNT_1C06 = 0xFFFFFFFF;
+#endif
+
 CORE_24F * Core_Init(MEM         *p_mem_data,
                              CPU_INT32U   addr,
                              CORE_ERR    *p_err)
@@ -41,7 +45,11 @@ CORE_24F * Core_Init(MEM         *p_mem_data,
     
     Mem_SetAccess(p_mem_data, 0x0042, 0x01EF, &mem_err);        /* Protect SR SRF */
 #ifdef WRITE_REPORT
+#if 0
     p_out = fopen("/Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/InputFiles/old_RA.txt", "wb");
+#else
+    p_out = fopen("new2_RA.txt", "wb");
+#endif
 #endif
     return (p_core);
 }
@@ -114,16 +122,45 @@ void  Core_Run(CORE_24F  *p_core_24f,
 #endif
         
 #if 0
-        if (core_data.cycles == (0x04d629 - 400)) {
+        if (core_data.cycles == (0x0135653d - 100)) {
 #ifdef WRITE_REPORT
             fflush(p_out);
 #endif
             EnableDebugPrintf = 1;
         }
 #endif
+#if 0
+        if ((Core_PC_Get(p_core_24f) == 0x0538)) {
+            if (RCOUNT_1C06 < p_core_24f->RCOUNT) {
+                uncaught_instructions *= 1;
+                printf("Caught that motofoka.");
+            }
+            RCOUNT_1C06 = p_core_24f->RCOUNT;
+        }
+#endif
+
 #if 1
-        if ((Core_PC_Get(p_core_24f) == 0x0512)) { // && (p_core_24f->W[0] == 0)){
-            printf("\r\n");
+        if ((Core_PC_Get(p_core_24f) == 0) && (core_data.cycles != 1)) {
+            printf("Reset motofoka.");
+#ifdef WRITE_REPORT
+            fflush(p_out);
+#endif
+        }
+#endif
+
+#if 0
+        if ((Core_PC_Get(p_core_24f) == 0x0538)) { // && (p_core_24f->W[0] == 0)){
+            printf("\r\nReturnNReset");
+            uncaught_instructions *= 1;
+#ifdef WRITE_REPORT
+            fflush(p_out);
+#endif
+        }
+#endif
+
+#if 1
+        if ((Core_PC_Get(p_core_24f) == 0x30AA)) { // && (p_core_24f->W[0] == 0)){
+            printf("\r\nMainLoop");
             uncaught_instructions *= 1;
 #ifdef WRITE_REPORT
             fflush(p_out);
@@ -768,10 +805,12 @@ void  Core_Run(CORE_24F  *p_core_24f,
     }
 #endif
         
+#if 0
 #if (RA_METHOD == RA_METHOD_NEW)
         if ((p_core_24f->SR & CORE_SR_RA) == CORE_SR_RA) {
             Core_PC_Slide(p_core_24f, -2);
         }
+#endif
 #endif
 
 #if 1
@@ -928,12 +967,18 @@ void  Core_PC_Slide (CORE_24F    *p_core,
                      CPU_INT32S   slide)
 {
     CPU_INT32U  PC;
+ 
+#if 1
+    if ((p_core->SR & CORE_SR_RA) == 0) {
+#endif
+        memcpy(&PC, (const void *)&p_core->PC[0], sizeof(PC));
     
-    memcpy(&PC, (const void *)&p_core->PC[0], sizeof(PC));
+        PC += slide;
     
-    PC += slide;
-    
-    memcpy((void *)&p_core->PC[0], &PC, sizeof(PC));
+        memcpy((void *)&p_core->PC[0], &PC, sizeof(PC));
+#if 1
+    }
+#endif
 }
 
 void  Core_PC_Set (CORE_24F    *p_core,

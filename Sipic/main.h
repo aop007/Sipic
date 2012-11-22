@@ -52,6 +52,7 @@ int  main (int argc, const char * argv[]);
 #endif
     
 #define  SIPIC_UNIT_TESTING    DEF_DISABLED
+#define  WRITE_REPORT_EN       DEF_DISABLED
 
 //void DLL_API C_STD_CALL init (void);
 void DLL_API C_STD_CALL init_sipic(void);
