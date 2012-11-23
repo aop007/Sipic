@@ -3224,12 +3224,14 @@ void Core_Logical (MEM_24      *p_mem_prog,
         p_core->SR &= ~(CORE_SR_Z);
     }
     
+#if 0
     if (((initial & 0x00008000) &&                              /* C */
          (value   & 0x00008000))) {
         p_core->SR |=   CORE_SR_C;
     } else {
         p_core->SR &= ~(CORE_SR_C);
     }
+#endif
 
     Core_PC_Slide(p_core, 2);
     *p_err = CORE_ERR_NONE;
