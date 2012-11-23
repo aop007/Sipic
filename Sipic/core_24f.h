@@ -18,6 +18,17 @@ extern "C" {
 #include "err.h"
 #include "sipic_cfg.h"
 
+
+typedef  CPU_INT16U  CORE_SR_FLAGS;
+
+enum sr_dir {
+    CORE_SR_DIR_NA   =  0u,
+    CORE_SR_DIR_UP   =  1u,
+    CORE_SR_DIR_DOWN =  2u
+};
+
+typedef enum sr_dir CORE_SR_DIR;
+
 #define  CORE_SR_NONE  0x0000
 #define  CORE_SR_C     0x0001
 #define  CORE_SR_Z     0x0002
@@ -134,10 +145,42 @@ CPU_INT32U  Core_Merge   (CPU_INT32U    value_original,
 CPU_INT08U  Core_GetIPL  (CORE_24F     *p_core);
 
 CPU_INT32U  Core_OPC_Words (OPCODE  opc);
+
+void  Core_UpdateC(CORE_24F       *p_core,
+                   CPU_INT32U      initial_val,
+                   CPU_INT32U      final_val,
+                   CPU_INT32U      size_op);
+
+void  Core_UpdateZ(CORE_24F       *p_core,
+                   CPU_INT32U      final_val);
+
+void  Core_UpdateOV(CORE_24F       *p_core,
+                    CPU_INT32U      initial_val,
+                    CPU_INT32U      final_val,
+                    CORE_SR_DIR     direction,
+                    CPU_INT32U      size_op);
+
+void  Core_UpdateN(CORE_24F       *p_core,
+                   CPU_INT32U      final_val,
+                   CPU_INT32U      size_op);
+
+void  Core_UpdateDC(CORE_24F       *p_core,
+                    CPU_INT32U      initial_val,
+                    CPU_INT32U      final_val,
+                    CPU_INT32U      size_op);
+
+void  Core_UpdateSRFlags(CORE_24F       *p_core,
+                         CORE_SR_FLAGS   flags,
+                         CORE_SR_DIR     direction,
+                         CPU_INT32U      initial_val,
+                         CPU_INT32U      final_val,
+                         CPU_INT32U      size_op);
     
+#if 0
 void        Core_InsertRA_OPC(CORE_DATA  *p_core_data,
                               OPCODE      opc);
-    
+#endif
+
 #if  (CORE_INTEGRITY_CHECK == DEF_ENABLED)
 void        Core_PushContext     (CORE_24F  *p_core);
 void        Core_PopCheckContext (CORE_24F  *p_core);
@@ -161,10 +204,4 @@ extern  CPU_INT32S   Call_Depth;
     
 #define  RA_METHOD      RA_METHOD_NEW
     
-#if 0
-#define CONSOLE_AND_FILE(x)     do { \
-                                    file_buffer_len = sprintf(file_buffer, x); \
-                                    fwrite(file_buffer, 1, file_buffer_len, p_out);                  \
-                                    } while (0)    
-#endif
 #endif

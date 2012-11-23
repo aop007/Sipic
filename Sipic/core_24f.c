@@ -526,7 +526,6 @@ void  Core_Run(CORE_24F  *p_core_24f,
                     Core_MATH_WN_LIT(p_mem_prog, p_mem_data, p_core_24f, args, instruction, p_err);
                     break;
 
-#if 1
                 /* BDf ffff ffff ffff */
                 case CORE_OPC_ADD_M_W:
                 case CORE_OPC_ADDC_M_W:
@@ -555,33 +554,6 @@ void  Core_Run(CORE_24F  *p_core_24f,
                 case CORE_OPC_XOR_M_W:
                     Core_Logical_M_W(p_mem_prog, p_mem_data, p_core_24f, args, instruction, p_err);
                     break;
-#else
-                case CORE_OPC_ADD_B40:
-                    Core_ADD_B40(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
-                    break;
-                    
-                case CORE_OPC_SETM_M_W0:
-                    Core_SETM_M_W0_EF8(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
-                    break;
-                    
-                case CORE_OPC_CLR_M_W0:
-                    Core_CLR_M_W0_EF0(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
-                    break;
-                    
-                case CORE_OPC_ADDC_M_W:
-                    Core_ADDC_B48(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
-                    break;
-
-                case CORE_OPC_INC_M:
-                    Core_INC_EC0(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
-                    break;
-                    
-                case CORE_OPC_MOV_M_W:
-                    Core_MOV_BF8(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
-                    break;
-#endif
-                    
-
                     
                 case CORE_OPC_MUL_UU:
                     Core_MUL_UU_B80(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
@@ -1068,11 +1040,102 @@ CPU_INT08U  Core_GetIPL(CORE_24F  *p_core)
     return (ipl);
 }
 
+void  Core_UpdateSRFlags(CORE_24F       *p_core,
+                         CORE_SR_FLAGS   flags,
+                         CORE_SR_DIR     direction,
+                         CPU_INT32U      initial_val,
+                         CPU_INT32U      final_val,
+                         CPU_INT32U      size_op)
+{
+    if (flags & CORE_SR_C)  { Core_UpdateC (p_core, initial_val, final_val,            size_op); }
+    if (flags & CORE_SR_Z)  { Core_UpdateZ (p_core,              final_val);                     }
+    if (flags & CORE_SR_OV) { Core_UpdateOV(p_core, initial_val, final_val, direction, size_op); }
+    if (flags & CORE_SR_N)  { Core_UpdateN (p_core,              final_val,            size_op); }
+    if (flags & CORE_SR_DC) { Core_UpdateDC(p_core, initial_val, final_val,            size_op); }
+}
+
+void  Core_UpdateDC(CORE_24F       *p_core,
+                    CPU_INT32U      initial_val,
+                    CPU_INT32U      final_val,
+                    CPU_INT32U      size_op)
+{
+    /* Exemple:
+    DS70157C-page 4-26
+    DS70157C-page 5-124 
+    DS70157C-page 5-125 
+    DS70157C-page 5-126 
+    ... 
+    */
+    if (((initial_val & 0x00000100) == 0) && ((final_val & 0x00000100) != 0)) {                
+        p_core->SR |=   CORE_SR_DC;
+    } else {
+        p_core->SR &= ~(CORE_SR_DC);
+    }
+}
+
+void  Core_UpdateN(CORE_24F       *p_core,
+                   CPU_INT32U      final_val,
+                   CPU_INT32U      size_op)
+{
+
+    if (((final_val & 0x00008000) && (size_op == 0)) ||
+        ((final_val & 0x00000080) && (size_op == 1))) {                
+        p_core->SR |=   CORE_SR_N;
+    } else {
+        p_core->SR &= ~(CORE_SR_N);
+    }
+}
+
+void  Core_UpdateOV(CORE_24F       *p_core,
+                    CPU_INT32U      initial_val,
+                    CPU_INT32U      final_val,
+                    CORE_SR_DIR     direction,
+                    CPU_INT32U      size_op)
+{
+    CPU_INT16S  initial_s;
+    CPU_INT16S  final_s;
+
+
+    initial_s = (CPU_INT16S)initial_val;
+    final_s   = (CPU_INT16S)final_val;
+
+    if (((final_s > initial_s) && (direction == CORE_SR_DIR_DOWN)) ||
+        ((final_s < initial_s) && (direction == CORE_SR_DIR_UP))) {                
+        p_core->SR |=   CORE_SR_OV;
+    } else {
+        p_core->SR &= ~(CORE_SR_OV);
+    }
+}
+
+void  Core_UpdateC(CORE_24F       *p_core,
+                   CPU_INT32U      initial_val,
+                   CPU_INT32U      final_val,
+                   CPU_INT32U      size_op)
+{
+    if (((initial_val & 0x00000100) == 0) && ((final_val & 0x00000100) != 0)) {                
+        p_core->SR |=   CORE_SR_C;
+    } else {
+        p_core->SR &= ~(CORE_SR_C);
+    }
+}
+
+void  Core_UpdateZ(CORE_24F       *p_core,
+                   CPU_INT32U      final_val)
+{
+    if (final_val == 0) {                
+        p_core->SR |=   CORE_SR_Z;
+    } else {
+        p_core->SR &= ~(CORE_SR_Z);
+    }
+}
+
+#if 0
 void Core_InsertRA_OPC(CORE_DATA  *p_core_data,
                        OPCODE      opc)
 {
     p_core_data->ra_opc = opc;
 }
+#endif
 
 #if  (CORE_INTEGRITY_CHECK == DEF_ENABLED)
 void Core_PushContext(CORE_24F  *p_core)
@@ -1136,9 +1199,3 @@ void Core_PopCheckContext(CORE_24F  *p_core)
     free(p_core_to_pop);
 }
 #endif
-
-
-
-
-
-
