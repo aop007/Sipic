@@ -231,30 +231,31 @@
   046A  AF0042     btsc.b 0x0042,#0
   046C  E80000     inc.w 0x0000,0x0000
   046E  060000     return
-  04B6  781F85     mov.w 0x000a,[0x001e++]
-  04B8  2000C5     mov.w #0xc,0x000a
-  04BA  090003     repeat #3
+                                                //@DIV3232A
+  04B6  781F85     mov.w 0x000a,[0x001e++]      //PUSH W5
+  04B8  2000C5     mov.w #0xc,0x000a            //MOV  12, W5
+  04BA  090003     repeat #3                    //PUSH W6, W7, W8, W9
   04BC  781FB5     mov.w [0x000a++],[0x001e++]
-  04BE  200009     mov.w #0x0,0x0012
-  04C0  AF0043     btsc.b 0x0043,#0
-  04C2  200019     mov.w #0x1,0x0012
-  04C4  781F89     mov.w 0x0012,[0x001e++]
-  04C6  EB0200     clr.w 0x0008
-  04C8  EB0280     clr.w 0x000a
-  04CA  EB0300     clr.w 0x000c
-  04CC  EB0380     clr.w 0x000e
-  04CE  690403     xor.w 0x0004,0x0006,0x0010
-  04D0  320011     bra z, 0x0004f4
-  04D2  200208     mov.w #0x20,0x0010
-  04D4  A90042     bclr.b 0x0042,#0
-  04D6  D28000     rlc.w 0x0000,0x0000
-  04D8  D28081     rlc.w 0x0002,0x0002
-  04DA  D28204     rlc.w 0x0008,0x0008
-  04DC  D28285     rlc.w 0x000a,0x000a
+  04BE  200009     mov.w #0x0,0x0012            //If   SR_DC == 0
+  04C0  AF0043     btsc.b 0x0043,#0             //     MOV  0, W9
+  04C2  200019     mov.w #0x1,0x0012            //Else MOV  1, W9
+  04C4  781F89     mov.w 0x0012,[0x001e++]      
+  04C6  EB0200     clr.w 0x0008                 //Clear W4  (Quotient? LSW)
+  04C8  EB0280     clr.w 0x000a                 //Clear W5  (Quotient? MSW)
+  04CA  EB0300     clr.w 0x000c                 //Clear W6  (Ruotient? LSW)
+  04CC  EB0380     clr.w 0x000e                 //Clear W7  (Reminder? MSW)
+  04CE  690403     xor.w 0x0004,0x0006,0x0010   //W2 XOR W3 -> W5
+  04D0  320011     bra z, 0x0004f4              //????
+  04D2  200208     mov.w #0x20,0x0010           //32 -> W8  (Shift count)
+  04D4  A90042     bclr.b 0x0042,#0             //Clear Carry
+  04D6  D28000     rlc.w 0x0000,0x0000          //Shift W0 Left with Carry Numerator   LSW
+  04D8  D28081     rlc.w 0x0002,0x0002          //Shift W1 Left with Carry Numerator   MSW
+  04DA  D28204     rlc.w 0x0008,0x0008          //Shift W2 Left with Carry Denominator LSW
+  04DC  D28285     rlc.w 0x000a,0x000a          //Shift W3 Left with Carry Denominator MSW
   04DE  E12803     cp.w 0x000a,0x0006
-  04E0  3A0001     bra nz, 0x0004e4
+  04E0  3A0001     bra nz, 0x0004e4             //if (W5 != W3)           (Denominator MSW != Quotient MSW) Goto 04E4
   04E2  E1A002     cpb.w 0x0008,0x0004
-  04E4  390003     bra nc, 0x0004ec
+  04E4  390003     bra nc, 0x0004ec             //if ((W5) – (W3) – (!C)) (Denominator MSW == Quotient MSW) Goto 04E4
   04E6  520202     sub.w 0x0008,0x0004,0x0008
   04E8  5A8283     subb.w 0x000a,0x0006,0x000a
   04EA  A80042     bset.b 0x0042,#0
