@@ -103,7 +103,9 @@ extern "C" {
 #define  CORE_OPC_IOR_M_W    0xB70000
 #define  CORE_OPC_MOV_WN_M   0xB7A000
 #define  CORE_OPC_SUBR_M_W   0xBD0000
-#define  CORE_OPC_SUBBR_M_W  0xBD8000    
+#define  CORE_OPC_SUBBR_M_W  0xBD8000
+#define  CORE_OPC_MOVD_BE0   0xBE0000
+#define  CORE_OPC_MOVD_BE8   0xBE8000
 #define  CORE_OPC_MOV2_M_W   0xBF8000
 
 #define  CORE_OPC_RLC_WS_WD  0xD28000

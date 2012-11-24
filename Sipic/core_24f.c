@@ -266,6 +266,23 @@ void  Core_Run(CORE_24F  *p_core_24f,
         }
         
         if (found_instruction == DEF_NO) {
+            instruction = opcode & 0xFFF880;
+            args        = opcode & 0x00077F;
+            found_instruction = DEF_YES;
+            
+            switch (instruction) {
+                case CORE_OPC_CP0_WN_SF:
+                    Core_MOVD_BE0(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
+                    break;
+                    
+                    
+                default:
+                    found_instruction = DEF_NO;
+                    break;
+            }
+        }
+        
+        if (found_instruction == DEF_NO) {
             instruction = opcode & 0xFF807F;
             args        = opcode & 0x007F80;
             found_instruction = DEF_YES;
