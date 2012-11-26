@@ -14,6 +14,11 @@
     SimulationController* p_sim_ctrl;
 }
 
+@property (assign) IBOutlet NSTableView *p_mem_view1;
+@property (assign) IBOutlet NSTableView *p_mem_view2;
+@property (assign) IBOutlet NSTableView *p_call_stack;
+@property (assign) IBOutlet NSTableView *p_code_listing;
+
 - (IBAction)sim_step:(id)sender;
 
 @end

@@ -194,14 +194,14 @@
 		690D63B71648A9EC008CB35B /* SipicUI */ = {
 			isa = PBXGroup;
 			children = (
-				690D643F1648D037008CB35B /* AppDelegate.h */,
 				690D64401648D037008CB35B /* AppDelegate.m */,
+				690D643F1648D037008CB35B /* AppDelegate.h */,
 				690D645E1648D037008CB35B /* MainMenu.xib */,
 				690D645F1648D037008CB35B /* MainWindow.xib */,
-				690D64691648D038008CB35B /* SimulationController.h */,
 				690D646A1648D038008CB35B /* SimulationController.m */,
-				690D64711648D038008CB35B /* WindowController.h */,
+				690D64691648D038008CB35B /* SimulationController.h */,
 				690D64721648D038008CB35B /* WindowController.m */,
+				690D64711648D038008CB35B /* WindowController.h */,
 				690D64731648D038008CB35B /* WindowController.xib */,
 				690D63B81648A9EC008CB35B /* Supporting Files */,
 			);

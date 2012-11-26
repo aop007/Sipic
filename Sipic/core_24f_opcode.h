@@ -506,6 +506,12 @@ void Core_SWAP_FD800    (MEM_24      *p_mem_prog,
                          CORE_24F    *p_core,
                          CPU_INT32U   args,
                          CORE_ERR    *p_err);
+    
+void Core_MOVD_BE0(MEM_24      *p_mem_prog,
+                       MEM         *p_mem_data,
+                       CORE_24F    *p_core,
+                       CPU_INT32U   args,
+                       CORE_ERR    *p_err);
 
 #ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
 }

@@ -19,7 +19,7 @@
     self = [super initWithWindow:window];
     if (self) {
         init_sipic();
-        Sim_Run();
+        //Sim_Run();
     }
     
     return self;

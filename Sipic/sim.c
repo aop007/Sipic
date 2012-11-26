@@ -251,49 +251,8 @@ void Sim_Init()
 
 void Sim_Run()
 {
-    SIM        *p_sim;
-    CORE_DATA  *p_core_data;
-    PERI_ERR    peri_err;
-    CORE_ERR    core_err;
-    
-    core_err    = CORE_ERR_NONE;
-    peri_err    = PERI_ERR_NONE;
-    p_sim       = &sim_struct;
-    p_core_data = p_sim->p_core_data;
-    
-    
-    
     while (1) {
-        p_core_data->cycles++;
-        
-        UT_Testting(p_sim);
-
-        /* Process HW */
-        HW_Run(p_sim->p_mem_data,
-               p_sim->p_hw_head,
-               &hw_static_err);
-        
-        /* Process Peripherals */
-        Peripheral_Run(&core_err,
-                       p_sim->p_mem_prog,
-                       p_sim->p_mem_data,
-                       p_sim->p_core,
-                       p_sim->p_periph_head,
-                       &peri_err);
-        
-        /* Process Core */
-        Core_Run(p_sim->p_core,
-                 p_sim->p_mem_prog,
-                 p_sim->p_mem_data,
-                &core_err);
-        
-        //printf("\r\n%004x", Core_PC_Get(p_sim->p_core));
-        
-        if (core_err != CORE_ERR_NONE) {
-            printf("\r\nCore Error no %d",core_err);
-            printf(" ");
-        }
-        
+        Sim_Step();
     }
 }
 
@@ -306,6 +265,8 @@ void Sim_Step()
     p_core_data = p_sim->p_core_data;
     
     p_core_data->cycles++;
+    
+    UT_Testting(p_sim);
     
     /* Process HW */
     HW_Run(p_sim->p_mem_data,
@@ -325,6 +286,11 @@ void Sim_Step()
              p_sim->p_mem_prog,
              p_sim->p_mem_data,
             &core_static_err);
+    
+    if (core_static_err != CORE_ERR_NONE) {
+        printf("\r\nCore Error no %d",core_static_err);
+        printf(" ");
+    }
 }
 
 unsigned short DLL_API C_STD_CALL Sim_GetValueFromDataMem(unsigned short addr)

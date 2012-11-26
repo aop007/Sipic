@@ -271,7 +271,7 @@ void  Core_Run(CORE_24F  *p_core_24f,
             found_instruction = DEF_YES;
             
             switch (instruction) {
-                case CORE_OPC_CP0_WN_SF:
+                case CORE_OPC_MOVD_BE0:
                     Core_MOVD_BE0(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
                     break;
                     
