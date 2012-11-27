@@ -31,7 +31,9 @@ namespace SipicWindows
                 else {
                     string addr_string = text.Substring(2, 4);
                     directive = text.Substring(19);
-                    addr = int.Parse(addr_string, System.Globalization.NumberStyles.HexNumber);
+                    try {
+                        addr = int.Parse(addr_string, System.Globalization.NumberStyles.HexNumber);
+                    } catch { }
                 }
             }
         }

@@ -149,7 +149,7 @@ void  Core_Run(CORE_24F  *p_core_24f,
 #endif
 
 #if 1
-        if ((Core_PC_Get(p_core_24f) == 0x04D6)) { // && (p_core_24f->W[0] == 0)){
+        if ((Core_PC_Get(p_core_24f) == 0x094E)) { // && (p_core_24f->W[0] == 0)){
             printf("");
             uncaught_instructions *= 1;
 #ifdef WRITE_REPORT
@@ -1129,7 +1129,7 @@ void  Core_UpdateC(CORE_24F       *p_core,
                    CPU_INT32U      final_val,
                    CPU_INT32U      size_op)
 {
-    if (((initial_val & 0x00000100) == 0) && ((final_val & 0x00000100) != 0)) {                
+    if (((initial_val & 0x00010000) == 0) && ((final_val & 0x00010000) != 0)) {                
         p_core->SR |=   CORE_SR_C;
     } else {
         p_core->SR &= ~(CORE_SR_C);

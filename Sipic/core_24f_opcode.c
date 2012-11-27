@@ -1159,6 +1159,7 @@ void Core_Logical_W_L_W(MEM_24      *p_mem_prog,
     lit       =  args & 0x00001F;
     
     flags     = CORE_SR_NONE;
+    dir       = CORE_SR_DIR_NA;
     mem_err   = MEM_ERR_NONE;
     
     if (size_op != 0) {
