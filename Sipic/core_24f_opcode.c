@@ -1512,6 +1512,62 @@ void  Core_BIT_LOGIC_W (MEM_24      *p_mem_prog,
     *p_err = CORE_ERR_NONE;
 }
 
+void Core_BIT_Manip_M (MEM_24     *p_mem_prog,
+                      MEM         *p_mem_data,
+                      CORE_24F    *p_core,
+                      CPU_INT32U   args,
+                      OPCODE       operation,
+                      CORE_ERR    *p_err)
+{
+    CPU_INT32U  addr;
+    CPU_INT16U  bit;
+    MEM_ERR     mem_err;
+    CPU_INT32U  value;
+    
+    bit  = (args & 0x00E000) >> 13;
+    addr =  args & 0x001FFF;
+    
+    if (addr & 0x1) {
+        bit += 8;
+    }
+    
+    value = Mem_Get(p_mem_data, (addr & 0x001FFE), &mem_err);
+    
+    if (mem_err != MEM_ERR_NONE) {
+        *p_err = CORE_ERR_INVALID_MEM;
+        return;
+    }
+    
+    switch (operation) {
+        case CORE_OPC_BSET_M:
+            value |= (1 << bit);
+            break;
+
+        case CORE_OPC_BCLR_M:
+            value &= ~(1 << bit);
+            break;
+
+        case CORE_OPC_BTG_M:
+            value ^= (1 << bit);
+            break;
+
+        default:
+            *p_err = CORE_ERR_INVALID_OPC_ARG;
+            return;
+    }
+
+    Mem_Set(p_mem_data, (addr & 0x001FFE), value, &mem_err);
+    
+    if (mem_err != MEM_ERR_NONE) {
+        *p_err = CORE_ERR_INVALID_MEM;
+        return;
+    }
+    
+    Core_PC_Slide(p_core, 2);
+    
+    *p_err = CORE_ERR_NONE;
+}
+
 void  Core_BSET_M_A8 (MEM_24      *p_mem_prog,
                       MEM         *p_mem_data,
                       CORE_24F    *p_core,
@@ -2262,8 +2318,14 @@ void Core_Logical (MEM_24      *p_mem_prog,
             break;
             
             
-        case CORE_OPC_ASR_W:
         case CORE_OPC_COM_W:
+            value      ^= 0xFFFF;
+            flags       = CORE_SR_N | CORE_SR_Z;
+            direction   = CORE_SR_DIR_NA;
+            break;
+
+        case CORE_OPC_ASR_W:
+        
         case CORE_OPC_LSR_W:
         case CORE_OPC_RLNC_W:
         case CORE_OPC_RRNC_W:
@@ -2284,7 +2346,7 @@ void Core_Logical (MEM_24      *p_mem_prog,
     switch (dst_addr_mode) {
         case CORE_OPC_ADDR_MODE_DIR:
             dst_mask = Core_MaskGet(size_op, 0); 
-            p_core->W[dst_w] = value;
+            p_core->W[dst_w] = value & dst_mask;
             break;
             
         case CORE_OPC_ADDR_MODE_IND:

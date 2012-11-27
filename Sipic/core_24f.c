@@ -149,7 +149,8 @@ void  Core_Run(CORE_24F  *p_core_24f,
 #endif
 
 #if 1
-        if ((Core_PC_Get(p_core_24f) == 0x094E)) { // && (p_core_24f->W[0] == 0)){
+        if ((Core_PC_Get(p_core_24f) == 0x0A28)) { // && (p_core_24f->W[0] == 0)){
+            //EnableDebugPrintf = 1;
             printf("");
             uncaught_instructions *= 1;
 #ifdef WRITE_REPORT
@@ -157,6 +158,18 @@ void  Core_Run(CORE_24F  *p_core_24f,
 #endif
         }
 #endif
+
+#if 1
+        if ((Core_PC_Get(p_core_24f) == 0x0A3A)) { // && (p_core_24f->W[0] == 0)){
+            //EnableDebugPrintf = 1;
+            printf("");
+            uncaught_instructions *= 1;
+#ifdef WRITE_REPORT
+            fflush(p_out);
+#endif
+        }
+#endif
+
 
 #if 1
         if ((Core_PC_Get(p_core_24f) == 0x30AA)) { // && (p_core_24f->W[0] == 0)){
@@ -661,6 +674,12 @@ void  Core_Run(CORE_24F  *p_core_24f,
                     break;
 
                 case CORE_OPC_BSET_M:
+                case CORE_OPC_BCLR_M:
+                case CORE_OPC_BTG_M:
+#if 1
+                    Core_BIT_Manip_M(p_mem_prog, p_mem_data, p_core_24f, args, instruction, p_err);
+                    break;
+#else
                     Core_BSET_M_A8(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
                     break;
                     
@@ -668,7 +687,7 @@ void  Core_Run(CORE_24F  *p_core_24f,
                 case CORE_OPC_BCLR_M:
                     Core_BCLR_M_A9(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
                     break;
-                    
+#endif               
                 case CORE_OPC_BTSS:
                     Core_BTSS_AE(p_mem_prog, p_mem_data, p_core_24f, args, p_err);
                     break;
