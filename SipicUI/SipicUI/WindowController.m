@@ -19,7 +19,9 @@
     self = [super initWithWindow:window];
     if (self) {
         init_sipic();
-        //Sim_Run();
+        
+//        p_tvc = [[TableViewsController alloc] init];
+        
     }
     
     return self;
@@ -40,6 +42,10 @@
 - (IBAction)sim_step:(id)sender
 {
     Sim_Step();
+    [_p_mem_view1 reloadData];
+    [_p_mem_view2 reloadData];
+    [_p_call_stack reloadData];
+    [_p_code_listing reloadData];
 }
 
 @end

@@ -221,6 +221,9 @@ void Peri_ISR_FromVect(CPU_INT32U    isr_vect_addr,
 #endif
     
     PC      = Core_PC_Get(p_core);
+    
+    Sim_LinkCall(PC);
+    
     SR      = (p_core->SR & 0x00FF);
     CORCON  = (p_core->CORCON & CORE_CORECON_IPL3);
     

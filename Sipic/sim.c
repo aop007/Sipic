@@ -246,7 +246,19 @@ void Sim_Init()
     
     
     p_sim->p_periph_head = p_peri_next;
+    
+    
+    /**********************************/
+    
+    CallStackHead = (CALL_STACK_ENTRY *)malloc(sizeof(CALL_STACK_ENTRY));
 
+    if (CallStackHead == NULL) {
+        return;
+    }
+    
+    CallStackHead->addr  = 0x000000;
+    CallStackHead->depth = 1;
+    CallStackHead->next  = NULL;
 }
 
 void Sim_Run()
@@ -306,3 +318,49 @@ unsigned int  DLL_API C_STD_CALL Sim_GetOPCFromProgMem(unsigned int addr)
 
     return (Mem_Get24(sim_struct.p_mem_prog, addr, &mem_err));
 }
+
+void Sim_LinkCall(CPU_INT32U  PC)
+{
+    CALL_STACK_ENTRY  *p_new_entry;
+    
+
+    p_new_entry = (CALL_STACK_ENTRY *)malloc(sizeof(CALL_STACK_ENTRY));
+    
+    if (p_new_entry == NULL) {
+        return;
+    }
+    
+    p_new_entry->addr  = PC;
+    p_new_entry->depth = CallStackHead->depth + 1;
+    p_new_entry->next  = CallStackHead;
+    
+    CallStackHead = p_new_entry;
+}
+
+void Sim_UnlinkCall()
+{
+    CALL_STACK_ENTRY  *p_old_entry;
+    
+    
+    p_old_entry   = CallStackHead;
+    CallStackHead = CallStackHead->next;
+    
+    free(p_old_entry);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

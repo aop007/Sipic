@@ -11,6 +11,7 @@
 #include <string.h>
 #include "core_24f_opcode.h"
 #include "main.h"
+#include "sim.h"
 
 CPU_INT32S  Call_Depth = 0;
 
@@ -78,6 +79,9 @@ void  Core_CALL_02            (MEM_24      *p_mem_prog,
     OPCODE      next_word;
     MEM_ERR     mem_err;
     
+    
+    Sim_LinkCall(Core_PC_Get(p_core));
+    
     Core_PC_Slide(p_core, 2);
     
     next_word   = Mem_Get24(p_mem_prog, Core_PC_Get(p_core), &mem_err);
@@ -112,6 +116,7 @@ void  Core_CALL_02            (MEM_24      *p_mem_prog,
     Core_PC_Set(p_core, pc);
     
     Call_Depth++;
+    
     
     *p_err = CORE_ERR_NONE;
 }
@@ -163,6 +168,7 @@ void Core_RETURN_060  (MEM_24      *p_mem_prog,
     
     Core_PC_Set(p_core, word1 << 16 | word2);
     
+    Sim_UnlinkCall();
     Call_Depth--;
     
     *p_err = CORE_ERR_NONE;
@@ -209,6 +215,7 @@ void Core_RETFIE_064 (MEM_24      *p_mem_prog,
     p_core->CORCON &= ~(CORE_CORECON_IPL3);
     p_core->CORCON |=   IPL3;
     
+    Sim_UnlinkCall();
     Call_Depth--;
     
     *p_err = CORE_ERR_NONE;

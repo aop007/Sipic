@@ -27,6 +27,16 @@ typedef  struct  sim {
     HW_MOD      *p_hw_head;
     CORE_DATA   *p_core_data;
 } SIM;
+    
+struct call_stack_entry;
+
+typedef  struct  call_stack_entry {
+    struct call_stack_entry  *next;
+    CPU_INT32U  addr;
+    CPU_INT32U  depth;
+} CALL_STACK_ENTRY;
+    
+CALL_STACK_ENTRY  *CallStackHead;
 
 void                                Sim_Init();
 
@@ -36,7 +46,12 @@ void            DLL_API             Sim_Step();
 
 unsigned short  DLL_API C_STD_CALL  Sim_GetValueFromDataMem(unsigned short addr);
 
-unsigned int    DLL_API C_STD_CALL  Sim_GetOPCFromProgMem(unsigned int addr);
+unsigned int    DLL_API C_STD_CALL  Sim_GetOPCFromProgMem  (unsigned int addr);
+    
+void                                Sim_LinkCall           (CPU_INT32U  PC);
+    
+void                                Sim_UnlinkCall         (void);
+    
 
 
 #ifdef __cplusplus /* If this is a C++ compiler, use C linkage */

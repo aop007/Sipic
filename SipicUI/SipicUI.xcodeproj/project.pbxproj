@@ -34,6 +34,7 @@
 		692960361650A89C00B07386 /* hardware.c in Sources */ = {isa = PBXBuildFile; fileRef = 692960351650A89C00B07386 /* hardware.c */; };
 		6929603A1650BAA800B07386 /* hw_if.c in Sources */ = {isa = PBXBuildFile; fileRef = 692960391650BAA700B07386 /* hw_if.c */; };
 		6929603C1651BFD300B07386 /* peri_tmr.c in Sources */ = {isa = PBXBuildFile; fileRef = 6929603B1651BFD300B07386 /* peri_tmr.c */; };
+		698C745E1664504C00D0151E /* TableViewsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 698C745D1664504C00D0151E /* TableViewsController.m */; };
 		69C612A0165D8CD500558B6C /* unit_testing.c in Sources */ = {isa = PBXBuildFile; fileRef = 69C6129E165D8CD500558B6C /* unit_testing.c */; };
 		69CF4C45165B007F003186FA /* peri_cni.c in Sources */ = {isa = PBXBuildFile; fileRef = 69CF4C43165B007F003186FA /* peri_cni.c */; };
 		69CF4C46165B007F003186FA /* peri_io.c in Sources */ = {isa = PBXBuildFile; fileRef = 69CF4C44165B007F003186FA /* peri_io.c */; };
@@ -104,6 +105,8 @@
 		692960391650BAA700B07386 /* hw_if.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = hw_if.c; path = ../Sipic/hw_if.c; sourceTree = "<group>"; };
 		6929603B1651BFD300B07386 /* peri_tmr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = peri_tmr.c; path = ../Sipic/peri_tmr.c; sourceTree = "<group>"; };
 		6947D0BD16531FB70021C276 /* main_memory_map.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = main_memory_map.txt; sourceTree = "<group>"; };
+		698C745C1664504C00D0151E /* TableViewsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewsController.h; sourceTree = "<group>"; };
+		698C745D1664504C00D0151E /* TableViewsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewsController.m; sourceTree = "<group>"; };
 		69C61281165B31AB00558B6C /* Chime.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = Chime.c; path = "../../../../dsPIC workspace/Chime.c"; sourceTree = "<group>"; };
 		69C61282165B31AB00558B6C /* Chime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Chime.h; path = "../../../../dsPIC workspace/Chime.h"; sourceTree = "<group>"; };
 		69C61283165B31AB00558B6C /* customTime.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = customTime.c; path = "../../../../dsPIC workspace/customTime.c"; sourceTree = "<group>"; };
@@ -154,8 +157,6 @@
 		690D63A21648A9EC008CB35B = {
 			isa = PBXGroup;
 			children = (
-				69C6129E165D8CD500558B6C /* unit_testing.c */,
-				69C6129F165D8CD500558B6C /* unit_testing.h */,
 				690D64931648D0E5008CB35B /* Core */,
 				690D64071648AA43008CB35B /* Products */,
 				690D63B71648A9EC008CB35B /* SipicUI */,
@@ -194,6 +195,8 @@
 		690D63B71648A9EC008CB35B /* SipicUI */ = {
 			isa = PBXGroup;
 			children = (
+				698C745D1664504C00D0151E /* TableViewsController.m */,
+				698C745C1664504C00D0151E /* TableViewsController.h */,
 				690D64401648D037008CB35B /* AppDelegate.m */,
 				690D643F1648D037008CB35B /* AppDelegate.h */,
 				690D645E1648D037008CB35B /* MainMenu.xib */,
@@ -232,6 +235,8 @@
 		690D64931648D0E5008CB35B /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				69C6129E165D8CD500558B6C /* unit_testing.c */,
+				69C6129F165D8CD500558B6C /* unit_testing.h */,
 				690D64BB1648D105008CB35B /* InputFiles */,
 				690D64941648D0F9008CB35B /* main.c */,
 				690D64951648D0F9008CB35B /* main.h */,
@@ -418,6 +423,7 @@
 				69CF4C45165B007F003186FA /* peri_cni.c in Sources */,
 				69CF4C46165B007F003186FA /* peri_io.c in Sources */,
 				69C612A0165D8CD500558B6C /* unit_testing.c in Sources */,
+				698C745E1664504C00D0151E /* TableViewsController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

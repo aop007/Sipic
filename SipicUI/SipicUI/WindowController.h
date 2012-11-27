@@ -8,10 +8,14 @@
 
 #import <Cocoa/Cocoa.h>
 #import "SimulationController.h"
+#import "TableViewsController.h"
+
 
 @interface WindowController : NSWindowController
 {
-    SimulationController* p_sim_ctrl;
+//    TableViewsController  *p_tvc;
+    SimulationController  *p_sim_ctrl;
+
 }
 
 @property (assign) IBOutlet NSTableView *p_mem_view1;
