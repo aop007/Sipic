@@ -13,7 +13,7 @@
 -(id)initWithAddr:(int)address andName:(NSString *)name
 {
     _addr     = [[NSNumber alloc] initWithInt:address];
-    _fnctName = [name copy];
+    _fnctName = [name retain];
     
     return self;
 }

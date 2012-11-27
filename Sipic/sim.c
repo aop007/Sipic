@@ -257,7 +257,7 @@ void Sim_Init()
     }
     
     CallStackHead->addr  = 0x000000;
-    CallStackHead->depth = 1;
+    CallStackHead->depth = 0;
     CallStackHead->next  = NULL;
 }
 
@@ -372,7 +372,7 @@ CPU_INT32U Sim_AddrForDepth(CPU_INT32U  depth)
             p_stack_entry = p_stack_entry->next;
         }
         
-        if (p_stack_entry->depth != depth) {
+        if (p_stack_entry->depth != (depth +1)) {
             printf("Error Depth mismatch");
         }
         

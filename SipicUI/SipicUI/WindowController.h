@@ -24,5 +24,6 @@
 @property (assign) IBOutlet NSTableView *p_code_listing;
 
 - (IBAction)sim_step:(id)sender;
+- (IBAction)sim_run_pause:(id)sender;
 
 @end

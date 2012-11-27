@@ -48,4 +48,18 @@
     [_p_code_listing reloadData];
 }
 
+- (IBAction)sim_run_pause:(id)sender
+{
+    CPU_INT32U  loop = 100;
+    
+    while (loop-- > 0) {
+        Sim_Step();
+    }
+    
+    [_p_mem_view1 reloadData];
+    [_p_mem_view2 reloadData];
+    [_p_call_stack reloadData];
+    [_p_code_listing reloadData];
+}
+
 @end

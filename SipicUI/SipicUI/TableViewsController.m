@@ -72,6 +72,8 @@
     NSNumber  *number;
     NSString  *value;
     
+    value = [aTableColumn identifier];
+    
     if ([[aTableColumn identifier] isEqualToString:@"Addr"]) {
         number = [[NSNumber alloc]initWithInt:(NSInteger)Sim_AddrForDepth(rowIndex)];
         value  = [NSString stringWithFormat:@"%06X", [number intValue]];

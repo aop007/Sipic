@@ -13,8 +13,6 @@
 
 -(id)init
 {
-    self = [super init];
-    if (self) {
         NSMutableArray *sortingArray = [[NSMutableArray alloc] init];
         int ix;
         int rom_start_ix;
@@ -61,7 +59,7 @@
             ix++;
         }
         
-        symbolList = [sortingArray sortedArrayUsingSelector:@selector(compare:)];
+        symbolList = [[NSArray alloc] initWithArray:[sortingArray sortedArrayUsingSelector:@selector(compare:)]];
         
 #if 1
         for (ix = 0 ; ix < [symbolList count] ; ix++) {
@@ -70,8 +68,7 @@
             NSLog(@"%X\t%@",[psym.addr intValue], psym.fnctName);
         }
 #endif
-    }
-    
+
     return self;
     
 }
@@ -83,6 +80,10 @@
     int test_range = hi_range / 2;
     SymbolAddrName  *p_test_sym;
 
+    if (addr == 0) {
+        return @"Reset";
+    }
+    
     while ((hi_range - lo_range) > 1) {
         p_test_sym = [symbolList objectAtIndex:test_range];
         
