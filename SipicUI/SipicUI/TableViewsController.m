@@ -15,7 +15,7 @@
 {
     self = [super init];
     if (self) {
-        p_call_stack = [[NSMutableArray alloc] init];
+        p_symbols = [[ProjectSymbols alloc] init];
     }
     
     return self;
@@ -31,7 +31,7 @@
             return MEM_VIEW_SIZE_WORD;
             
         case TABLE_VIEW_CALL_STACK_TAG:
-            return [p_call_stack count];
+            return Sim_GetCallDepth();
             
         case TABLE_VIEW_CODE_LISTING_TAG:
             return [p_code_listing count];
@@ -43,7 +43,7 @@
 
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
-    NSString *returning;
+    NSString *returning;  
     
     switch ([aTableView tag]) {
         case TABLE_VIEW_MEM_VIEW1_TAG:
@@ -51,9 +51,12 @@
             returning = [self GetDataMemoryTable:aTableColumn row:rowIndex];
             return returning;
             
-#if 0
+
         case TABLE_VIEW_CALL_STACK_TAG:
-            return [p_call_stack count];
+            returning = [self GetCallStackTable:aTableColumn row:rowIndex];
+            return returning;
+            
+#if 0     
             
         case TABLE_VIEW_CODE_LISTING_TAG:
             return [p_code_listing count];
@@ -61,6 +64,23 @@
         default:
             return 0;
     }
+}
+
+
+- (NSString *)GetCallStackTable:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
+{
+    NSNumber  *number;
+    NSString  *value;
+    
+    if ([[aTableColumn identifier] isEqualToString:@"Addr"]) {
+        number = [[NSNumber alloc]initWithInt:(NSInteger)Sim_AddrForDepth(rowIndex)];
+        value  = [NSString stringWithFormat:@"%06X", [number intValue]];
+    } else {
+        
+        value = [p_symbols getSymbolAtAddr:Sim_AddrForDepth(rowIndex)];
+    }
+    
+    return value;
 }
 
 - (NSString *)GetDataMemoryTable:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
@@ -76,7 +96,7 @@
     
     if ([[aTableColumn identifier] isEqualToString:@"Addr"]) {
         number = [[NSNumber alloc]initWithLong:(rowIndex * 2)];
-        value =[NSString stringWithFormat:@"%04X", [number intValue]];
+        value  = [NSString stringWithFormat:@"%04X", [number intValue]];
     } else {
         number = [[NSNumber alloc] initWithInt:Sim_GetValueFromDataMem(rowIndex*2)];
         value = [NSString stringWithFormat:@"%04X", [number intValue]];

@@ -35,6 +35,8 @@
 		6929603A1650BAA800B07386 /* hw_if.c in Sources */ = {isa = PBXBuildFile; fileRef = 692960391650BAA700B07386 /* hw_if.c */; };
 		6929603C1651BFD300B07386 /* peri_tmr.c in Sources */ = {isa = PBXBuildFile; fileRef = 6929603B1651BFD300B07386 /* peri_tmr.c */; };
 		698C745E1664504C00D0151E /* TableViewsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 698C745D1664504C00D0151E /* TableViewsController.m */; };
+		698C746116646DA800D0151E /* ProjectSymbols.m in Sources */ = {isa = PBXBuildFile; fileRef = 698C746016646DA800D0151E /* ProjectSymbols.m */; };
+		698C746716647C2100D0151E /* SymbolAddrName.m in Sources */ = {isa = PBXBuildFile; fileRef = 698C746616647C2100D0151E /* SymbolAddrName.m */; };
 		69C612A0165D8CD500558B6C /* unit_testing.c in Sources */ = {isa = PBXBuildFile; fileRef = 69C6129E165D8CD500558B6C /* unit_testing.c */; };
 		69CF4C45165B007F003186FA /* peri_cni.c in Sources */ = {isa = PBXBuildFile; fileRef = 69CF4C43165B007F003186FA /* peri_cni.c */; };
 		69CF4C46165B007F003186FA /* peri_io.c in Sources */ = {isa = PBXBuildFile; fileRef = 69CF4C44165B007F003186FA /* peri_io.c */; };
@@ -107,6 +109,10 @@
 		6947D0BD16531FB70021C276 /* main_memory_map.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = main_memory_map.txt; sourceTree = "<group>"; };
 		698C745C1664504C00D0151E /* TableViewsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewsController.h; sourceTree = "<group>"; };
 		698C745D1664504C00D0151E /* TableViewsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewsController.m; sourceTree = "<group>"; };
+		698C745F16646DA800D0151E /* ProjectSymbols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectSymbols.h; sourceTree = "<group>"; };
+		698C746016646DA800D0151E /* ProjectSymbols.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectSymbols.m; sourceTree = "<group>"; };
+		698C746516647C2100D0151E /* SymbolAddrName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SymbolAddrName.h; sourceTree = "<group>"; };
+		698C746616647C2100D0151E /* SymbolAddrName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SymbolAddrName.m; sourceTree = "<group>"; };
 		69C61281165B31AB00558B6C /* Chime.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = Chime.c; path = "../../../../dsPIC workspace/Chime.c"; sourceTree = "<group>"; };
 		69C61282165B31AB00558B6C /* Chime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Chime.h; path = "../../../../dsPIC workspace/Chime.h"; sourceTree = "<group>"; };
 		69C61283165B31AB00558B6C /* customTime.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = customTime.c; path = "../../../../dsPIC workspace/customTime.c"; sourceTree = "<group>"; };
@@ -195,6 +201,10 @@
 		690D63B71648A9EC008CB35B /* SipicUI */ = {
 			isa = PBXGroup;
 			children = (
+				698C746616647C2100D0151E /* SymbolAddrName.m */,
+				698C746516647C2100D0151E /* SymbolAddrName.h */,
+				698C746016646DA800D0151E /* ProjectSymbols.m */,
+				698C745F16646DA800D0151E /* ProjectSymbols.h */,
 				698C745D1664504C00D0151E /* TableViewsController.m */,
 				698C745C1664504C00D0151E /* TableViewsController.h */,
 				690D64401648D037008CB35B /* AppDelegate.m */,
@@ -424,6 +434,8 @@
 				69CF4C46165B007F003186FA /* peri_io.c in Sources */,
 				69C612A0165D8CD500558B6C /* unit_testing.c in Sources */,
 				698C745E1664504C00D0151E /* TableViewsController.m in Sources */,
+				698C746116646DA800D0151E /* ProjectSymbols.m in Sources */,
+				698C746716647C2100D0151E /* SymbolAddrName.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

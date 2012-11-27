@@ -348,13 +348,37 @@ void Sim_UnlinkCall()
     free(p_old_entry);
 }
 
+CPU_INT32U Sim_GetCallDepth (void)
+{
+    return Call_Depth + 1;
+}
 
-
-
-
-
-
-
+CPU_INT32U Sim_AddrForDepth(CPU_INT32U  depth)
+{
+    CPU_INT32U         ix;
+    CPU_INT32U         levels;
+    CALL_STACK_ENTRY  *p_stack_entry;
+    CORE_24F          *p_core;
+    
+    p_core = sim_struct.p_core;
+    
+    if (depth == Call_Depth) {
+        return Core_PC_Get(p_core);
+    } else {
+        p_stack_entry = CallStackHead;
+        levels        = Call_Depth - depth - 1;
+        
+        for (ix = 0 ; ix < levels ; ix++) {
+            p_stack_entry = p_stack_entry->next;
+        }
+        
+        if (p_stack_entry->depth != depth) {
+            printf("Error Depth mismatch");
+        }
+        
+        return (p_stack_entry->addr);
+    }
+}
 
 
 

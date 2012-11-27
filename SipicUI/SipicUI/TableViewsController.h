@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ProjectSymbols.h"
 
 
 #define  TABLE_VIEW_MEM_VIEW1_TAG       0u
@@ -19,7 +20,7 @@
 
 @interface TableViewsController : NSObject <NSTableViewDataSource>
 {
-    NSMutableArray        *p_call_stack;
+    ProjectSymbols        *p_symbols;
     NSArray               *p_code_listing;
 }
 

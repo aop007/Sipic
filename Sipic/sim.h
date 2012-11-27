@@ -52,7 +52,9 @@ void                                Sim_LinkCall           (CPU_INT32U  PC);
     
 void                                Sim_UnlinkCall         (void);
     
-
+CPU_INT32U                          Sim_GetCallDepth       (void);
+    
+CPU_INT32U                          Sim_AddrForDepth       (CPU_INT32U  depth);
 
 #ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
 }
