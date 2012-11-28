@@ -34,7 +34,7 @@ extern "C" {
 
 #define  SIPIC_CFG_PC_START        0u
 
-
+#define  DIVISION_BYPASS           DEF_ENABLED
 
 
 

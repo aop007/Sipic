@@ -75,7 +75,8 @@ void  Core_CALL_02            (MEM_24      *p_mem_prog,
                                CPU_INT32U   args,
                                CORE_ERR    *p_err)
 {
-    CPU_INT32U  pc;
+    CPU_INT32U  pc_current;
+    CPU_INT32U  pc_call;
     OPCODE      next_word;
     MEM_ERR     mem_err;
     
@@ -90,30 +91,47 @@ void  Core_CALL_02            (MEM_24      *p_mem_prog,
         *p_err = CORE_ERR_INVALID_MEM;
         return;
     }
+
+    pc_call = (next_word & 0x00007F) << 16 | (args & 0x00FFFE);
+
+#if  (DIVISION_BYPASS == DEF_ENABLED)
+    switch (pc_call) {
+        case 0x0004B6:
+            Core_DIV3232A(p_mem_prog,
+                          p_mem_data,
+                          p_core,
+                          p_err);
+
+            Core_PC_Slide(p_core, 2);
+            *p_err = CORE_ERR_NONE;
+            return;
+
+        default:
+            break;
+    }
     
+#endif
     Core_PC_Slide(p_core, 2);
 
-    pc = Core_PC_Get(p_core);
+    pc_current = Core_PC_Get(p_core);
     
-    Core_Push((pc  & 0x00FFFF), p_core, p_mem_data, p_err);
+    Core_Push((pc_current  & 0x00FFFF), p_core, p_mem_data, p_err);
     
     if (*p_err != CORE_ERR_NONE) {
         return;
     }
     
-    Core_Push(((pc & 0xFF0000) >> 16), p_core, p_mem_data, p_err);
+    Core_Push(((pc_current & 0xFF0000) >> 16), p_core, p_mem_data, p_err);
 
     if (*p_err != CORE_ERR_NONE) {
         return;
     }
     
-    pc = (next_word & 0x00007F) << 16 | (args & 0x00FFFE);
-    
-    if (pc >= 0x4000) {
+    if (pc_call >= 0x4000) {
         printf("\r\nPC out of bounds.");
     }
     
-    Core_PC_Set(p_core, pc);
+    Core_PC_Set(p_core, pc_call);
     
     Call_Depth++;
     

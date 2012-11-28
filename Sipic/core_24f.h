@@ -149,6 +149,7 @@ CPU_INT32U  Core_OPC_Words (OPCODE  opc);
 void  Core_UpdateC(CORE_24F       *p_core,
                    CPU_INT32U      initial_val,
                    CPU_INT32U      final_val,
+                   CORE_SR_DIR     direction,
                    CPU_INT32U      size_op);
 
 void  Core_UpdateZ(CORE_24F       *p_core,
@@ -167,6 +168,7 @@ void  Core_UpdateN(CORE_24F       *p_core,
 void  Core_UpdateDC(CORE_24F       *p_core,
                     CPU_INT32U      initial_val,
                     CPU_INT32U      final_val,
+                    CORE_SR_DIR     direction,
                     CPU_INT32U      size_op);
 
 void  Core_UpdateSRFlags(CORE_24F       *p_core,
@@ -175,7 +177,14 @@ void  Core_UpdateSRFlags(CORE_24F       *p_core,
                          CPU_INT32U      initial_val,
                          CPU_INT32U      final_val,
                          CPU_INT32U      size_op);
-    
+
+#if  (DIVISION_BYPASS == DEF_ENABLED)
+void Core_DIV3232A (MEM_24      *p_mem_prog,
+                    MEM         *p_mem_data,
+                    CORE_24F    *p_core,
+                    CORE_ERR    *p_err);
+#endif    
+
 #if 0
 void        Core_InsertRA_OPC(CORE_DATA  *p_core_data,
                               OPCODE      opc);

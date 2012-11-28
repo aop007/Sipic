@@ -1083,16 +1083,17 @@ void  Core_UpdateSRFlags(CORE_24F       *p_core,
                          CPU_INT32U      final_val,
                          CPU_INT32U      size_op)
 {
-    if (flags & CORE_SR_C)  { Core_UpdateC (p_core, initial_val, final_val,            size_op); }
+    if (flags & CORE_SR_C)  { Core_UpdateC (p_core, initial_val, final_val, direction, size_op); }
     if (flags & CORE_SR_Z)  { Core_UpdateZ (p_core,              final_val);                     }
     if (flags & CORE_SR_OV) { Core_UpdateOV(p_core, initial_val, final_val, direction, size_op); }
     if (flags & CORE_SR_N)  { Core_UpdateN (p_core,              final_val,            size_op); }
-    if (flags & CORE_SR_DC) { Core_UpdateDC(p_core, initial_val, final_val,            size_op); }
+    if (flags & CORE_SR_DC) { Core_UpdateDC(p_core, initial_val, final_val, direction, size_op); }
 }
 
 void  Core_UpdateDC(CORE_24F       *p_core,
                     CPU_INT32U      initial_val,
                     CPU_INT32U      final_val,
+                    CORE_SR_DIR     direction,
                     CPU_INT32U      size_op)
 {
     /* Exemple:
@@ -1146,6 +1147,7 @@ void  Core_UpdateOV(CORE_24F       *p_core,
 void  Core_UpdateC(CORE_24F       *p_core,
                    CPU_INT32U      initial_val,
                    CPU_INT32U      final_val,
+                   CORE_SR_DIR     direction,
                    CPU_INT32U      size_op)
 {
     if (((initial_val & 0x00010000) == 0) && ((final_val & 0x00010000) != 0)) {                
@@ -1233,5 +1235,39 @@ void Core_PopCheckContext(CORE_24F  *p_core)
     }
     
     free(p_core_to_pop);
+}
+#endif
+
+#if  (DIVISION_BYPASS == DEF_ENABLED)
+/*
+Inputs:
+    W0 = Numerator   LSW
+    W1 = Numerator   MSW
+    W2 = Denominator LSW
+    W3 = Denominator NSW
+
+Outputs:
+    W0 = Quotient    LSW
+    W1 = Quotient    MSW
+*/
+
+void Core_DIV3232A (MEM_24      *p_mem_prog,
+                    MEM         *p_mem_data,
+                    CORE_24F    *p_core,
+                    CORE_ERR    *p_err)
+{
+    CPU_INT32U  numerator;
+    CPU_INT32U  denominator;
+    CPU_INT32U  quotient;
+
+    numerator    = (p_core->W[1] << 16) | p_core->W[0];
+    denominator  = (p_core->W[3] << 16) | p_core->W[2];
+
+    quotient     = numerator / denominator;
+
+    p_core->W[1] = quotient >> 16;
+    p_core->W[0] = quotient  & 0xFFFF;
+
+    *p_err = CORE_ERR_NONE;
 }
 #endif
