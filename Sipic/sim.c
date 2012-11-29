@@ -259,6 +259,10 @@ void Sim_Init()
     CallStackHead->addr  = 0x000000;
     CallStackHead->depth = 0;
     CallStackHead->next  = NULL;
+
+    /**********************************/
+
+    UT_Testting(p_sim);
 }
 
 void Sim_Run()
@@ -277,9 +281,7 @@ void Sim_Step()
     p_core_data = p_sim->p_core_data;
     
     p_core_data->cycles++;
-    
-    UT_Testting(p_sim);
-    
+       
     /* Process HW */
     HW_Run(p_sim->p_mem_data,
            p_sim->p_hw_head,

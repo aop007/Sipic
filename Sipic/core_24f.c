@@ -19,9 +19,9 @@
 CPU_INT32U  RCOUNT_1C06 = 0xFFFFFFFF;
 #endif
 
-CORE_24F * Core_Init(MEM         *p_mem_data,
-                             CPU_INT32U   addr,
-                             CORE_ERR    *p_err)
+CORE_24F  *Core_Init(MEM         *p_mem_data,
+                     CPU_INT32U   addr,
+                     CORE_ERR    *p_err)
 {
     CORE_24F  *p_core;
     MEM_ERR    mem_err;
@@ -34,13 +34,12 @@ CORE_24F * Core_Init(MEM         *p_mem_data,
         return (NULL);
     }
     
-    memset(p_core, 0, sizeof(CORE_24F));
-    
-    p_core->W[15] = 0x0800;
-#ifdef  CORE_CFG_CYCLE_CNTR
-    p_core->CYCLE = 0;
-#endif
-    
+    Core_Reset(p_core, p_err);
+
+    if (*p_err != CORE_ERR_NONE) {
+        return;
+    }
+
     /* Write protection */
     
     Mem_SetAccess(p_mem_data, 0x0042, 0x01EF, &mem_err);        /* Protect SR SRF */
@@ -52,6 +51,16 @@ CORE_24F * Core_Init(MEM         *p_mem_data,
 #endif
 #endif
     return (p_core);
+}
+
+void  Core_Reset(CORE_24F  *p_core,
+                 CORE_ERR  *p_err)
+{
+    memset(p_core, 0, sizeof(CORE_24F));
+    
+    p_core->W[15] = 0x0800;
+    
+    *p_err = CORE_ERR_NONE;
 }
 
 void  Core_Run(CORE_24F  *p_core_24f,
@@ -139,7 +148,7 @@ void  Core_Run(CORE_24F  *p_core_24f,
         }
 #endif
 
-#if 1
+#if 0
         if ((Core_PC_Get(p_core_24f) == 0) && (core_data.cycles != 1)) {
             printf("Reset motofoka.");
 #ifdef WRITE_REPORT
@@ -1103,10 +1112,14 @@ void  Core_UpdateDC(CORE_24F       *p_core,
     DS70157C-page 5-126 
     ... 
     */
-    if (((initial_val & 0x00000100) == 0) && ((final_val & 0x00000100) != 0)) {                
-        p_core->SR |=   CORE_SR_DC;
-    } else {
-        p_core->SR &= ~(CORE_SR_DC);
+    CPU_BOOLEAN  condition1 = ((initial_val & 0x00000100) == 0) && ((final_val & 0x00000100) != 0);
+
+    if (condition1) {
+        if (direction == CORE_SR_DIR_UP) {
+            p_core->SR |=   CORE_SR_DC;
+        } else {
+            p_core->SR &= ~(CORE_SR_DC);
+        }
     }
 }
 
@@ -1150,10 +1163,21 @@ void  Core_UpdateC(CORE_24F       *p_core,
                    CORE_SR_DIR     direction,
                    CPU_INT32U      size_op)
 {
-    if (((initial_val & 0x00010000) == 0) && ((final_val & 0x00010000) != 0)) {                
-        p_core->SR |=   CORE_SR_C;
+    CPU_BOOLEAN  condition1 = ((initial_val & 0x00010000) == 0) && ((final_val & 0x00010000) != 0) && (size_op == 0);
+    CPU_BOOLEAN  condition2 = ((initial_val & 0x00000100) == 0) && ((final_val & 0x00000100) != 0) && (size_op == 1);
+
+    if (condition1 || condition2) {
+        if (direction == CORE_SR_DIR_UP) {
+            p_core->SR |=   CORE_SR_C;
+        } else {
+            p_core->SR &= ~(CORE_SR_C);
+        }
     } else {
-        p_core->SR &= ~(CORE_SR_C);
+        if (direction == CORE_SR_DIR_DOWN) {
+            p_core->SR |=   CORE_SR_C;
+        } else {
+            p_core->SR &= ~(CORE_SR_C);
+        }
     }
 }
 

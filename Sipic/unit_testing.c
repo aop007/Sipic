@@ -38,9 +38,29 @@ CPU_INT32U DS1371_DateToBinary(tm_struct *datetime) {
     return val; 
 }
 
+void  UT_CleanContext(SIM  *p_sim) {
+    CORE_ERR  core_err;
+    
+    Core_Reset(p_sim->p_core, &core_err);
+}
+
 void  UT_Testting(SIM  *p_sim)
 {
-    CORE_24F    *p_core;
+    UT_CleanContext(p_sim);
+    UT_SUB_F_EX1(p_sim);
+
+    UT_CleanContext(p_sim);
+    UT_SUB_F_EX2(p_sim);
+
+    UT_CleanContext(p_sim);
+    UT_DIV_U(p_sim);
+
+    while(1) {
+    
+    }
+
+#if 0
+     CORE_24F    *p_core;
     MEM         *p_mem;
     CPU_INT32U   pc;
     CPU_INT32U   time_binary;
@@ -50,6 +70,7 @@ void  UT_Testting(SIM  *p_sim)
 
     p_core       = p_sim->p_core;
     p_mem        = p_sim->p_mem_data;
+
 
     pc = Core_PC_Get(p_core);
 
@@ -82,7 +103,92 @@ void  UT_Testting(SIM  *p_sim)
 
         time_binary = DS1371_DateToBinary(&time_buffer_after);
     }
+#endif
+}
 
+#define  UT_SUB_F_ADDR_F1  0x0A05
+
+void UT_SUB_F_EX1(SIM * p_sim) {
+    CORE_24F    *p_core;
+    MEM_24      *p_mem;
+    CPU_INT16U   val;
+    MEM_ERR      mem_err;
+    CORE_ERR     core_err;
+     
+
+    p_core       = p_sim->p_core;
+    p_mem        = p_sim->p_mem_prog;
+
+    p_core->W[0] = 0x7804;
+    p_core->SR   = 0x0000;
+
+    Mem_Set(p_sim->p_mem_data, (UT_SUB_F_ADDR_F1 & 0xFFFE), 0x9439, &mem_err);
+
+    /* SUB.B 0x1FFF */
+    Mem_Set24(p_mem, 0, (0xB56000 | UT_SUB_F_ADDR_F1), &mem_err);
+
+    Core_PC_Set(p_core, 0);
+
+    Core_Run(p_sim->p_core,
+             p_sim->p_mem_prog,
+             p_sim->p_mem_data,
+            &core_err);
+
+    val = Mem_Get(p_sim->p_mem_data, (UT_SUB_F_ADDR_F1 & 0xFFFE), &mem_err);
+
+    if (p_core->W[0] != 0x7804) {
+        printf("\r\np_core->W[0] != 0x7804");
+    }
+
+    if (val != 0x9039) {
+        printf("\r\n*0x1FFE != 0x9039");
+    }
+
+    if (p_core->SR != 0x0009) {
+        printf("\r\np_core->SR != 0x0009");
+    }
+}
+
+#define  UT_SUB_F_ADDR_F2  0x0A04
+
+void UT_SUB_F_EX2(SIM * p_sim) {
+    CORE_24F    *p_core;
+    MEM_24      *p_mem;
+    CPU_INT16U   val;
+    MEM_ERR      mem_err;
+    CORE_ERR     core_err;
+     
+
+    p_core       = p_sim->p_core;
+    p_mem        = p_sim->p_mem_prog;
+
+    p_core->W[0] = 0x6234;
+    p_core->SR   = 0x0000;
+
+    Mem_Set(p_sim->p_mem_data, (UT_SUB_F_ADDR_F2 & 0xFFFE), 0x4523, &mem_err);
+
+    Mem_Set24(p_mem, 0, (0xB50000 | UT_SUB_F_ADDR_F2), &mem_err);
+
+    Core_PC_Set(p_core, 0);
+
+    Core_Run(p_sim->p_core,
+             p_sim->p_mem_prog,
+             p_sim->p_mem_data,
+            &core_err);
+
+    val = Mem_Get(p_sim->p_mem_data, (UT_SUB_F_ADDR_F2 & 0xFFFE), &mem_err);
+
+    if (p_core->W[0] != 0xE2EF) {
+        printf("\r\np_core->W[0] != 0xE2EF");
+    }
+
+    if (val != 0x4523) {
+        printf("\r\n*0x1FFE != 0x4523");
+    }
+
+    if (p_core->SR != 0x0008) {
+        printf("\r\np_core->SR != 0x0008");
+    }
 }
 
 void UT_DIV_U(SIM * p_sim) {

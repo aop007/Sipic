@@ -2080,10 +2080,8 @@ void Core_Logical_M_W (MEM_24      *p_mem_prog,
     }
     
     value_0  = Core_Align(value_0, mask);
-    
-    value_0  = CPU_SignExt16(value_0);
-    val_wreg = CPU_SignExt16(p_core->W[0]);
-    
+    val_wreg = p_core->W[0] & Core_MaskGet(size_op, 0);
+
     switch (operation) {
         case CORE_OPC_ADD_M_W:
             value_1 = value_0 + val_wreg;
@@ -2133,6 +2131,16 @@ void Core_Logical_M_W (MEM_24      *p_mem_prog,
             flags   = CORE_SR_N | CORE_SR_Z;
             break;
             
+        case CORE_OPC_SUB_M_W:
+            value_1 = value_0 - val_wreg;
+            flags   = CORE_SR_DC | CORE_SR_N | CORE_SR_OV | CORE_SR_Z | CORE_SR_C;
+            dir     =  CORE_SR_DIR_DOWN;
+            break;
+
+        case CORE_OPC_SETM_M_W:
+            value_1 = 0xFFFF;
+            break;
+            
         case CORE_OPC_NEG_M_W:
         case CORE_OPC_RLC_M_W:
         case CORE_OPC_RLNC_M_W:
@@ -2141,12 +2149,8 @@ void Core_Logical_M_W (MEM_24      *p_mem_prog,
             *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
             return;
             
-        case CORE_OPC_SETM_M_W:
-            value_1 = 0xFFFF;
-            break;
-            
+        
         case CORE_OPC_SL_M_W:
-        case CORE_OPC_SUB_M_W:
         case CORE_OPC_SUBB_M_W:
         case CORE_OPC_SUBBR_M_W:
         case CORE_OPC_SUBR_M_W:

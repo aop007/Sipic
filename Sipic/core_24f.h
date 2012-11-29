@@ -98,9 +98,12 @@ typedef struct core_data {
     OPCODE         ra_opc;
 } CORE_DATA;
 
-CORE_24F * Core_Init(MEM         *p_mem_data,
+CORE_24F  *Core_Init(MEM         *p_mem_data,
                      CPU_INT32U   addr,
                      CORE_ERR    *p_err);
+
+void       Core_Reset(CORE_24F  *p_core,
+                      CORE_ERR  *p_err);
 
 void        Core_Push(CPU_INT32U   val,
                       CORE_24F    *p_core,
