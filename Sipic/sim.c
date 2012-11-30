@@ -262,7 +262,9 @@ void Sim_Init()
 
     /**********************************/
 
+#if  (SIPIC_UNIT_TESTING == DEF_ENABLED)
     UT_Testting(p_sim);
+#endif
 }
 
 void Sim_Run()

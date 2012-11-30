@@ -51,7 +51,6 @@ CPU_BOOLEAN    EnableDebugPrintf;
 int  main (int argc, const char * argv[]);
 #endif
     
-#define  SIPIC_UNIT_TESTING    DEF_DISABLED
 #define  WRITE_REPORT_EN       DEF_DISABLED
 
 

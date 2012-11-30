@@ -14,6 +14,7 @@ extern "C" {
 #endif
 
 #include "mem.h"
+#include "sipic_cfg.h"
 
 static const MEM_CFG mem_cfg_prog_dsPIC30F[7] = {
     /* See http://ww1.microchip.com/downloads/en/DeviceDoc/70157C.pdf Figure 6-3 */
@@ -28,10 +29,15 @@ static const MEM_CFG mem_cfg_prog_dsPIC30F[7] = {
     {"DEVID",              0xFF0000, 0xFFFFFE}
 };
 
-static const MEM_CFG mem_cfg_data_dsPIC30F[3] = {
+static const MEM_CFG mem_cfg_data_dsPIC30F[] = {
     {"SFR Space",               0x0000,   0x07FE},
     {"X Data RAM",              0x0800,   0x09FE},
+#if (SIPIC_UNIT_TESTING == DEF_DISABLED)
     {"Y Data RAM",              0x0A00,   0x0BFE}
+#else
+    {"Y Data RAM",              0x0A00,   0x0BFE},
+    {"UT Data RAM",             0x0C00,   0xFFFE}
+#endif
 };
 
 #ifdef __cplusplus /* If this is a C++ compiler, use C linkage */

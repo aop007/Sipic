@@ -109,7 +109,7 @@ extern "C" {
 #define  CORE_OPC_MOVD_BE8   0xBE8000
 #define  CORE_OPC_MOV2_M_W   0xBF8000
 
-#define  CORE_OPC_RLC_WS_WD  0xD28000
+//#define  CORE_OPC_RLC_WS_WD  0xD28000
 #define  CORE_OPC_SL_M_W     0xD40000
 #define  CORE_OPC_LSR_M_W    0xD50000
 #define  CORE_OPC_ASR_M_W    0xD58000

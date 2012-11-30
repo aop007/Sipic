@@ -2191,7 +2191,7 @@ void Core_Logical (MEM_24      *p_mem_prog,
     switch (dst_addr_mode) {
         case CORE_OPC_ADDR_MODE_DIR:
             dst_mask = Core_MaskGet(size_op, 0); 
-            p_core->W[dst_w] = value & dst_mask;
+            p_core->W[dst_w] = Core_Merge(p_core->W[dst_w], value, dst_mask);
             break;
             
         case CORE_OPC_ADDR_MODE_IND:
