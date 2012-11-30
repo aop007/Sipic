@@ -8,6 +8,13 @@
 
 #include "unit_testing.h"
 
+#define TEST_WREG(wreg, val)    if (!((p_sim->p_core->W[wreg]) == val)) printf("\r\nW[%d] != %04X",wreg,val)
+
+#define TEST_DMEM(addr, val)    if (!((Mem_Get(p_sim->p_mem_data, (addr & 0xFFFE), &mem_err)) == val)) printf("\r\n[%d] != %04X",addr,val)
+
+#define TEST_SR(val)            if (p_sim->p_core->SR != val) printf("\r\nSR != %04X",val)
+
+
 tm_struct   time_buffer_before;
 tm_struct   time_buffer_after;
 CPU_INT32U  time_binary_before;
@@ -54,6 +61,15 @@ void  UT_Testting(SIM  *p_sim)
 
     UT_CleanContext(p_sim);
     UT_DIV_U(p_sim);
+
+    UT_CleanContext(p_sim);
+    UT_DIV_S(p_sim);
+
+    UT_CleanContext(p_sim);
+    UT_XOR_Wb_Ws_Wd(p_sim);
+
+    UT_CleanContext(p_sim);
+    UT_DIV3232A(p_sim);
 
     while(1) {
     
@@ -198,14 +214,15 @@ void UT_DIV_U(SIM * p_sim) {
     CORE_ERR   core_err;
 
 
-    p_core       = p_sim->p_core;
-    p_mem        = p_sim->p_mem_prog;
+    p_core         = p_sim->p_core;
+    p_mem          = p_sim->p_mem_prog;
 
-    p_core->W[0] = 0x5555;
-    p_core->W[1] = 0x1234;
-    p_core->W[7] = 0x8000;
-    p_core->W[8] = 0x0200;
-    p_core->SR   = 0x0000;
+    p_core->W[0]   = 0x5555;
+    p_core->W[1]   = 0x1234;
+    p_core->W[7]   = 0x8000;
+    p_core->W[8]   = 0x0200;
+    p_core->RCOUNT = 0x0001;
+    p_core->SR     = CORE_SR_RA;
 
     Mem_Set24(p_sim->p_mem_prog, 0, 0xD88388, &mem_err);
 
@@ -232,7 +249,7 @@ void UT_DIV_U(SIM * p_sim) {
         printf("\r\np_core->W[8] != 0x0200");
     }
 
-    if (p_core->SR   != 0x0002) {
+    if ((p_core->SR & ~(CORE_SR_RA)) != 0x0002) {
         printf("\r\np_core->SR   != 0x0002");
     }
 
@@ -246,14 +263,15 @@ void UT_DIV_S(SIM * p_sim) {
     CORE_ERR   core_err;
 
 
-    p_core       = p_sim->p_core;
-    p_mem        = p_sim->p_mem_prog;
+    p_core         = p_sim->p_core;
+    p_mem          = p_sim->p_mem_prog;
 
-    p_core->W[0] = 0x5555;
-    p_core->W[1] = 0x1234;
-    p_core->W[4] = 0x3000;
-    p_core->W[3] = 0x0027;
-    p_core->SR   = 0x0000;
+    p_core->W[0]   = 0x5555;
+    p_core->W[1]   = 0x1234;
+    p_core->W[4]   = 0x3000;
+    p_core->W[3]   = 0x0027;
+    p_core->RCOUNT = 0x0001;
+    p_core->SR     = CORE_SR_RA;
 
     Core_PC_Set(p_core, 0);
 
@@ -280,9 +298,103 @@ void UT_DIV_S(SIM * p_sim) {
         printf("\r\np_core->W[3] != 0x0027");
     }
 
-    if (p_core->SR   != 0x0000) {
+    if ((p_core->SR & ~(CORE_SR_RA)) != 0x0000) {
         printf("\r\np_core->SR   != 0x0000");
     }
 
 
+}
+
+void UT_DIV3232A(SIM * p_sim)
+{
+    CORE_24F  *p_core;
+    MEM_24    *p_mem;
+    MEM_ERR    mem_err;
+    CORE_ERR   core_err;
+
+
+    p_core         = p_sim->p_core;
+    p_mem          = p_sim->p_mem_prog;
+
+    p_core->W[0]   = 0xB221;
+    p_core->W[1]   = 0x4E84;
+    p_core->W[2]   = 0x003C;
+    p_core->W[3]   = 0x0000;
+    p_core->SR    &= ~(CORE_SR_DC);
+
+    Mem_Set24(p_sim->p_mem_prog, 0, 0x0204B6, &mem_err);
+    Mem_Set24(p_sim->p_mem_prog, 2, 0x000000, &mem_err);
+
+    Core_PC_Set(p_core, 0);
+
+    while (Core_PC_Get(p_core) != 4) {
+
+        Core_Run(p_sim->p_core,
+                 p_sim->p_mem_prog,
+                 p_sim->p_mem_data,
+                &core_err);
+
+    }
+
+    printf("\r\nUT_DIV3232A Done.");
+
+    if (p_core->W[0] != 0x02F8) {
+        printf("\r\np_core->W[0] != 0x02F8: 0x%04X", p_core->W[0]);
+    }
+
+    if (p_core->W[1] != 0x014F) {
+        printf("\r\np_core->W[1] != 0x014F: 0x%04X", p_core->W[1]);
+    }
+
+}
+
+#define  XOR_MEM_1  0x0200
+#define  XOR_MEM_2  0x0260
+
+void UT_XOR_Wb_Ws_Wd(SIM * p_sim)
+{
+    CORE_24F  *p_core;
+    MEM_24    *p_mem;
+    MEM_ERR    mem_err;
+    OPCODE     opcode;
+    CORE_ERR   core_err;
+
+
+    p_core         = p_sim->p_core;
+    p_mem          = p_sim->p_mem_prog;
+
+    p_core->W[1]   = 0xAAAA;
+    p_core->W[5]   = XOR_MEM_1;
+    p_core->W[9]   = XOR_MEM_2;
+    p_core->SR     = CORE_SR_NONE;
+
+    /* XOR.B  W1, [W5++], [W9++] p.5-262 */
+    opcode  = 0x680000;
+    opcode |= 0x004000;     /* Byte mode */
+    opcode |= 0x008000;     /* Wb = W1   */
+    opcode |= 0x001800;     /* Dst Addr Mode = 011 [++] */
+    opcode |= 0x000480;     /* Dst Wreg = W9 */
+    opcode |= 0x000030;     /* Src Addr Mode = 011 [++] */
+    opcode |= 0x000005;     /* Src Wreg = W5 */
+
+    Mem_Set24(p_sim->p_mem_prog, 0, opcode, &mem_err);
+
+    Mem_Set(p_sim->p_mem_data, XOR_MEM_1, 0x115A, &mem_err);
+    Mem_Set(p_sim->p_mem_data, XOR_MEM_2, 0x0000, &mem_err);
+
+    Core_PC_Set(p_core, 0);
+
+    Core_Run(p_sim->p_core,
+                p_sim->p_mem_prog,
+                p_sim->p_mem_data,
+            &core_err);
+
+    TEST_WREG(1 ,0xAAAA);
+    TEST_WREG(5 ,(XOR_MEM_1+1));
+    TEST_WREG(9 ,(XOR_MEM_2+1));
+
+    TEST_DMEM(XOR_MEM_1, 0x115A);
+    TEST_DMEM(XOR_MEM_2, 0x00F0);
+
+    TEST_SR(CORE_SR_N);
 }

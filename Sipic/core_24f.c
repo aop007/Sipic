@@ -1112,14 +1112,12 @@ void  Core_UpdateDC(CORE_24F       *p_core,
     DS70157C-page 5-126 
     ... 
     */
-    CPU_BOOLEAN  condition1 = ((initial_val & 0x00000100) == 0) && ((final_val & 0x00000100) != 0);
+    CPU_BOOLEAN  condition1 = ((initial_val & 0x00000010) == 0) && ((final_val & 0x00000010) != 0);
 
     if (condition1) {
-        if (direction == CORE_SR_DIR_UP) {
-            p_core->SR |=   CORE_SR_DC;
-        } else {
-            p_core->SR &= ~(CORE_SR_DC);
-        }
+        p_core->SR |=   CORE_SR_DC;
+    } else {
+        p_core->SR &= ~(CORE_SR_DC);
     }
 }
 

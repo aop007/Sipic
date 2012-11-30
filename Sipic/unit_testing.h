@@ -25,9 +25,11 @@ typedef struct {
 
 void  UT_Testting(SIM  *p_sim);
 
-void  UT_DIV_U      (SIM  *p_sim);
-void  UT_DIV_S      (SIM  *p_sim);
-void  UT_SUB_F_EX1  (SIM  *p_sim);
-void  UT_SUB_F_EX2  (SIM  *p_sim);
+void  UT_DIV_U        (SIM  *p_sim);
+void  UT_DIV_S        (SIM  *p_sim);
+void  UT_SUB_F_EX1    (SIM  *p_sim);
+void  UT_SUB_F_EX2    (SIM  *p_sim);
+void  UT_DIV3232A     (SIM  *p_sim);
+void  UT_XOR_Wb_Ws_Wd (SIM  *p_sim);
 
 #endif
