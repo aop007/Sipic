@@ -1031,11 +1031,16 @@ CPU_INT32U  Core_MaskGet (CPU_INT08U  byte_mode,
 {
     if (byte_mode == 0) {
         return 0xFFFF;
-    } else {
+    } else if (byte_mode == 1) {
         if (addr & 0x1) {
             return 0xFF00;
         } else {
             return 0xFF;
+        }
+    } else {
+        printf("\r\nUnsupported DataSize!!!");
+        while(1) {
+            ;
         }
     }
 }

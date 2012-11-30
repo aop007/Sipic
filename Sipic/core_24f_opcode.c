@@ -574,7 +574,7 @@ void Core_MATH_WS_WD   (MEM_24       *p_mem_prog,
     
     
     base_w_addr   = (args & 0x078000) >> 15;
-    size_op       = (args & 0x004000) >> 12;
+    size_op       = (args & 0x004000) >> 14;
     dst_addr_mode = (args & 0x003800) >> 11;
     dst_addr      = (args & 0x000780) >>  7;
     src_addr_mode = (args & 0x000070) >>  4;
@@ -582,6 +582,7 @@ void Core_MATH_WS_WD   (MEM_24       *p_mem_prog,
     
     dir           = CORE_SR_DIR_NA;
     flags         = CORE_SR_NONE;
+    mem_err       = MEM_ERR_NONE;
 
     if (size_op == 0u) {
         addr_offset = 2;
@@ -591,98 +592,54 @@ void Core_MATH_WS_WD   (MEM_24       *p_mem_prog,
         value_mask  = 0x00FF;
     }
     
-    operand_1 = (CPU_SignExt16(p_core->W[base_w_addr]) & value_mask);
+    operand_1 = p_core->W[base_w_addr] & value_mask;
 
     switch (src_addr_mode) {
         case CORE_OPC_ADDR_MODE_DIR:
-            operand_2 = p_core->W[src_addr] & value_mask;
+            value_mask           = Core_MaskGet(size_op, 0);
+            operand_2            = p_core->W[src_addr];
             break;
             
         case CORE_OPC_ADDR_MODE_IND:
-            operand_2  = Mem_Get(p_mem_data, (p_core->W[src_addr] & 0xFFFE), &mem_err);
-            
-            if (mem_err != MEM_ERR_NONE) {
-                *p_err = CORE_ERR_INVALID_MEM;
-                return;
-            }
-            
-            if ((size_op                        != 0) &&
-                ((p_core->W[src_addr] & 0x0001) == 0x0001)) {
-                operand_2 >>= 8;
-            }
-            
+            value_mask           = Core_MaskGet(size_op, p_core->W[src_addr]);
+            operand_2            = Mem_Get(p_mem_data, (p_core->W[src_addr] & 0xFFFE), &mem_err);
             break;
             
         case CORE_OPC_ADDR_MODE_IND_POS_DEC:
-            operand_2 = Mem_Get(p_mem_data, (p_core->W[src_addr] & 0xFFFE), &mem_err);
-            
-            if (mem_err != MEM_ERR_NONE) {
-                *p_err = CORE_ERR_INVALID_MEM;
-                return;
-            }
-            
-            if ((size_op                        != 0) &&
-                ((p_core->W[src_addr] & 0x0001) == 0x0001)) {
-                operand_2 >>= 8;
-            }
-            
+            value_mask           = Core_MaskGet(size_op, p_core->W[src_addr]);
+            operand_2            = Mem_Get(p_mem_data, (p_core->W[src_addr] & 0xFFFE), &mem_err);
             p_core->W[src_addr] -= addr_offset;
             break;
             
         case CORE_OPC_ADDR_MODE_IND_POS_INC:
-            operand_2 = Mem_Get(p_mem_data, (p_core->W[src_addr] & 0xFFFE), &mem_err);
-            
-            if (mem_err != MEM_ERR_NONE) {
-                *p_err = CORE_ERR_INVALID_MEM;
-                return;
-            }
-            
-            if ((size_op                        != 0) &&
-                ((p_core->W[src_addr] & 0x0001) == 0x0001)) {
-                operand_2 >>= 8;
-            }
-            
+            value_mask           = Core_MaskGet(size_op, p_core->W[src_addr]);
+            operand_2            = Mem_Get(p_mem_data, (p_core->W[src_addr] & 0xFFFE), &mem_err);
             p_core->W[src_addr] += addr_offset;
             break;
             
         case CORE_OPC_ADDR_MODE_IND_PRE_DEC:
             p_core->W[src_addr] -= addr_offset;
-            
-            operand_2 = Mem_Get(p_mem_data, (p_core->W[src_addr] & 0xFFFE), &mem_err);
-            
-            if (mem_err != MEM_ERR_NONE) {
-                *p_err = CORE_ERR_INVALID_MEM;
-                return;
-            }
-            
-            if ((size_op                        != 0) &&
-                ((p_core->W[src_addr] & 0x0001) == 0x0001)) {
-                operand_2 >>= 8;
-            }
-            
+            value_mask           = Core_MaskGet(size_op, p_core->W[src_addr]);
+            operand_2            = Mem_Get(p_mem_data, (p_core->W[src_addr] & 0xFFFE), &mem_err);
             break;
             
         case CORE_OPC_ADDR_MODE_IND_PRE_INC:
             p_core->W[src_addr] += addr_offset;
-            
-            operand_2 = Mem_Get(p_mem_data, (p_core->W[src_addr] & 0xFFFE), &mem_err);
-            
-            if (mem_err != MEM_ERR_NONE) {
-                *p_err = CORE_ERR_INVALID_MEM;
-                return;
-            }
-            
-            if ((size_op                        != 0) &&
-                ((p_core->W[src_addr] & 0x0001) == 0x0001)) {
-                operand_2 >>= 8;
-            }
-            
+            value_mask           = Core_MaskGet(size_op, p_core->W[src_addr]);
+            operand_2            = Mem_Get(p_mem_data, (p_core->W[src_addr] & 0xFFFE), &mem_err);
             break;
             
         default:
             *p_err = CORE_ERR_INVALID_OPC_ARG;
             return;
     }
+
+    if (mem_err != MEM_ERR_NONE) {
+        *p_err = CORE_ERR_INVALID_MEM;
+        return;
+    }
+
+    operand_2 = Core_Align(operand_2, value_mask);
 
     switch (math_opc) {
         case CORE_OPC_ADD_WB_WS_WD:
@@ -742,182 +699,48 @@ void Core_MATH_WS_WD   (MEM_24       *p_mem_prog,
     
     switch (dst_addr_mode) {
         case CORE_OPC_ADDR_MODE_DIR:
-            p_core->W[dst_addr] &= ~(value_mask);
-            p_core->W[dst_addr] |=   result;
+            value_mask          = Core_MaskGet(size_op, 0);
+            value_temp          = p_core->W[dst_addr];
+            p_core->W[dst_addr] = Core_Merge(value_temp, result, value_mask);
             break;
             
         case CORE_OPC_ADDR_MODE_IND:
-            if (size_op == 0) {
-                Mem_Set(p_mem_data, p_core->W[dst_addr], result, &mem_err);
-                
-                if (mem_err != MEM_ERR_NONE) {
-                    *p_err = CORE_ERR_INVALID_MEM;
-                    return;
-                }
-                
-            } else {
-                value_temp = Mem_Get(p_mem_data, (p_core->W[dst_addr] & 0xFFFE), &mem_err);
-                
-                if (mem_err != MEM_ERR_NONE) {
-                    *p_err = CORE_ERR_INVALID_MEM;
-                    return;
-                }
-                
-                if ((p_core->W[dst_addr] & 0x0001) == 0x0001) {
-                    value_temp &= 0x00FF;
-                    value_temp |= (result << 8);
-                } else {
-                    value_temp &= 0xFF00;
-                    value_temp |= result;
-                }
-                Mem_Set(p_mem_data, (p_core->W[dst_addr] & 0xFFFE), value_temp, &mem_err);
-                
-                if (mem_err != MEM_ERR_NONE) {
-                    *p_err = CORE_ERR_INVALID_MEM;
-                    return;
-                }
-            }
-            
+            value_mask     = Core_MaskGet(size_op, p_core->W[dst_addr]);
+            value_temp     = Mem_Get(p_mem_data, (p_core->W[dst_addr] & 0xFFFE), &mem_err);
+            result         = Core_Merge(value_temp, result, value_mask);
+            Mem_Set(p_mem_data, (p_core->W[dst_addr] & 0xFFFE), result, &mem_err);
             break;
             
         case CORE_OPC_ADDR_MODE_IND_POS_DEC:
-            if (size_op == 0) {
-                Mem_Set(p_mem_data, p_core->W[dst_addr], result, &mem_err);
-                
-                if (mem_err != MEM_ERR_NONE) {
-                    *p_err = CORE_ERR_INVALID_MEM;
-                    return;
-                }
-                
-            } else {
-                value_temp = Mem_Get(p_mem_data, (p_core->W[dst_addr] & 0xFFFE), &mem_err);
-                
-                if (mem_err != MEM_ERR_NONE) {
-                    *p_err = CORE_ERR_INVALID_MEM;
-                    return;
-                }
-                
-                if ((p_core->W[dst_addr] & 0x0001) == 0x0001) {
-                    value_temp &= 0x00FF;
-                    value_temp |= (result << 8);
-                } else {
-                    value_temp &= 0xFF00;
-                    value_temp |= result;
-                }
-                Mem_Set(p_mem_data, (p_core->W[dst_addr] & 0xFFFE), value_temp, &mem_err);
-                
-                if (mem_err != MEM_ERR_NONE) {
-                    *p_err = CORE_ERR_INVALID_MEM;
-                    return;
-                }
-            }
-            
+            value_mask     = Core_MaskGet(size_op, p_core->W[dst_addr]);
+            value_temp     = Mem_Get(p_mem_data, (p_core->W[dst_addr] & 0xFFFE), &mem_err);
+            result         = Core_Merge(value_temp, result, value_mask);
+            Mem_Set(p_mem_data, (p_core->W[dst_addr] & 0xFFFE), result, &mem_err);
             p_core->W[dst_addr] -= addr_offset;
             break;
-            
+
         case CORE_OPC_ADDR_MODE_IND_POS_INC:
-            if (size_op == 0) {
-                Mem_Set(p_mem_data, p_core->W[dst_addr], result, &mem_err);
-                
-                if (mem_err != MEM_ERR_NONE) {
-                    *p_err = CORE_ERR_INVALID_MEM;
-                    return;
-                }
-                
-            } else {
-                value_temp = Mem_Get(p_mem_data, (p_core->W[dst_addr] & 0xFFFE), &mem_err);
-                
-                if (mem_err != MEM_ERR_NONE) {
-                    *p_err = CORE_ERR_INVALID_MEM;
-                    return;
-                }
-                
-                if ((p_core->W[dst_addr] & 0x0001) == 0x0001) {
-                    value_temp &= 0x00FF;
-                    value_temp |= (result << 8);
-                } else {
-                    value_temp &= 0xFF00;
-                    value_temp |= result;
-                }
-                Mem_Set(p_mem_data, (p_core->W[dst_addr] & 0xFFFE), value_temp, &mem_err);
-                
-                if (mem_err != MEM_ERR_NONE) {
-                    *p_err = CORE_ERR_INVALID_MEM;
-                    return;
-                }
-            }
-            
+            value_mask     = Core_MaskGet(size_op, p_core->W[dst_addr]);
+            value_temp     = Mem_Get(p_mem_data, (p_core->W[dst_addr] & 0xFFFE), &mem_err);
+            result         = Core_Merge(value_temp, result, value_mask);
+            Mem_Set(p_mem_data, (p_core->W[dst_addr] & 0xFFFE), result, &mem_err);
             p_core->W[dst_addr] += addr_offset;
             break;
             
         case CORE_OPC_ADDR_MODE_IND_PRE_DEC:
             p_core->W[dst_addr] -= addr_offset;
-            
-            if (size_op == 0) {
-                Mem_Set(p_mem_data, p_core->W[dst_addr], result, &mem_err);
-                
-                if (mem_err != MEM_ERR_NONE) {
-                    *p_err = CORE_ERR_INVALID_MEM;
-                    return;
-                }
-                
-            } else {
-                value_temp = Mem_Get(p_mem_data, (p_core->W[dst_addr] & 0xFFFE), &mem_err);
-                
-                if (mem_err != MEM_ERR_NONE) {
-                    *p_err = CORE_ERR_INVALID_MEM;
-                    return;
-                }
-                
-                if ((p_core->W[dst_addr] & 0x0001) == 0x0001) {
-                    value_temp &= 0x00FF;
-                    value_temp |= (result << 8);
-                } else {
-                    value_temp &= 0xFF00;
-                    value_temp |= result;
-                }
-                Mem_Set(p_mem_data, (p_core->W[dst_addr] & 0xFFFE), value_temp, &mem_err);
-                
-                if (mem_err != MEM_ERR_NONE) {
-                    *p_err = CORE_ERR_INVALID_MEM;
-                    return;
-                }
-            }
+            value_mask     = Core_MaskGet(size_op, p_core->W[dst_addr]);
+            value_temp     = Mem_Get(p_mem_data, (p_core->W[dst_addr] & 0xFFFE), &mem_err);
+            result         = Core_Merge(value_temp, result, value_mask);
+            Mem_Set(p_mem_data, (p_core->W[dst_addr] & 0xFFFE), result, &mem_err);
             break;
             
         case CORE_OPC_ADDR_MODE_IND_PRE_INC:
             p_core->W[dst_addr] += addr_offset;
-            
-            if (size_op == 0) {
-                Mem_Set(p_mem_data, p_core->W[dst_addr], result, &mem_err);
-                
-                if (mem_err != MEM_ERR_NONE) {
-                    *p_err = CORE_ERR_INVALID_MEM;
-                    return;
-                }
-                
-            } else {
-                value_temp = Mem_Get(p_mem_data, (p_core->W[dst_addr] & 0xFFFE), &mem_err);
-                
-                if (mem_err != MEM_ERR_NONE) {
-                    *p_err = CORE_ERR_INVALID_MEM;
-                    return;
-                }
-                
-                if ((p_core->W[dst_addr] & 0x0001) == 0x0001) {
-                    value_temp &= 0x00FF;
-                    value_temp |= (result << 8);
-                } else {
-                    value_temp &= 0xFF00;
-                    value_temp |= result;
-                }
-                Mem_Set(p_mem_data, (p_core->W[dst_addr] & 0xFFFE), value_temp, &mem_err);
-                
-                if (mem_err != MEM_ERR_NONE) {
-                    *p_err = CORE_ERR_INVALID_MEM;
-                    return;
-                }
-            }
+            value_mask     = Core_MaskGet(size_op, p_core->W[dst_addr]);
+            value_temp     = Mem_Get(p_mem_data, (p_core->W[dst_addr] & 0xFFFE), &mem_err);
+            result         = Core_Merge(value_temp, result, value_mask);
+            Mem_Set(p_mem_data, (p_core->W[dst_addr] & 0xFFFE), result, &mem_err);
             break;
             
         default:
