@@ -37,7 +37,7 @@ CORE_24F  *Core_Init(MEM         *p_mem_data,
     Core_Reset(p_core, p_err);
 
     if (*p_err != CORE_ERR_NONE) {
-        return;
+        return NULL;
     }
 
     /* Write protection */

@@ -35,4 +35,6 @@ void  UT_XOR_Wb_Ws_Wd_B (SIM  *p_sim);
 void  UT_XOR_Wb_Ws_Wd_W (SIM  *p_sim);
 void  UT_RLC_Ws_Wd_B    (SIM  *p_sim);
 void  UT_RLC_Ws_Wd_W    (SIM  *p_sim);
+void  UT_CP_B           (SIM  *p_sim);
+void  UT_CP_W           (SIM  *p_sim);
 #endif
