@@ -161,6 +161,7 @@ void  Core_UpdateZ(CORE_24F       *p_core,
 void  Core_UpdateOV(CORE_24F       *p_core,
                     CPU_INT32U      initial_val,
                     CPU_INT32U      final_val,
+                    CPU_INT32U      operand,
                     CORE_SR_DIR     direction,
                     CPU_INT32U      size_op);
 
@@ -178,6 +179,7 @@ void  Core_UpdateSRFlags(CORE_24F       *p_core,
                          CORE_SR_FLAGS   flags,
                          CORE_SR_DIR     direction,
                          CPU_INT32U      initial_val,
+                         CPU_INT32U      operand_val,
                          CPU_INT32U      final_val,
                          CPU_INT32U      size_op);
 

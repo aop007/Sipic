@@ -182,7 +182,7 @@ void  Core_Run(CORE_24F  *p_core_24f,
 
 #if 1
         if ((Core_PC_Get(p_core_24f) == 0x30AA)) { // && (p_core_24f->W[0] == 0)){
-            printf("\r\nMainLoop");
+            printf("\r\nMainLoop %d", core_data.cycles);
             uncaught_instructions *= 1;
 #ifdef WRITE_REPORT
             fflush(p_out);
@@ -1094,14 +1094,15 @@ void  Core_UpdateSRFlags(CORE_24F       *p_core,
                          CORE_SR_FLAGS   flags,
                          CORE_SR_DIR     direction,
                          CPU_INT32U      initial_val,
+                         CPU_INT32U      operand_val,
                          CPU_INT32U      final_val,
                          CPU_INT32U      size_op)
 {
-    if (flags & CORE_SR_C)  { Core_UpdateC (p_core, initial_val, final_val, direction, size_op); }
-    if (flags & CORE_SR_Z)  { Core_UpdateZ (p_core,              final_val);                     }
-    if (flags & CORE_SR_OV) { Core_UpdateOV(p_core, initial_val, final_val, direction, size_op); }
-    if (flags & CORE_SR_N)  { Core_UpdateN (p_core,              final_val,            size_op); }
-    if (flags & CORE_SR_DC) { Core_UpdateDC(p_core, initial_val, final_val, direction, size_op); }
+    if (flags & CORE_SR_C)  { Core_UpdateC (p_core, initial_val, final_val,              direction, size_op); }
+    if (flags & CORE_SR_Z)  { Core_UpdateZ (p_core,              final_val);                                  }
+    if (flags & CORE_SR_OV) { Core_UpdateOV(p_core, initial_val, final_val, operand_val, direction, size_op); }
+    if (flags & CORE_SR_N)  { Core_UpdateN (p_core,              final_val,                         size_op); }
+    if (flags & CORE_SR_DC) { Core_UpdateDC(p_core, initial_val, final_val,              direction, size_op); }
 }
 
 void  Core_UpdateDC(CORE_24F       *p_core,
@@ -1139,25 +1140,94 @@ void  Core_UpdateN(CORE_24F       *p_core,
     }
 }
 
+CPU_BOOLEAN CheckOV_B(CPU_INT32U      initial_val,
+                      CPU_INT32U      operand,
+                      CORE_SR_DIR     direction)
+{
+    CPU_INT08S  operand_1;
+    CPU_INT08S  operand_2;
+    CPU_INT16S  result;
+
+    operand_1 = (CPU_INT08S)initial_val;
+    operand_2 = (CPU_INT08S)operand;
+
+    switch(direction) {
+        case CORE_SR_DIR_UP:
+            result =  operand_1 + operand_2;
+            break;
+
+        case CORE_SR_DIR_DOWN:
+            result =  operand_1 - operand_2;
+            break;
+
+        default:
+            return DEF_NO;
+    }
+
+    return ((result > 127) || (result < -128));
+}
+
+CPU_BOOLEAN CheckOV_W(CPU_INT32U      initial_val,
+                      CPU_INT32U      operand,
+                      CORE_SR_DIR     direction)
+{
+    CPU_INT16S  operand_1;
+    CPU_INT16S  operand_2;
+    CPU_INT32S  result;
+
+    operand_1 = (CPU_INT16S)initial_val;
+    operand_2 = (CPU_INT16S)operand;
+
+    switch(direction) {
+        case CORE_SR_DIR_UP:
+            result =  operand_1 + operand_2;
+            break;
+
+        case CORE_SR_DIR_DOWN:
+            result =  operand_1 - operand_2;
+            break;
+
+        default:
+            return DEF_NO;
+    }
+
+    return ((result > 32767) || (result < -32768));
+}
+
 void  Core_UpdateOV(CORE_24F       *p_core,
                     CPU_INT32U      initial_val,
                     CPU_INT32U      final_val,
+                    CPU_INT32U      operand,
                     CORE_SR_DIR     direction,
                     CPU_INT32U      size_op)
 {
-    CPU_INT16S  initial_s;
-    CPU_INT16S  final_s;
+    CPU_INT16S   initial_s;
+    CPU_INT16S   final_s;
+    CPU_INT16S   operand_s;
+    CPU_BOOLEAN  ov_flag;
 
+    ov_flag   = DEF_NO;
 
-    initial_s = (CPU_INT16S)initial_val;
-    final_s   = (CPU_INT16S)final_val;
+    if (size_op == 0) {
+        ov_flag = CheckOV_W(initial_val, operand, direction);
+    } else if (size_op == 1) {
+        ov_flag = CheckOV_B(initial_val, operand, direction);
+    }
 
+#if 1
+    if (ov_flag) {
+        p_core->SR |=   CORE_SR_OV;
+    } else {
+        p_core->SR &= ~(CORE_SR_OV);
+    }
+#else
     if (((final_s > initial_s) && (direction == CORE_SR_DIR_DOWN)) ||
         ((final_s < initial_s) && (direction == CORE_SR_DIR_UP))) {                
         p_core->SR |=   CORE_SR_OV;
     } else {
         p_core->SR &= ~(CORE_SR_OV);
     }
+#endif
 }
 
 void  Core_UpdateC(CORE_24F       *p_core,

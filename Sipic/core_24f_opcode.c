@@ -463,6 +463,7 @@ void Core_MATH_WN_LIT  (MEM_24       *p_mem_prog,
                        flags,
                        dir,
                        initial,
+                       lit,
                        result,
                        size_op);
     
@@ -752,6 +753,7 @@ void Core_MATH_WS_WD   (MEM_24       *p_mem_prog,
                        flags,
                        dir,
                        operand_1,
+                       operand_2,
                        result,
                        size_op);
     
@@ -984,8 +986,8 @@ void Core_Logical_W_L_W(MEM_24      *p_mem_prog,
     CPU_INT32U   dst_w;
     CPU_INT32U   lit;
     CPU_INT32U   offset;
-    CPU_INT32S   operand1;
-    CPU_INT32S   result;
+    CPU_INT32U   operand1;
+    CPU_INT32U   result;
     CPU_INT32U   value_original;
     CPU_INT32U   flags;
     CPU_INT32U   mask;
@@ -1047,13 +1049,19 @@ void Core_Logical_W_L_W(MEM_24      *p_mem_prog,
             break;
             
         case CORE_OPC_SUBR_W_LIT_W:
-            result = lit - operand1;
-            flags  = CORE_SR_DC | CORE_SR_N | CORE_SR_OV | CORE_SR_Z | CORE_SR_C;
-            dir    = CORE_SR_DIR_DOWN;
+            result   = operand1;    //Swap Operands
+            operand1 = lit;
+            lit      = result;
+            result   = operand1 - lit;
+            flags    = CORE_SR_DC | CORE_SR_N | CORE_SR_OV | CORE_SR_Z | CORE_SR_C;
+            dir      = CORE_SR_DIR_DOWN;
             break;
             
         case CORE_OPC_SUBBR_W_LIT_W:
-            result =  lit - operand1;
+            result   = operand1;    //Swap Operands
+            operand1 = lit;
+            lit      = result;
+            result   = operand1 - lit;
             if (!Core_GetC(p_core)) {
                 result--;
             }
@@ -1136,6 +1144,7 @@ void Core_Logical_W_L_W(MEM_24      *p_mem_prog,
                        flags,
                        dir,
                        operand1,
+                       lit,
                        result,
                        size_op);
     
@@ -1931,8 +1940,13 @@ void Core_Logical_M_W (MEM_24      *p_mem_prog,
             value_1 = 0x0000;
             break;
             
-        case CORE_OPC_COM_M_W:
         case CORE_OPC_DEC_M_W:
+            value_1 = value_0 + 1; 
+            flags   = CORE_SR_DC | CORE_SR_N | CORE_SR_OV | CORE_SR_Z | CORE_SR_C;
+            dir     =  CORE_SR_DIR_DOWN;
+            break;
+
+        case CORE_OPC_COM_M_W:
         case CORE_OPC_DEC2_M_W:
             *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
             return;
@@ -2009,6 +2023,7 @@ void Core_Logical_M_W (MEM_24      *p_mem_prog,
                        flags,
                        dir,
                        value_0,
+                       val_wreg,
                        value_1,
                        size_op);
     
@@ -2032,6 +2047,7 @@ void Core_Logical (MEM_24      *p_mem_prog,
     CPU_INT32U   value;
     CPU_INT32U   value_original;
     CPU_INT32U   initial;
+    CPU_INT32U   operand;
     CPU_INT32U   offset;
     CPU_INT32U   src_mask;
     CPU_INT32U   dst_mask;
@@ -2055,6 +2071,7 @@ void Core_Logical (MEM_24      *p_mem_prog,
     direction = CORE_SR_DIR_NA;
     flags     = CORE_SR_NONE;
     mem_err   = MEM_ERR_NONE;
+    operand   = 0u;
     
     switch (src_addr_mode) {
         case CORE_OPC_ADDR_MODE_DIR:
@@ -2106,25 +2123,29 @@ void Core_Logical (MEM_24      *p_mem_prog,
 
     switch (operation) {
         case CORE_OPC_INC_W:
-            value++;
+            operand   = 1u;
+            value    += operand;
             flags     = CORE_SR_DC | CORE_SR_N | CORE_SR_OV | CORE_SR_Z | CORE_SR_C;
             direction = CORE_SR_DIR_UP;
             break;
             
         case CORE_OPC_DEC_W:
-            value--;
+            operand   = 1u;
+            value    -= operand;
             flags     = CORE_SR_DC | CORE_SR_N | CORE_SR_OV | CORE_SR_Z | CORE_SR_C;
             direction = CORE_SR_DIR_DOWN;
             break;
             
         case CORE_OPC_INC2_W:
-            value     += 2;
+            operand    = 2u;
+            value     += operand;
             flags      = CORE_SR_DC | CORE_SR_N | CORE_SR_OV | CORE_SR_Z | CORE_SR_C;
             direction  = CORE_SR_DIR_UP;
             break;
 
         case CORE_OPC_DEC2_W:
-            value     -= 2;
+            operand    = 2u;
+            value     -= operand;
             flags      = CORE_SR_DC | CORE_SR_N | CORE_SR_OV | CORE_SR_Z | CORE_SR_C;
             direction  = CORE_SR_DIR_DOWN;
             break;
@@ -2248,6 +2269,7 @@ void Core_Logical (MEM_24      *p_mem_prog,
                        flags,
                        direction,
                        initial,
+                       operand,
                        value,
                        size_op);
 
@@ -2865,70 +2887,70 @@ void Core_CP_WS_WB (MEM_24      *p_mem_prog,
                     OPCODE       instruction,
                     CORE_ERR    *p_err)
 {
-    CPU_INT32U  src_w;
-    CPU_INT32U  size_op;
-    CPU_INT32U  addr_mode;
-    CPU_INT32U  dst_w;
-    CPU_INT32U  result;
-    CPU_INT32U  operand1;
-    CPU_INT32U  operand2;
-    CPU_INT32U  mask;
-    MEM_ERR     mem_err;
+    CPU_INT32U     src_w;
+    CPU_INT32U     size_op;
+    CPU_INT32U     addr_mode;
+    CPU_INT32U     bas_w;
+    CPU_INT32U     result;
+    CPU_INT32U     operand1;
+    CPU_INT32U     operand2;
+    CORE_SR_DIR    dir;
+    CORE_SR_FLAGS  flags;
+    CPU_INT32U     mask;
+    CPU_INT32U     offset;
+    MEM_ERR        mem_err;
     
     
-    src_w     = (args & 0x007800) >> 11;
+    bas_w     = (args & 0x007800) >> 11;
     size_op   = (args & 0x000400) >> 10;
     addr_mode = (args & 0x000070) >> 4;
-    dst_w     =  args & 0x00000F;
-    
-    if (size_op != 0) {
-        mask = 0xFF;
+    src_w     =  args & 0x00000F;
+
+    if (size_op == 0) {
+        offset = 2;
     } else {
-        mask = 0xFFFF;
+        offset = 1;
     }
-    
-    operand1  = p_core->W[src_w] & mask;
+
+    dir       = CORE_SR_DIR_DOWN;
+    mask      = Core_MaskGet(size_op, 0);
+    operand1  = p_core->W[bas_w] & mask;
     
     mem_err = MEM_ERR_NONE;
     
     switch (addr_mode) {
         case CORE_OPC_ADDR_MODE_DIR:
             mask     = Core_MaskGet(size_op, 0);
-            operand2 = p_core->W[dst_w] & mask;
+            operand2 = p_core->W[src_w];
             break;
             
         case CORE_OPC_ADDR_MODE_IND:
-            mask     = Core_MaskGet(size_op, p_core->W[dst_w]);
-            operand2 = Mem_Get(p_mem_data, (p_core->W[dst_w] & 0xFFFE), &mem_err);
-            operand2 = Core_Align(operand2, mask);
+            mask     = Core_MaskGet(size_op, p_core->W[src_w]);
+            operand2 = Mem_Get(p_mem_data, (p_core->W[src_w] & 0xFFFE), &mem_err);
             break;
             
         case CORE_OPC_ADDR_MODE_IND_POS_DEC:
-            mask     = Core_MaskGet(size_op, p_core->W[dst_w]);
-            operand2 = Mem_Get(p_mem_data, (p_core->W[dst_w] & 0xFFFE), &mem_err);
-            operand2 = Core_Align(operand2, mask);
-            p_core->W[src_w] -= 2;
+            mask     = Core_MaskGet(size_op, p_core->W[src_w]);
+            operand2 = Mem_Get(p_mem_data, (p_core->W[src_w] & 0xFFFE), &mem_err);
+            p_core->W[src_w] -= offset;
             break;
             
         case CORE_OPC_ADDR_MODE_IND_POS_INC:
-            mask     = Core_MaskGet(size_op, p_core->W[dst_w]);
-            operand2 = Mem_Get(p_mem_data, (p_core->W[dst_w] & 0xFFFE), &mem_err);
-            operand2 = Core_Align(operand2, mask);
-            p_core->W[src_w] += 2;
+            mask     = Core_MaskGet(size_op, p_core->W[src_w]);
+            operand2 = Mem_Get(p_mem_data, (p_core->W[src_w] & 0xFFFE), &mem_err);
+            p_core->W[src_w] += offset;
             break;
             
         case CORE_OPC_ADDR_MODE_IND_PRE_DEC:
-            p_core->W[src_w] -= 2;
-            mask     = Core_MaskGet(size_op, p_core->W[dst_w]);
-            operand2 = Mem_Get(p_mem_data, (p_core->W[dst_w] & 0xFFFE), &mem_err);
-            operand2 = Core_Align(operand2, mask);
+            p_core->W[src_w] -= offset;
+            mask     = Core_MaskGet(size_op, p_core->W[src_w]);
+            operand2 = Mem_Get(p_mem_data, (p_core->W[src_w] & 0xFFFE), &mem_err);
             break;
             
         case CORE_OPC_ADDR_MODE_IND_PRE_INC:
-            p_core->W[src_w] += 2;
-            mask     = Core_MaskGet(size_op, p_core->W[dst_w]);
-            operand2 = Mem_Get(p_mem_data, (p_core->W[dst_w] & 0xFFFE), &mem_err);
-            operand2 = Core_Align(operand2, mask);
+            p_core->W[src_w] += offset;
+            mask     = Core_MaskGet(size_op, p_core->W[src_w]);
+            operand2 = Mem_Get(p_mem_data, (p_core->W[src_w] & 0xFFFE), &mem_err);
             break;
             
         default:
@@ -2941,9 +2963,12 @@ void Core_CP_WS_WB (MEM_24      *p_mem_prog,
         return;
     }
     
+    operand2 = Core_Align(operand2, mask);
+
     switch (instruction) {
         case CORE_OPC_CP_WB_WS:
             result = operand1 - operand2;
+            flags  = CORE_SR_DC | CORE_SR_N | CORE_SR_OV | CORE_SR_Z | CORE_SR_C;
             break;
             
         case CORE_OPC_CPB_WB_WS:
@@ -2951,6 +2976,7 @@ void Core_CP_WS_WB (MEM_24      *p_mem_prog,
             if (!Core_GetC(p_core)) {
                 result--;
             }
+            flags  = CORE_SR_DC | CORE_SR_N | CORE_SR_OV | CORE_SR_Z | CORE_SR_C;
             break;
             
         default:
@@ -2959,31 +2985,13 @@ void Core_CP_WS_WB (MEM_24      *p_mem_prog,
     
     
     /* Update Status Register */
-    if (((operand1 & 0x00000080) &&                              /* DC */
-         (result  & 0x00000080))) {
-        p_core->SR |=   CORE_SR_DC;
-    } else {
-        p_core->SR &= ~(CORE_SR_DC);
-    }
-    
-                                                                /* N */
-    p_core->SR &= ~(CORE_SR_N);
-    
-                                                                /* OV */
-    p_core->SR &= ~(CORE_SR_OV);
-    
-    if (result == 0) {                                          /* Z */
-        p_core->SR |=   CORE_SR_Z;
-    } else {
-        p_core->SR &= ~(CORE_SR_Z);
-    }
-    
-    if (((operand1 & 0x00008000) &&                              /* C */
-         (result  & 0x00008000))) {
-        p_core->SR |=   CORE_SR_C;
-    } else {
-        p_core->SR &= ~(CORE_SR_C);
-    }
+    Core_UpdateSRFlags(p_core,
+                       flags,
+                       dir,
+                       operand1,
+                       operand2,
+                       result,
+                       size_op);
     
     Core_PC_Slide(p_core, 2);
     

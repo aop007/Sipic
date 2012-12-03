@@ -36,7 +36,7 @@ extern "C" {
 
 #define  DIVISION_BYPASS            DEF_DISABLED
 
-#define  SIPIC_UNIT_TESTING         DEF_ENABLED
+#define  SIPIC_UNIT_TESTING         DEF_DISABLED
 
 //#define  CORE_CFG_CYCLE_CNTR
 
