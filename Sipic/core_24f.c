@@ -138,13 +138,9 @@ void  Core_Run(CORE_24F  *p_core_24f,
             EnableDebugPrintf = 1;
         }
 #endif
-#if 0
-        if ((Core_PC_Get(p_core_24f) == 0x0538)) {
-            if (RCOUNT_1C06 < p_core_24f->RCOUNT) {
-                uncaught_instructions *= 1;
-                printf("Caught that motofoka.");
-            }
-            RCOUNT_1C06 = p_core_24f->RCOUNT;
+#if 1
+        if ((Core_PC_Get(p_core_24f) == 0x0796)) {
+            UT_TestTimeConversion(p_mem_data);  
         }
 #endif
 
@@ -157,7 +153,7 @@ void  Core_Run(CORE_24F  *p_core_24f,
         }
 #endif
 
-#if 1
+#if 0
         if ((Core_PC_Get(p_core_24f) == 0x0A28)) { // && (p_core_24f->W[0] == 0)){
             //EnableDebugPrintf = 1;
             printf("");
@@ -168,7 +164,7 @@ void  Core_Run(CORE_24F  *p_core_24f,
         }
 #endif
 
-#if 1
+#if 0
         if ((Core_PC_Get(p_core_24f) == 0x0A3A)) { // && (p_core_24f->W[0] == 0)){
             //EnableDebugPrintf = 1;
             printf("");
@@ -180,7 +176,7 @@ void  Core_Run(CORE_24F  *p_core_24f,
 #endif
 
 
-#if 1
+#if 0
         if ((Core_PC_Get(p_core_24f) == 0x30AA)) { // && (p_core_24f->W[0] == 0)){
             printf("\r\nMainLoop %d", core_data.cycles);
             uncaught_instructions *= 1;

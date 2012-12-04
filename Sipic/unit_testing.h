@@ -24,7 +24,28 @@ typedef struct {
     CPU_INT16U tm_isdst;	/* daylight savings time flag NOT USED */
 } tm_struct;
 
+typedef struct internal_binary_datetime {
+    CPU_INT32U hour; 
+	CPU_INT32U day; 
+	CPU_INT32U minute; 
+	CPU_INT32U second; 
+	CPU_INT32U month; 
+	CPU_INT32U year; 
+	CPU_INT32U whole_minutes; 
+	CPU_INT32U whole_hours; 
+	CPU_INT32U whole_days; 
+	CPU_INT32U whole_days_since_1968; 
+	CPU_INT32U leap_year_periods; 
+	CPU_INT32U days_since_current_lyear; 
+	CPU_INT32U whole_years; 
+	CPU_INT32U days_since_first_of_year; 
+	CPU_INT32U days_to_month; 
+	CPU_INT32U day_of_week;
+} INTERNAL_BINARY_DATETIME;
+
 void  UT_Testting(SIM  *p_sim);
+
+void  UT_TestTimeConversion (MEM  *p_mem_data);
 
 void  UT_DIV_U          (SIM  *p_sim);
 void  UT_DIV_S          (SIM  *p_sim);

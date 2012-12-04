@@ -55,6 +55,118 @@ CPU_INT32U DS1371_DateToBinary(tm_struct *datetime) {
     return val; 
 }
 
+void DS1371_BinaryToDate(unsigned long binary, tm_struct *datetime, INTERNAL_BINARY_DATETIME *ibd) 
+{ 
+    /*
+	unsigned long hour; 
+	unsigned long day; 
+	unsigned long minute; 
+	unsigned long second; 
+	unsigned long month; 
+	unsigned long year; 
+	unsigned long whole_minutes; 
+	unsigned long whole_hours; 
+	unsigned long whole_days; 
+	unsigned long whole_days_since_1968; 
+	unsigned long leap_year_periods; 
+	unsigned long days_since_current_lyear; 
+	unsigned long whole_years; 
+	unsigned long days_since_first_of_year; 
+	unsigned long days_to_month; 
+	unsigned long day_of_week; 
+    */
+	 
+	ibd->whole_minutes = binary / 60; 
+
+	ibd->second = binary - (60 * ibd->whole_minutes);			// leftover seconds 
+
+	ibd->whole_hours = ibd->whole_minutes / 60; 
+
+	ibd->minute = ibd->whole_minutes - (60 * ibd->whole_hours);	// leftover minutes 
+
+	ibd->whole_days	= ibd->whole_hours / 24; 
+
+	ibd->hour	= ibd->whole_hours - (24 * ibd->whole_days);		// leftover hours 
+
+	 
+	   
+	ibd->whole_days_since_1968 = ibd->whole_days + 365 + 366;  
+
+	ibd->leap_year_periods = ibd->whole_days_since_1968 / ((4 * 365) + 1);	 
+
+	ibd->days_since_current_lyear = ibd->whole_days_since_1968 % ((4 * 365) + 1); 
+
+	 
+	// if days are after a current leap year then add a leap year period 
+	if ((ibd->days_since_current_lyear >= (31 + 29))) 
+
+	{ 
+		ibd->leap_year_periods++; 
+
+	}  
+	 
+	ibd->whole_years = (ibd->whole_days_since_1968 - ibd->leap_year_periods) / 365; 
+
+	ibd->days_since_first_of_year = ibd->whole_days_since_1968 - (ibd->whole_years * 365) - ibd->leap_year_periods; 
+
+ 
+	if ((ibd->days_since_current_lyear <= 365) && (ibd->days_since_current_lyear >= 60)) 
+
+	{ 
+		ibd->days_since_first_of_year++; 
+
+	} 
+	 
+	ibd->year = ibd->whole_years + 68; 
+
+ 
+	// setup for a search for what month it is based on how many days have past 
+	//	within the current year 
+	ibd->month = 13; 
+
+	ibd->days_to_month = 366; 
+
+	 
+	while (ibd->days_since_first_of_year < ibd->days_to_month) 
+	{ 
+
+		ibd->month--; 
+
+		ibd->days_to_month = DaysToMonth[ibd->month-1]; 
+
+		if ((ibd->month > 2) && ((ibd->year % 4) == 0)) 
+
+		{ 
+			ibd->days_to_month++; 
+
+		} 
+		 
+		ibd->day = ibd->days_since_first_of_year - ibd->days_to_month + 1; 
+
+		ibd->day_of_week = (ibd->whole_days + 4) % 7; 
+
+	} 
+
+	 
+	datetime->tm_yday = ibd->days_since_first_of_year;	/* days since January 1 - [0,365]	*/ 
+
+	datetime->tm_sec = ibd->second;						/* seconds after the minute - [0,59]	*/ 
+
+	datetime->tm_min = ibd->minute;						/* minutes after the hour - [0,59]	*/ 
+
+	datetime->tm_hour = ibd->hour;						/* hours since midnight - [0,23]	*/ 
+
+	datetime->tm_mday = ibd->day;						/* day of the month - [1,31]	*/ 
+
+	datetime->tm_wday = ibd->day_of_week;				/* days since Sunday - [0,6]	*/ 
+
+	datetime->tm_mon = ibd->month;						/* months since January - [0,11]	*/ 
+
+	datetime->tm_year = ibd->year;						/* years since 1900	*/ 
+
+} 
+
+
 void  UT_CleanContext(SIM  *p_sim) {
     CORE_ERR  core_err;
     
@@ -65,6 +177,21 @@ void  UT_CleanContext(SIM  *p_sim) {
 
 void  UT_Testting(SIM  *p_sim)
 {
+    tm_struct   time_buffer;
+    CPU_INT32U  binary_time;
+
+
+    /* Test Time Conversion Functions. */
+#if 0
+    binary_time = 1317319200;
+    DS1371_BinaryToDate(binary_time, &time_buffer);
+    printf("\r\n%d/%d/%d\t%d:%d:%d\t%d",time_buffer.tm_mday,time_buffer.tm_mon,time_buffer.tm_year + 1900, time_buffer.tm_hour,time_buffer.tm_min,time_buffer.tm_sec, binary_time);
+
+    binary_time++;
+    DS1371_BinaryToDate(binary_time, &time_buffer);
+    printf("\r\n%d/%d/%d\t%d:%d:%d\t%d",time_buffer.tm_mday,time_buffer.tm_mon,time_buffer.tm_year + 1900, time_buffer.tm_hour,time_buffer.tm_min,time_buffer.tm_sec, binary_time);
+#endif
+
     UT_CleanContext(p_sim);
     UT_SUB_F_EX1(p_sim);
 
@@ -636,4 +763,58 @@ void UT_CP_W(SIM * p_sim)
     TEST_WREG(6 , 0x8001);
     
     TEST_SR((CORE_SR_N|CORE_SR_OV));
+}
+
+void UT_TestTimeConversion(MEM  *p_mem_data)
+{
+    tm_struct                 time_buffer_pic;
+    tm_struct                 time_buffer_pc;
+    CPU_INT32U                binary_time;
+    INTERNAL_BINARY_DATETIME  ibd_pc;
+    INTERNAL_BINARY_DATETIME  ibd_pic;
+    MEM_ERR                   mem_err;
+
+
+    Mem_Load((void *)&time_buffer_pic, 0x0928, 18, p_mem_data, &mem_err);
+    Mem_Load((void *)&binary_time,     0x0866,  4, p_mem_data, &mem_err);
+    
+        
+    printf("\r\n%02d/%02d/%04d\t%02d:%02d:%02d\t%d",
+                                        time_buffer_pic.tm_mday,
+                                        time_buffer_pic.tm_mon,
+                                        time_buffer_pic.tm_year + 1900,
+                                        time_buffer_pic.tm_hour,
+                                        time_buffer_pic.tm_min,
+                                        time_buffer_pic.tm_sec,
+                                        binary_time);
+
+    DS1371_BinaryToDate(binary_time, &time_buffer_pc, &ibd_pc);
+
+    printf("\r\n%02d/%02d/%04d\t%02d:%02d:%02d\t%d",
+                                        time_buffer_pc.tm_mday,
+                                        time_buffer_pc.tm_mon,
+                                        time_buffer_pc.tm_year + 1900,
+                                        time_buffer_pc.tm_hour,
+                                        time_buffer_pc.tm_min,
+                                        time_buffer_pc.tm_sec,
+                                        binary_time);
+
+    Mem_Load((void *)&ibd_pic, 0x0A56, sizeof(ibd_pic), p_mem_data, &mem_err);
+
+    if (ibd_pic.whole_minutes            != ibd_pc.whole_minutes) { printf("\r\n*whole_minutes");}
+    if (ibd_pic.second                   != ibd_pc.second) { printf("\r\n*second");}
+    if (ibd_pic.whole_hours              != ibd_pc.whole_hours) { printf("\r\n*whole_hours");}
+    if (ibd_pic.minute                   != ibd_pc.minute) { printf("\r\n*minute");}
+    if (ibd_pic.whole_days               != ibd_pc.whole_days) { printf("\r\n*whole_days");}
+    if (ibd_pic.hour                     != ibd_pc.hour) { printf("\r\n*hour");}
+    if (ibd_pic.whole_days_since_1968    != ibd_pc.whole_days_since_1968) { printf("\r\n*whole_days_since_1968");}
+    if (ibd_pic.leap_year_periods        != ibd_pc.leap_year_periods) { printf("\r\n*leap_year_periods");}
+    if (ibd_pic.days_since_current_lyear != ibd_pc.days_since_current_lyear) { printf("\r\n*days_since_current_lyear");}
+    if (ibd_pic.whole_years              != ibd_pc.whole_years) { printf("\r\n*whole_years");}
+    if (ibd_pic.days_since_first_of_year != ibd_pc.days_since_first_of_year) { printf("\r\n*days_since_first_of_year");}
+    if (ibd_pic.year                     != ibd_pc.year) { printf("\r\n*year");}
+    if (ibd_pic.month                    != ibd_pc.month) { printf("\r\n*month");}
+    if (ibd_pic.days_to_month            != ibd_pc.days_to_month) { printf("\r\n*days_to_month");}
+    if (ibd_pic.day                      != ibd_pc.day) { printf("\r\n*day");}
+    if (ibd_pic.day_of_week              != ibd_pc.day_of_week) { printf("\r\n*day_of_week");}
 }

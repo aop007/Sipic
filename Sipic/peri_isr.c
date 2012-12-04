@@ -205,6 +205,7 @@ void Peri_ISR_FromVect(CPU_INT32U    isr_vect_addr,
     CORE_ERR    core_err;
 #ifndef  DONT_PRINT_TIME
     tm_struct   time_buffer;
+    CPU_INT32U  binary_time;
 #endif
     MEM_ERR     mem_err;
     
@@ -256,25 +257,7 @@ void Peri_ISR_FromVect(CPU_INT32U    isr_vect_addr,
         printf("\r\nISR = 0x%x from 0x%004x with ipl %d/%d at Call_Depth %d at cycle %lu",ISR_addr, (PC & 0xFFFFFF), ipl, ipl_old, Call_Depth, core_data.cycles);
 #if 1
 #ifndef  DONT_PRINT_TIME
-        //928-939 CurrentTime
-        Mem_Load((void *)&time_buffer, 0x0928, 18, p_mem_data, &mem_err);
-        
-#if 0
-         typedef struct
-         .................... {
-         .................... 	int tm_sec;		/* seconds after the minute - [0,59]   */
-        .................... 	int tm_min;		/* minutes after the hour   - [0,59]   */
-        .................... 	int tm_hour;	/* hours since midnight     - [0,23]   */
-        .................... 	int tm_mday;	/* day of the month         - [1,31]   */
-        .................... 	int tm_mon;		/* months since January     - [0,11]   */
-        .................... 	int tm_year;	/* years since 1900					   */
-        .................... 	int tm_wday;	/* days since Sunday         - [0,6]   */
-        .................... 	int tm_yday;	/* days since January 1      - [0,365] */
-        .................... 	int tm_isdst;	/* daylight savings time flag NOT USED */
-        .................... } tm_struct;
-#endif
-        
-        printf("\r\n%d/%d/%d\t%d:%d:%d",time_buffer.tm_mday,time_buffer.tm_mon,time_buffer.tm_year + 1900, time_buffer.tm_hour,time_buffer.tm_min,time_buffer.tm_sec);
+        //928-939 CurrentTime     
 #endif
     }
     

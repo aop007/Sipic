@@ -145,7 +145,7 @@
             this.BPupdown.Size = new System.Drawing.Size(100, 20);
             this.BPupdown.TabIndex = 5;
             this.BPupdown.Value = new decimal(new int[] {
-            1342,
+            1490,
             0,
             0,
             0});
