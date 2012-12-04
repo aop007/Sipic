@@ -21,7 +21,7 @@
 @interface TableViewsController : NSObject <NSTableViewDataSource>
 {
     ProjectSymbols        *p_symbols;
-    NSArray               *p_code_listing;
+    NSDictionary          *p_code_listing;
 }
 
 

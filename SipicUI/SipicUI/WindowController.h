@@ -22,6 +22,7 @@
 @property (assign) IBOutlet NSTableView *p_mem_view2;
 @property (assign) IBOutlet NSTableView *p_call_stack;
 @property (assign) IBOutlet NSTableView *p_code_listing;
+@property (assign) IBOutlet NSTextField *p_pc_bp;
 
 - (IBAction)sim_step:(id)sender;
 - (IBAction)sim_run_pause:(id)sender;

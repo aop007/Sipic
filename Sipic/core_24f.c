@@ -1201,9 +1201,11 @@ void  Core_UpdateOV(CORE_24F       *p_core,
                     CORE_SR_DIR     direction,
                     CPU_INT32U      size_op)
 {
+#if 0
     CPU_INT16S   initial_s;
     CPU_INT16S   final_s;
     CPU_INT16S   operand_s;
+#endif
     CPU_BOOLEAN  ov_flag;
 
     ov_flag   = DEF_NO;

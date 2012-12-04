@@ -20,6 +20,7 @@
     if (self) {
         init_sipic();
         
+ //       run();
 //        p_tvc = [[TableViewsController alloc] init];
         
     }
@@ -50,16 +51,21 @@
 
 - (IBAction)sim_run_pause:(id)sender
 {
-    CPU_INT32U  loop = 100;
+    UInt32 addr;
+    NSScanner  *pScanner = [NSScanner scannerWithString: [_p_pc_bp stringValue]];
+    [pScanner scanHexInt:&addr];
     
-    while (loop-- > 0) {
+    
+    while (Sim_GetValueFromDataMem(0x002E) != addr) {
         Sim_Step();
+
     }
-    
+
     [_p_mem_view1 reloadData];
     [_p_mem_view2 reloadData];
     [_p_call_stack reloadData];
     [_p_code_listing reloadData];
+    
 }
 
 @end

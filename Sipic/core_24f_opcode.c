@@ -323,8 +323,8 @@ void Core_BRA_3 (MEM_24      *p_mem_prog,
             break;
             
         case CORE_OPC_BRA_LT:
-            *p_err = CORE_ERR_OPC_UNSUPORTED_YET;
-            return;
+            result = (Core_GetN(p_core)&&!Core_GetOV(p_core)) || (!Core_GetN(p_core)&&Core_GetOV(p_core));
+            break;
             
         case CORE_OPC_BRA_LEU:
             result = !Core_GetC(p_core)||Core_GetZ(p_core);
@@ -2190,12 +2190,16 @@ void Core_Logical (MEM_24      *p_mem_prog,
             direction   = CORE_SR_DIR_NA;
             break;
 
+        case CORE_OPC_SL_W:
+            value    <<= 1;
+            flags      = CORE_SR_N | CORE_SR_Z | CORE_SR_C;
+            direction  = CORE_SR_DIR_NA;
+            break;
+            
         case CORE_OPC_ASR_W:
-        
         case CORE_OPC_LSR_W:
         case CORE_OPC_RLNC_W:
         case CORE_OPC_RRNC_W:
-        case CORE_OPC_SL_W:
         case CORE_OPC_TBLRDH_W:
         case CORE_OPC_TBLRDL_W:
         case CORE_OPC_TBLWDH_W:

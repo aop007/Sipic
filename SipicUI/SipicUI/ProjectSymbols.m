@@ -61,7 +61,7 @@
         
         symbolList = [[NSArray alloc] initWithArray:[sortingArray sortedArrayUsingSelector:@selector(compare:)]];
         
-#if 1
+#if 0
         for (ix = 0 ; ix < [symbolList count] ; ix++) {
             SymbolAddrName *psym = [symbolList objectAtIndex:ix];
             
@@ -96,7 +96,7 @@
         test_range = (lo_range + hi_range) / 2;
     }
     
-    NSLog(@"%X\t%@",[p_test_sym.addr intValue], p_test_sym.fnctName);
+    //NSLog(@"%X\t%@",[p_test_sym.addr intValue], p_test_sym.fnctName);
     
     return p_test_sym.fnctName;
 }

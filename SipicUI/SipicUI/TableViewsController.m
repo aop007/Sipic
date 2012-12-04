@@ -16,10 +16,42 @@
     self = [super init];
     if (self) {
         p_symbols = [[ProjectSymbols alloc] init];
+        p_code_listing = [[NSDictionary alloc] init];
+        
+        [self loadCode:p_code_listing withFile:@"/Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/InputFiles/main.lst"];
+        //[self loadCode:p_code_listing withFile:@"/Users/aop007/Documents/Projets/DawnStar/dsPIC workspace/main.cof"];
     }
     
     return self;
 
+}
+
+-(void)loadCode:(NSDictionary *)dictonary withFile:(NSString *)file
+{
+    NSError    *error;
+    NSScanner  *pScanner;
+    NSString   *line;
+    UInt32      addr;
+    NSString   *fileContents;
+    NSArray    *allLinedStrings;
+    
+    error           = [[NSError alloc] init];
+    fileContents    = [NSString stringWithContentsOfFile:file encoding:NSASCIIStringEncoding error:&error];
+    allLinedStrings = [fileContents componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]];
+    
+    for (int ix = 0 ; ix < [allLinedStrings count] ; ix++) {
+        line = [allLinedStrings objectAtIndex:ix];
+        
+        if ([line length] < 5) {
+            continue;
+        }
+        
+        if ([line characterAtIndex:4] == ':') {
+            pScanner = [NSScanner scannerWithString: line];
+            [pScanner scanHexInt:&addr];
+            NSLog(line);
+        }
+    }
 }
 
 
