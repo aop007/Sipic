@@ -10,6 +10,7 @@
 #import "ProjectSymbols.h"
 #import "CodeLineElement.h"
 #import "cpu.h"
+#import "WindowController.h"
 
 
 #define  TABLE_VIEW_MEM_VIEW1_TAG       0u
@@ -35,7 +36,9 @@ typedef  struct  code_line_element{
     CPU_INT32U   index;
 } CODE_LINE_ELEMENT;
 
-@property (assign) IBOutlet NSTableView *p_table;
+@property (assign) IBOutlet NSTableView         *p_table;
+
+@property (assign) IBOutlet NSWindowController  *p_win_ctrl;
 
 -(IBAction)tableAction:(id)sender;
 

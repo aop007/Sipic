@@ -61,22 +61,29 @@
     UInt32      addr;
     NSString   *memoryBPstring;
     NSScanner  *pScanner;
+    NSString   *btnName;
     
     
     memoryBPstring = [_p_pc_bp stringValue];
     pScanner       = [NSScanner scannerWithString:memoryBPstring];
     
     p_button = (NSButton *)sender;
+    btnName  = [p_button title];
     
-    if ([[p_button title] compare:@"Run"] == NSOrderedSame) {
+    if ([btnName compare:@"Run"] == NSOrderedSame) {
         [p_button setTitle:@"Stop"];
+        
         [p_run_thread initWithTarget:self selector:@selector(Thread_Run) object:nil];
-        kill_thread = false;
         [p_run_thread start];
     } else {
-        [p_button setTitle:@"Run"];
+        
         kill_thread = true;
-        [p_run_thread cancel];
+        [p_button setTitle:@"Run"];
+        [_p_mem_view1    reloadData];
+        [_p_mem_view2    reloadData];
+        [_p_call_stack   reloadData];
+        [_p_code_listing reloadData];
+        //[p_run_thread    cancel];
     }
 }
 
@@ -86,7 +93,7 @@
     BREAK_POINT_LIST  *listHead;
     
     
-    
+    kill_thread = false;
     
     while (kill_thread == false) {
         Sim_Step();
@@ -97,6 +104,7 @@
         
         while (listHead != NULL) {
             if (listHead->cle.addr == PC) {
+                kill_thread = true;
                 break;
             } else {
                 listHead = listHead->next;
@@ -104,11 +112,39 @@
         }
     }
     
+    //[self sim_run_pause:_p_start_stop];
+    
+    NSLog(@"Found BP");
+    
+    [_p_start_stop   setTitle:@"Run"];
     [_p_mem_view1    reloadData];
     [_p_mem_view2    reloadData];
     [_p_call_stack   reloadData];
     [_p_code_listing reloadData];
+    [p_run_thread    cancel];
 }
 
+- (void    )AddBreakPoint:   (CodeLineElement *)cle
+{
+    BREAK_POINT_LIST  *new_bpl;
+    
+    
+    new_bpl = malloc(sizeof(BREAK_POINT_LIST));
+    
+    if (bpl == NULL) {
+        bpl       = new_bpl;
+        bpl->cle  = cle;
+        bpl->next = NULL;
+    } else {
+        new_bpl->next = bpl;
+        new_bpl->cle  = cle;
+        bpl           = new_bpl;
+    }
+}
+
+- (void    )RemoveBreakPoint:(CodeLineElement *)cle
+{
+    NSLog(@"Remove!");
+}
 
 @end

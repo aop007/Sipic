@@ -11,12 +11,6 @@
 #import "TableViewsController.h"
 #import "CodeLineElement.h"
 
-struct break_point_list;
-
-typedef  struct  break_point_list {
-    struct  break_point_list  *next;
-    CodeLineElement   *cle;
-} BREAK_POINT_LIST;
 
 @interface WindowController : NSWindowController
 {
@@ -33,10 +27,11 @@ typedef  struct  break_point_list {
 @property (assign) IBOutlet NSTableView *p_code_listing;
 @property (assign) IBOutlet NSTextField *p_pc_bp;
 
+@property (assign) IBOutlet NSButton    *p_start_stop;
+
 - (IBAction)sim_step:(id)sender;
 - (IBAction)sim_run_pause:(id)sender;
 - (void    )Thread_Run;
-
-
-
+- (void    )AddBreakPoint:   (CodeLineElement *)cle;
+- (void    )RemoveBreakPoint:(CodeLineElement *)cle;
 @end

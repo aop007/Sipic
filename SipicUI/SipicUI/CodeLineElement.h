@@ -19,4 +19,13 @@
 @property (assign) bool      isCode;
 @property (assign) int       addr;
 
+
+
 @end
+
+struct break_point_list;
+
+typedef  struct  break_point_list {
+    struct  break_point_list  *next;
+    CodeLineElement   *cle;
+} BREAK_POINT_LIST;

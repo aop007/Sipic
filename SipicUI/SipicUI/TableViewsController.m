@@ -13,7 +13,8 @@
 
 @implementation TableViewsController
 
-@synthesize p_table = _p_table;
+@synthesize p_table    = _p_table;
+@synthesize p_win_ctrl = _p_win_ctrl;
 
 -(id)init
 {
@@ -205,12 +206,13 @@
 
 -(IBAction)tableAction:(id)sender
 {
-    NSTimeInterval    time_int;
-    NSTableView      *p_tblview;
-    CodeLineElement  *cle;
+    NSTimeInterval     time_int;
+    NSTableView       *p_tblview;
+    CodeLineElement   *cle;
+    WindowController  *wc;
     
     time_int = -[p_last_click timeIntervalSinceNow];
-    
+    wc = (WindowController *)_p_win_ctrl;
     
     if (time_int > MAX_DCLICK_TIME) {
         p_last_click = [p_last_click initWithTimeIntervalSinceNow:0];       // No double click. Return.
@@ -231,6 +233,7 @@
     /* Add or remove from break list. */
     if (cle.breakOnPC == true) {
         NSLog(@"Add %x:%@ to breaklist", cle.addr, cle.line);
+        [wc AddBreakPoint:cle];
     } else {
         NSLog(@"Remove %x:%@ to breaklist", cle.addr, cle.line);
     }
