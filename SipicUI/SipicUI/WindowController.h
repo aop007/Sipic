@@ -15,7 +15,8 @@
 {
 //    TableViewsController  *p_tvc;
     SimulationController  *p_sim_ctrl;
-
+    bool                   kill_thread;
+    NSThread              *p_run_thread;
 }
 
 @property (assign) IBOutlet NSTableView *p_mem_view1;
@@ -26,5 +27,6 @@
 
 - (IBAction)sim_step:(id)sender;
 - (IBAction)sim_run_pause:(id)sender;
+- (void    )Thread_Run;
 
 @end

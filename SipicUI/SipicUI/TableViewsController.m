@@ -16,17 +16,18 @@
     self = [super init];
     if (self) {
         p_symbols = [[ProjectSymbols alloc] init];
-        p_code_listing = [[NSDictionary alloc] init];
+        p_code_listing = [[NSMutableDictionary alloc] init];
+        p_code_all     = [[NSMutableArray alloc] init];
         
-        [self loadCode:p_code_listing withFile:@"/Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/InputFiles/main.lst"];
-        //[self loadCode:p_code_listing withFile:@"/Users/aop007/Documents/Projets/DawnStar/dsPIC workspace/main.cof"];
+        [self loadCodeLST:p_code_listing withFile:@"/Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/InputFiles/main.lst" allLines:p_code_all];
+        [self loadCodeTXT:p_code_listing withFile:@"/Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/InputFiles/main.txt" allLines:p_code_all];
     }
     
     return self;
 
 }
 
--(void)loadCode:(NSDictionary *)dictonary withFile:(NSString *)file
+-(void)loadCodeLST:(NSMutableDictionary *)dictonary withFile:(NSString *)file allLines:(NSMutableArray *)allLines
 {
     NSError    *error;
     NSScanner  *pScanner;
@@ -34,13 +35,23 @@
     UInt32      addr;
     NSString   *fileContents;
     NSArray    *allLinedStrings;
+    NSRange     range;
+    NSString   *key;
+    NSNumber   *addr_nbr;
     
     error           = [[NSError alloc] init];
     fileContents    = [NSString stringWithContentsOfFile:file encoding:NSASCIIStringEncoding error:&error];
     allLinedStrings = [fileContents componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]];
     
+    range.length   = 4;
+    range.location = 0;
+    
     for (int ix = 0 ; ix < [allLinedStrings count] ; ix++) {
         line = [allLinedStrings objectAtIndex:ix];
+        
+        if ([line length] > 0) {
+            [allLines addObject:line];
+        }
         
         if ([line length] < 5) {
             continue;
@@ -49,11 +60,52 @@
         if ([line characterAtIndex:4] == ':') {
             pScanner = [NSScanner scannerWithString: line];
             [pScanner scanHexInt:&addr];
-            NSLog(line);
+            addr_nbr = [[NSNumber alloc] initWithInt:addr];
+            key = [addr_nbr stringValue];
+            
+            [dictonary setObject:line forKey:key];
         }
     }
 }
 
+-(void)loadCodeTXT:(NSMutableDictionary *)dictonary withFile:(NSString *)file allLines:(NSMutableArray *)allLines
+{
+    NSError    *error;
+    NSScanner  *pScanner;
+    NSString   *line;
+    UInt32      addr;
+    NSString   *fileContents;
+    NSArray    *allLinedStrings;
+    NSRange     range;
+    NSString   *key;
+    NSNumber   *addr_nbr;
+    
+    error           = [[NSError alloc] init];
+    fileContents    = [NSString stringWithContentsOfFile:file encoding:NSASCIIStringEncoding error:&error];
+    allLinedStrings = [fileContents componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]];
+    
+    range.length   = 4;
+    range.location = 2;
+    
+    for (int ix = 0 ; ix < [allLinedStrings count] ; ix++) {
+        line = [allLinedStrings objectAtIndex:ix];
+        
+        [allLines addObject:line];
+        
+        if ([line length] < 5) {
+            continue;
+        }
+        
+        if (([line characterAtIndex:0] == ' ') && ([line characterAtIndex:1] == ' ') && ([line characterAtIndex:2] != ' ')) {
+            pScanner = [NSScanner scannerWithString: line];
+            [pScanner scanHexInt:&addr];
+            addr_nbr = [[NSNumber alloc] initWithInt:addr];
+            key = [addr_nbr stringValue];
+            
+            [dictonary setObject:line forKey:key];
+        }
+    }
+}
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
@@ -66,7 +118,7 @@
             return Sim_GetCallDepth();
             
         case TABLE_VIEW_CODE_LISTING_TAG:
-            return [p_code_listing count];
+            return [p_code_all count];
             
         default:
             return 0;
@@ -88,10 +140,10 @@
             returning = [self GetCallStackTable:aTableColumn row:rowIndex];
             return returning;
             
-#if 0     
+#if 1     
             
         case TABLE_VIEW_CODE_LISTING_TAG:
-            return [p_code_listing count];
+            return [p_code_all objectAtIndex:rowIndex];
 #endif
         default:
             return 0;
@@ -139,5 +191,9 @@
     return value;
 }
 
+- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
+{
+    [aCell setFont:[NSFont fontWithName:@"Menlo" size:10.0]];
+}
 
 @end

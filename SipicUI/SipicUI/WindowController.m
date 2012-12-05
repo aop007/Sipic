@@ -22,7 +22,8 @@
         
  //       run();
 //        p_tvc = [[TableViewsController alloc] init];
-        
+        kill_thread = true;
+        p_run_thread = [NSThread alloc];
     }
     
     return self;
@@ -51,21 +52,50 @@
 
 - (IBAction)sim_run_pause:(id)sender
 {
-    UInt32 addr;
+    NSButton   *p_button;
+    UInt32      addr;
     NSScanner  *pScanner = [NSScanner scannerWithString: [_p_pc_bp stringValue]];
-    [pScanner scanHexInt:&addr];
     
+    
+    p_button = (NSButton *)sender;
+    
+    if ([[p_button title] compare:@"Run"] == NSOrderedSame) {
+        [p_button setTitle:@"Stop"];
+        [p_run_thread initWithTarget:self selector:@selector(Thread_Run) object:nil];
+        kill_thread = false;
+        [p_run_thread start];
+    } else {
+        [p_button setTitle:@"Run"];
+        kill_thread = true;
+        [p_run_thread cancel];
+    }
+#if 1
+    Sim_Step();
+#else
+    [pScanner scanHexInt:&addr];
     
     while (Sim_GetValueFromDataMem(0x002E) != addr) {
         Sim_Step();
 
     }
-
-    [_p_mem_view1 reloadData];
-    [_p_mem_view2 reloadData];
-    [_p_call_stack reloadData];
+#endif
+    [_p_mem_view1    reloadData];
+    [_p_mem_view2    reloadData];
+    [_p_call_stack   reloadData];
     [_p_code_listing reloadData];
     
+}
+
+-(void)Thread_Run
+{
+    while (kill_thread == false) {
+        Sim_Step();
+    }
+    
+    [_p_mem_view1    reloadData];
+    [_p_mem_view2    reloadData];
+    [_p_call_stack   reloadData];
+    [_p_code_listing reloadData];
 }
 
 @end
