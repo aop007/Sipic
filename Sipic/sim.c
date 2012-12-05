@@ -373,7 +373,11 @@ CPU_INT32U Sim_AddrForDepth(CPU_INT32U  depth)
         levels        = Call_Depth - depth - 1;
         
         for (ix = 0 ; ix < levels ; ix++) {
-            p_stack_entry = p_stack_entry->next;
+            if (p_stack_entry != NULL) {
+                p_stack_entry = p_stack_entry->next;
+            } else {
+                return 0;
+            }
         }
         
         if (p_stack_entry->depth != (depth +1)) {

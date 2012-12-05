@@ -27,6 +27,8 @@
         
         //[_p_code_listing setDoubleAction:@selector(doubleClick:)];
         //[_p_code_listing setTarget:self];
+        
+        bpl = NULL;
     }
     
     return self;
@@ -57,8 +59,12 @@
 {
     NSButton   *p_button;
     UInt32      addr;
-    NSScanner  *pScanner = [NSScanner scannerWithString: [_p_pc_bp stringValue]];
+    NSString   *memoryBPstring;
+    NSScanner  *pScanner;
     
+    
+    memoryBPstring = [_p_pc_bp stringValue];
+    pScanner       = [NSScanner scannerWithString:memoryBPstring];
     
     p_button = (NSButton *)sender;
     
@@ -72,27 +78,30 @@
         kill_thread = true;
         [p_run_thread cancel];
     }
-#if 1
-    Sim_Step();
-#else
-    [pScanner scanHexInt:&addr];
-    
-    while (Sim_GetValueFromDataMem(0x002E) != addr) {
-        Sim_Step();
-
-    }
-#endif
-    [_p_mem_view1    reloadData];
-    [_p_mem_view2    reloadData];
-    [_p_call_stack   reloadData];
-    [_p_code_listing reloadData];
-    
 }
 
 -(void)Thread_Run
 {
+    CPU_INT32U         PC;
+    BREAK_POINT_LIST  *listHead;
+    
+    
+    
+    
     while (kill_thread == false) {
         Sim_Step();
+        
+        PC       = (Sim_GetValueFromDataMem(0x0030) & 0xFF) << 16 | Sim_GetValueFromDataMem(0x002E);
+        listHead = bpl;
+        
+        
+        while (listHead != NULL) {
+            if (listHead->cle.addr == PC) {
+                break;
+            } else {
+                listHead = listHead->next;
+            }
+        }
     }
     
     [_p_mem_view1    reloadData];
@@ -101,9 +110,5 @@
     [_p_code_listing reloadData];
 }
 
-- (void)doubleClick:(id)sender
-{
-    NSLog(@"DClick!");
-}
 
 @end

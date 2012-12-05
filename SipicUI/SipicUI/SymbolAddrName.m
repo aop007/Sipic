@@ -10,10 +10,14 @@
 
 @implementation SymbolAddrName
 
+@synthesize addr     = _addr;
+@synthesize fnctName = _fnctName;
+
+
 -(id)initWithAddr:(int)address andName:(NSString *)name
 {
-    _addr     = [[NSNumber alloc] initWithInt:address];
-    _fnctName = [name retain];
+    self.addr     = [[NSNumber alloc] initWithInt:address];
+    self.fnctName = [name retain];
     
     return self;
 }

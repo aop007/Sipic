@@ -9,7 +9,14 @@
 #import <Cocoa/Cocoa.h>
 #import "SimulationController.h"
 #import "TableViewsController.h"
+#import "CodeLineElement.h"
 
+struct break_point_list;
+
+typedef  struct  break_point_list {
+    struct  break_point_list  *next;
+    CodeLineElement   *cle;
+} BREAK_POINT_LIST;
 
 @interface WindowController : NSWindowController
 {
@@ -17,6 +24,7 @@
     SimulationController  *p_sim_ctrl;
     bool                   kill_thread;
     NSThread              *p_run_thread;
+    BREAK_POINT_LIST      *bpl;
 }
 
 @property (assign) IBOutlet NSTableView *p_mem_view1;
@@ -28,4 +36,7 @@
 - (IBAction)sim_step:(id)sender;
 - (IBAction)sim_run_pause:(id)sender;
 - (void    )Thread_Run;
+
+
+
 @end

@@ -203,10 +203,6 @@ void Peri_ISR_FromVect(CPU_INT32U    isr_vect_addr,
     CPU_INT32U  CORCON;
     CPU_INT32U  ISR_addr;
     CORE_ERR    core_err;
-#ifndef  DONT_PRINT_TIME
-    tm_struct   time_buffer;
-    CPU_INT32U  binary_time;
-#endif
     MEM_ERR     mem_err;
     
 #if 0
