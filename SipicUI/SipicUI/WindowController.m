@@ -24,6 +24,9 @@
 //        p_tvc = [[TableViewsController alloc] init];
         kill_thread = true;
         p_run_thread = [NSThread alloc];
+        
+        //[_p_code_listing setDoubleAction:@selector(doubleClick:)];
+        //[_p_code_listing setTarget:self];
     }
     
     return self;
@@ -96,6 +99,11 @@
     [_p_mem_view2    reloadData];
     [_p_call_stack   reloadData];
     [_p_code_listing reloadData];
+}
+
+- (void)doubleClick:(id)sender
+{
+    NSLog(@"DClick!");
 }
 
 @end

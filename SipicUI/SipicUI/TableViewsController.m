@@ -9,36 +9,50 @@
 #import "TableViewsController.h"
 #import "sim.h"
 
+
+
 @implementation TableViewsController
+
+@synthesize p_table = _p_table;
 
 -(id)init
 {
+    CPU_INT32U  index;
+    
     self = [super init];
     if (self) {
         p_symbols = [[ProjectSymbols alloc] init];
         p_code_listing = [[NSMutableDictionary alloc] init];
         p_code_all     = [[NSMutableArray alloc] init];
+        p_last_click   = [[NSDate alloc] initWithTimeIntervalSinceNow:0];
         
-        [self loadCodeLST:p_code_listing withFile:@"/Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/InputFiles/main.lst" allLines:p_code_all];
-        [self loadCodeTXT:p_code_listing withFile:@"/Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/InputFiles/main.txt" allLines:p_code_all];
+        index = 0;
+        
+        [self loadCode:p_code_listing withFile:@"/Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/InputFiles/main.lst" allLines:p_code_all index:&index method:0];
+        [self loadCode:p_code_listing withFile:@"/Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/InputFiles/main.txt" allLines:p_code_all index:&index method:1];
+        
+
     }
     
     return self;
 
 }
 
--(void)loadCodeLST:(NSMutableDictionary *)dictonary withFile:(NSString *)file allLines:(NSMutableArray *)allLines
+-(void)loadCode:(NSMutableDictionary *)dictonary withFile:(NSString *)file allLines:(NSMutableArray *)allLines index:(CPU_INT32U *)p_index method:(int)method
 {
-    NSError    *error;
-    NSScanner  *pScanner;
-    NSString   *line;
-    UInt32      addr;
-    NSString   *fileContents;
-    NSArray    *allLinedStrings;
-    NSRange     range;
-    NSString   *key;
-    NSNumber   *addr_nbr;
+    NSError            *error;
+    NSScanner          *pScanner;
+    NSString           *line;
+    UInt32              addr;
+    NSString           *fileContents;
+    NSArray            *allLinedStrings;
+    NSRange             range;
+    NSString           *key;
+    NSNumber           *addr_nbr;
+    int                 index;
+    CodeLineElement    *cle;
     
+    index           = 0;
     error           = [[NSError alloc] init];
     fileContents    = [NSString stringWithContentsOfFile:file encoding:NSASCIIStringEncoding error:&error];
     allLinedStrings = [fileContents componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]];
@@ -50,61 +64,42 @@
         line = [allLinedStrings objectAtIndex:ix];
         
         if ([line length] > 0) {
-            [allLines addObject:line];
-        }
-        
-        if ([line length] < 5) {
+            
+            index++;
+        } else {
             continue;
         }
-        
-        if ([line characterAtIndex:4] == ':') {
-            pScanner = [NSScanner scannerWithString: line];
-            [pScanner scanHexInt:&addr];
-            addr_nbr = [[NSNumber alloc] initWithInt:addr];
-            key = [addr_nbr stringValue];
-            
-            [dictonary setObject:line forKey:key];
-        }
-    }
-}
 
--(void)loadCodeTXT:(NSMutableDictionary *)dictonary withFile:(NSString *)file allLines:(NSMutableArray *)allLines
-{
-    NSError    *error;
-    NSScanner  *pScanner;
-    NSString   *line;
-    UInt32      addr;
-    NSString   *fileContents;
-    NSArray    *allLinedStrings;
-    NSRange     range;
-    NSString   *key;
-    NSNumber   *addr_nbr;
-    
-    error           = [[NSError alloc] init];
-    fileContents    = [NSString stringWithContentsOfFile:file encoding:NSASCIIStringEncoding error:&error];
-    allLinedStrings = [fileContents componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]];
-    
-    range.length   = 4;
-    range.location = 2;
-    
-    for (int ix = 0 ; ix < [allLinedStrings count] ; ix++) {
-        line = [allLinedStrings objectAtIndex:ix];
+        cle = [[CodeLineElement alloc] init];
         
-        [allLines addObject:line];
+        cle.index     = index - 1;
+        cle.line      = [line retain];
+        cle.breakOnPC = false;
+        cle.isCode    = false;
+        cle.addr      = 0;
+        
+        [allLines addObject:cle];
         
         if ([line length] < 5) {
             continue;
         }
-        
-        if (([line characterAtIndex:0] == ' ') && ([line characterAtIndex:1] == ' ') && ([line characterAtIndex:2] != ' ')) {
+
+        if (((method == 0) && ([line characterAtIndex:4] == ':')) ||                                                                                /* LST */
+            ((method == 1) && ([line characterAtIndex:0] == ' ') && ([line characterAtIndex:1] == ' ') && ([line characterAtIndex:2] != ' '))) {    /* TXT */
+            
             pScanner = [NSScanner scannerWithString: line];
             [pScanner scanHexInt:&addr];
             addr_nbr = [[NSNumber alloc] initWithInt:addr];
             key = [addr_nbr stringValue];
             
-            [dictonary setObject:line forKey:key];
+            cle.isCode = true;
+            cle.addr   = addr;
+            
+            [dictonary setObject:cle forKey:key];
         }
     }
+    
+    *p_index = index;
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
@@ -127,7 +122,8 @@
 
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
-    NSString *returning;  
+    CodeLineElement  *cle;
+    NSString         *returning;  
     
     switch ([aTableView tag]) {
         case TABLE_VIEW_MEM_VIEW1_TAG:
@@ -143,10 +139,16 @@
 #if 1     
             
         case TABLE_VIEW_CODE_LISTING_TAG:
-            return [p_code_all objectAtIndex:rowIndex];
+            cle = [p_code_all objectAtIndex:rowIndex];
+            if (cle.line != nil) {
+                return cle.line;
+            } else {
+                return @"";
+            }
+            
 #endif
         default:
-            return 0;
+            return @"";
     }
 }
 
@@ -194,6 +196,49 @@
 - (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
     [aCell setFont:[NSFont fontWithName:@"Menlo" size:10.0]];
+}
+
+- (void)doubleClick
+{
+    NSLog(@"DoubleClick");
+}
+
+-(IBAction)tableAction:(id)sender
+{
+    NSTimeInterval    time_int;
+    NSTableView      *p_tblview;
+    CodeLineElement  *cle;
+    
+    time_int = -[p_last_click timeIntervalSinceNow];
+    
+    
+    if (time_int > MAX_DCLICK_TIME) {
+        p_last_click = [p_last_click initWithTimeIntervalSinceNow:0];       // No double click. Return.
+        return;
+    } else {
+        p_last_click = [p_last_click initWithTimeIntervalSinceNow:-1];
+    }
+    
+    p_tblview = (NSTableView *)sender;
+    
+    //NSLog(@"table action from %@ at row %lu %f",[p_tblview identifier], [p_tblview clickedRow], time_int);
+    
+    /* If code, toggle break on PC property. */
+    cle = [p_code_all objectAtIndex:[p_tblview clickedRow]];
+    
+    cle.breakOnPC = !cle.breakOnPC;
+    
+    /* Add or remove from break list. */
+    if (cle.breakOnPC == true) {
+        NSLog(@"Add %x:%@ to breaklist", cle.addr, cle.line);
+    } else {
+        NSLog(@"Remove %x:%@ to breaklist", cle.addr, cle.line);
+    }
+}
+
+- (BOOL)tableView:(NSTableView *)aTableView shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
+{
+    return false;
 }
 
 @end
