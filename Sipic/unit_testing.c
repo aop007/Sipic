@@ -177,8 +177,8 @@ void  UT_CleanContext(SIM  *p_sim) {
 
 void  UT_Testting(SIM  *p_sim)
 {
-    tm_struct   time_buffer;
-    CPU_INT32U  binary_time;
+    //tm_struct   time_buffer;
+    //CPU_INT32U  binary_time;
 
 
     /* Test Time Conversion Functions. */

@@ -52,8 +52,9 @@
     NSNumber           *addr_nbr;
     int                 index;
     CodeLineElement    *cle;
+    CodeLineElement    *current_key;
     
-    index           = 0;
+    index           = *p_index;
     error           = [[NSError alloc] init];
     fileContents    = [NSString stringWithContentsOfFile:file encoding:NSASCIIStringEncoding error:&error];
     allLinedStrings = [fileContents componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]];
@@ -96,7 +97,11 @@
             cle.isCode = true;
             cle.addr   = addr;
             
-            [dictonary setObject:cle forKey:key];
+            current_key = [dictonary objectForKey:key];
+            
+            if (current_key == nil) {
+                [dictonary setObject:cle forKey:key];
+            }
         }
     }
     
@@ -123,7 +128,6 @@
 
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
-    CodeLineElement  *cle;
     NSString         *returning;  
     
     switch ([aTableView tag]) {
@@ -137,17 +141,12 @@
             returning = [self GetCallStackTable:aTableColumn row:rowIndex];
             return returning;
             
-#if 1     
             
         case TABLE_VIEW_CODE_LISTING_TAG:
-            cle = [p_code_all objectAtIndex:rowIndex];
-            if (cle.line != nil) {
-                return cle.line;
-            } else {
-                return @"";
-            }
+            returning = [self GetCodeTable:aTableColumn row:rowIndex];
+            return returning;
             
-#endif
+
         default:
             return @"";
     }
@@ -162,11 +161,35 @@
     value = [aTableColumn identifier];
     
     if ([[aTableColumn identifier] isEqualToString:@"Addr"]) {
-        number = [[NSNumber alloc]initWithInt:(NSInteger)Sim_AddrForDepth(rowIndex)];
+        number = [[NSNumber alloc]initWithInt:Sim_AddrForDepth((CPU_INT32U)rowIndex)];
         value  = [NSString stringWithFormat:@"%06X", [number intValue]];
     } else {
         
-        value = [p_symbols getSymbolAtAddr:Sim_AddrForDepth(rowIndex)];
+        value = [p_symbols getSymbolAtAddr:Sim_AddrForDepth((CPU_INT32U)rowIndex)];
+    }
+    
+    return value;
+}
+
+- (NSString *)GetCodeTable:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
+{
+    NSNumber         *number;
+    NSString         *value;
+    CodeLineElement  *cle;
+
+    
+    value = [aTableColumn identifier];
+    
+    if ([[aTableColumn identifier] isEqualToString:@"Line"]) {
+        number = [[NSNumber alloc]initWithInt:rowIndex];
+        value  = [number stringValue];
+    } else {
+        cle = [p_code_all objectAtIndex:rowIndex];
+        if (cle.line != nil) {
+            return cle.line;
+        } else {
+            return @"";
+        }
     }
     
     return value;
@@ -196,6 +219,19 @@
 
 - (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
+    NSCell          *cell;
+    CodeLineElement *cle;
+    
+    cle  = [p_code_all objectAtIndex:rowIndex];
+    cell = (NSCell *)aCell;
+    
+    if (cle.breakOnPC == true) {
+        [aCell setTextColor:[NSColor redColor]];
+        //[cell setBackgroundColor:[NSColor redColor]];
+        //[cell setForegroundColor:[NSColor whiteColor]];
+    } else {
+        [aCell setTextColor:[NSColor blackColor]];
+    }
     [aCell setFont:[NSFont fontWithName:@"Menlo" size:10.0]];
 }
 
@@ -237,11 +273,27 @@
     } else {
         NSLog(@"Remove %x:%@ to breaklist", cle.addr, cle.line);
     }
+    //[_p_win_ctrl UpdateWindowControls];
 }
 
 - (BOOL)tableView:(NSTableView *)aTableView shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
     return false;
+}
+
+-(NSInteger)RowForPC:(NSInteger)pc
+{
+    NSNumber         *pc_val;
+    CodeLineElement  *cle;
+    NSString         *key;
+    
+    
+    pc_val = [[NSNumber alloc] initWithInt:(int)pc];
+    key    = [pc_val stringValue];
+    
+    cle = [p_code_listing objectForKey:key];
+ 
+    return cle.index;
 }
 
 @end

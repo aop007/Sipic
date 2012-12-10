@@ -7,6 +7,7 @@
 //
 
 #import "WindowController.h"
+#import "sim.h"
 
 @interface WindowController ()
 
@@ -19,16 +20,10 @@
     self = [super initWithWindow:window];
     if (self) {
         init_sipic();
-        
- //       run();
-//        p_tvc = [[TableViewsController alloc] init];
-        kill_thread = true;
+
+        kill_thread  = true;
         p_run_thread = [NSThread alloc];
-        
-        //[_p_code_listing setDoubleAction:@selector(doubleClick:)];
-        //[_p_code_listing setTarget:self];
-        
-        bpl = NULL;
+        bpl          = NULL;
     }
     
     return self;
@@ -49,16 +44,13 @@
 - (IBAction)sim_step:(id)sender
 {
     Sim_Step();
-    [_p_mem_view1 reloadData];
-    [_p_mem_view2 reloadData];
-    [_p_call_stack reloadData];
-    [_p_code_listing reloadData];
+    [self UpdateWindowControls];
 }
 
 - (IBAction)sim_run_pause:(id)sender
 {
     NSButton   *p_button;
-    UInt32      addr;
+    //UInt32      addr;
     NSString   *memoryBPstring;
     NSScanner  *pScanner;
     NSString   *btnName;
@@ -79,10 +71,7 @@
         
         kill_thread = true;
         [p_button setTitle:@"Run"];
-        [_p_mem_view1    reloadData];
-        [_p_mem_view2    reloadData];
-        [_p_call_stack   reloadData];
-        [_p_code_listing reloadData];
+        [self UpdateWindowControls];
         //[p_run_thread    cancel];
     }
 }
@@ -117,10 +106,7 @@
     NSLog(@"Found BP");
     
     [_p_start_stop   setTitle:@"Run"];
-    [_p_mem_view1    reloadData];
-    [_p_mem_view2    reloadData];
-    [_p_call_stack   reloadData];
-    [_p_code_listing reloadData];
+    [self UpdateWindowControls];
     [p_run_thread    cancel];
 }
 
@@ -132,9 +118,9 @@
     new_bpl = malloc(sizeof(BREAK_POINT_LIST));
     
     if (bpl == NULL) {
-        bpl       = new_bpl;
-        bpl->cle  = cle;
-        bpl->next = NULL;
+        bpl           = new_bpl;
+        bpl->cle      = cle;
+        bpl->next     = NULL;
     } else {
         new_bpl->next = bpl;
         new_bpl->cle  = cle;
@@ -142,9 +128,40 @@
     }
 }
 
-- (void    )RemoveBreakPoint:(CodeLineElement *)cle
+- (void)RemoveBreakPoint:(CodeLineElement *)cle
 {
     NSLog(@"Remove!");
+}
+
+-(void)UpdateWindowControls
+{
+    CPU_INT32U             PC;
+    TableViewsController  *tvc;
+    NSInteger              row;
+    //NSInteger              rowHeight;
+    
+    tvc = (TableViewsController *)_p_data_source;
+    PC  = (Sim_GetValueFromDataMem(0x0030) & 0xFF) << 16 | Sim_GetValueFromDataMem(0x002E);
+    
+    //[p_code]
+    
+    row       = [tvc RowForPC:PC];
+    
+#if 1
+    [_p_code_listing scrollRowToVisible:row];
+    NSLog(@"Scroll to Line %d", row);
+#else
+    rowHeight = (NSInteger)[_p_code_listing rowHeight];
+    
+    NSPoint pointToScrollTo = NSMakePoint (0, (row * rowHeight));  // Any point you like.
+    [[_p_code_listing_scroll contentView] scrollToPoint: pointToScrollTo];
+    [_p_code_listing_scroll reflectScrolledClipView: [_p_code_listing_scroll contentView]];
+#endif
+    
+    [_p_mem_view1    reloadData];
+    [_p_mem_view2    reloadData];
+    [_p_call_stack   reloadData];
+    [_p_code_listing reloadData];
 }
 
 @end

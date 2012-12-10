@@ -42,4 +42,5 @@ typedef  struct  code_line_element{
 
 -(IBAction)tableAction:(id)sender;
 
+-(NSInteger)RowForPC:(NSInteger)pc;
 @end

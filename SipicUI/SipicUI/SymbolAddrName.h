@@ -13,8 +13,8 @@
 
 }
 
-@property NSNumber *addr;
-@property NSString *fnctName;
+@property (assign) NSNumber *addr;
+@property (assign) NSString *fnctName;
 
 -(id)initWithAddr:(int)address andName:(NSString *)name;
 
