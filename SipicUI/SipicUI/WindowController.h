@@ -12,13 +12,15 @@
 #import "CodeLineElement.h"
 
 
-@interface WindowController : NSWindowController
+@interface WindowController : NSWindowController <NSTableViewDataSource, NSTableViewDelegate>
 {
-//    TableViewsController  *p_tvc;
+    //TableViewsController  *p_tvc;
     SimulationController           *p_sim_ctrl;
     bool                            kill_thread;
     NSThread                       *p_run_thread;
     BREAK_POINT_LIST               *bpl;
+    bool                            breakPointSignalled;
+    NSObject                       *tableViewController;
 }
 
 @property (assign) IBOutlet NSTableView *p_mem_view1;
@@ -35,10 +37,12 @@
 
 @property (assign) IBOutlet NSButton    *p_start_stop;
 
-@property (assign) IBOutlet NSObject    *p_data_source;
+//@property (assign) IBOutlet NSObject    *p_data_source;
 
 - (IBAction)sim_step:(id)sender;
 - (IBAction)sim_run_pause:(id)sender;
+- (IBAction)tableAction:(id)sender;
+
 - (void    )Thread_Run;
 - (void    )AddBreakPoint:   (CodeLineElement *)cle;
 - (void    )RemoveBreakPoint:(CodeLineElement *)cle;

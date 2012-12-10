@@ -23,7 +23,7 @@
 
 #define  MAX_DCLICK_TIME                0.25
 
-@interface TableViewsController : NSObject <NSTableViewDataSource, NSTableViewDelegate>
+@interface TableViewsController : NSObject 
 {
     ProjectSymbols       *p_symbols;
     NSMutableDictionary  *p_code_listing;
@@ -36,11 +36,17 @@ typedef  struct  code_line_element{
     CPU_INT32U   index;
 } CODE_LINE_ELEMENT;
 
-@property (assign) IBOutlet NSTableView         *p_table;
+//@property (assign) IBOutlet NSTableView         *p_table;
 
-@property (assign) IBOutlet NSWindowController  *p_win_ctrl;
+//@property (assign) IBOutlet NSWindowController  *p_win_ctrl;
 
--(IBAction)tableAction:(id)sender;
 
--(NSInteger)RowForPC:(NSInteger)pc;
+-(CodeLineElement *)tableAction:(id)sender;
+-(CodeLineElement *)CleForPC:(NSInteger)pc;
+
+/* Delegate Methods */
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView;
+- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex;
+- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex;
+- (BOOL)tableView:(NSTableView *)aTableView shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex;
 @end

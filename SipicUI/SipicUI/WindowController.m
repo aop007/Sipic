@@ -21,9 +21,14 @@
     if (self) {
         init_sipic();
 
-        kill_thread  = true;
-        p_run_thread = [NSThread alloc];
-        bpl          = NULL;
+        kill_thread         = true;
+        p_run_thread        = [NSThread alloc];
+        bpl                 = NULL;
+        breakPointSignalled = false;
+        
+        tableViewController = [[TableViewsController alloc] init];
+        
+        [self loadBPLfromFile:@"/Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/InputFiles/breakpointfile.txt"];
     }
     
     return self;
@@ -130,38 +135,164 @@
 
 - (void)RemoveBreakPoint:(CodeLineElement *)cle
 {
-    NSLog(@"Remove!");
+    BREAK_POINT_LIST  *prev_bpl;
+    BREAK_POINT_LIST  *remove_bpl;
+    
+    prev_bpl   = nil;
+    remove_bpl = bpl;
+    
+    while ((remove_bpl->cle != cle) && (remove_bpl != nil)) {
+        
+        prev_bpl   = remove_bpl;
+        remove_bpl = remove_bpl->next;
+    }
+    
+    if (remove_bpl != nil) {
+        if (prev_bpl == nil) {      /* Breakpoint is head */
+            bpl = remove_bpl->next;
+        } else {                    /* Breakpoint is in the middle of the list. */
+            prev_bpl->next = remove_bpl->next;
+        }
+    }
+    
+    free(remove_bpl);               /* Free the breakpoint. */
 }
 
 -(void)UpdateWindowControls
 {
     CPU_INT32U             PC;
     TableViewsController  *tvc;
-    NSInteger              row;
-    //NSInteger              rowHeight;
+    CodeLineElement       *cle;
     
-    tvc = (TableViewsController *)_p_data_source;
+    tvc = (TableViewsController *)tableViewController;
     PC  = (Sim_GetValueFromDataMem(0x0030) & 0xFF) << 16 | Sim_GetValueFromDataMem(0x002E);
+    cle = [tvc CleForPC:PC];
     
-    //[p_code]
-    
-    row       = [tvc RowForPC:PC];
-    
-#if 1
-    [_p_code_listing scrollRowToVisible:row];
-    NSLog(@"Scroll to Line %d", row);
-#else
-    rowHeight = (NSInteger)[_p_code_listing rowHeight];
-    
-    NSPoint pointToScrollTo = NSMakePoint (0, (row * rowHeight));  // Any point you like.
-    [[_p_code_listing_scroll contentView] scrollToPoint: pointToScrollTo];
-    [_p_code_listing_scroll reflectScrolledClipView: [_p_code_listing_scroll contentView]];
-#endif
+    /* Scroll to next Line of Execution. */
+    [_p_code_listing scrollRowToVisible:cle.index];
     
     [_p_mem_view1    reloadData];
     [_p_mem_view2    reloadData];
     [_p_call_stack   reloadData];
     [_p_code_listing reloadData];
+}
+
+- (void)windowWillClose:(NSNotification *)notification
+{
+    BREAK_POINT_LIST  *listHead;
+    NSOutputStream    *stream;
+    NSData            *data;
+    NSNumber          *number;
+    NSFileManager     *fileManager;
+    NSError           *error;
+    
+    error = [NSError alloc];
+    
+    fileManager = [NSFileManager defaultManager];
+    
+    [fileManager removeItemAtPath:@"/Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/InputFiles/breakpointfile.txt" error:&error];
+    
+    NSLog(@"Window willClose");
+    
+    stream = [[NSOutputStream alloc] initToFileAtPath:@"/Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/InputFiles/breakpointfile.txt" append:YES];
+
+    [stream open];
+    
+    listHead = bpl;
+    
+    while (listHead != NULL) {
+        number = [[NSNumber alloc] initWithInt:listHead->cle.addr];
+        data   = [[number stringValue] dataUsingEncoding:NSUTF8StringEncoding];
+        [stream write:data.bytes maxLength:data.length];
+        
+        data   = [@"\r\n" dataUsingEncoding:NSUTF8StringEncoding];
+        [stream write:data.bytes maxLength:data.length];
+        
+
+        listHead = listHead->next;
+    }
+    
+    [stream close];
+}
+
+-(void)loadBPLfromFile:(NSString *)path
+{
+    NSString              *line;
+    CPU_INT32U             ix;
+    BREAK_POINT_LIST      *new_bpl;
+    CodeLineElement       *cle;
+    TableViewsController  *tvc;
+    NSScanner             *pScanner;
+    int                    addrVal;
+    
+    
+    NSString* fileContents = [NSString stringWithContentsOfFile:path
+                                                       encoding:NSUTF8StringEncoding error:nil];
+    
+    NSArray* allLinedStrings = [fileContents componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]];
+    
+    tvc = (TableViewsController *)tableViewController;
+    
+    for (ix = 0 ; ix < [allLinedStrings count] ; ix++) {
+        line = [allLinedStrings objectAtIndex:ix];
+        if ([line length] > 0) {
+            /* Find CLE for addr */
+            pScanner = [NSScanner scannerWithString: line];
+            [pScanner scanInt:&addrVal];
+            
+            cle           = [tvc CleForPC:addrVal];
+            cle.breakOnPC = true;
+            
+            /* Add CLE to break point list */
+            new_bpl = malloc(sizeof(BREAK_POINT_LIST));
+            
+            if (bpl == NULL) {
+                bpl           = new_bpl;
+                bpl->cle      = cle;
+                bpl->next     = NULL;
+            } else {
+                new_bpl->next = bpl;
+                new_bpl->cle  = cle;
+                bpl           = new_bpl;
+            }
+        }
+    }
+}
+
+/* Delegate Methods */
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
+{
+    return [((TableViewsController *)tableViewController) numberOfRowsInTableView:aTableView];
+}
+
+- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
+{
+    return [((TableViewsController *)tableViewController) tableView:aTableView objectValueForTableColumn:aTableColumn row:rowIndex];
+}
+
+-(IBAction)tableAction:(id)sender
+{
+    CodeLineElement *cle;
+    
+    cle = [((TableViewsController *)tableViewController) tableAction:sender];
+    
+    if (cle != nil) {
+        if (cle.breakOnPC == true) {
+            [self AddBreakPoint:cle];
+        } else {
+            [self RemoveBreakPoint:cle];
+        }
+    }
+}
+
+- (BOOL)tableView:(NSTableView *)aTableView shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
+{
+    return [((TableViewsController *)tableViewController) tableView:aTableView shouldEditTableColumn:aTableColumn row:rowIndex];
+}
+
+- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
+{
+    [((TableViewsController *)tableViewController) tableView:aTableView willDisplayCell:aCell forTableColumn:aTableColumn row:rowIndex];
 }
 
 @end

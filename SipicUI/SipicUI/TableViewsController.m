@@ -13,15 +13,19 @@
 
 @implementation TableViewsController
 
-@synthesize p_table    = _p_table;
-@synthesize p_win_ctrl = _p_win_ctrl;
+//@synthesize p_table    = _p_table;
+//@synthesize p_win_ctrl = _p_win_ctrl;
 
 -(id)init
 {
-    CPU_INT32U  index;
+    WindowController  *wc;
+    CPU_INT32U         index;
     
     self = [super init];
     if (self) {
+        
+        NSLog(@"TableViewsController:init");
+        
         p_symbols = [[ProjectSymbols alloc] init];
         p_code_listing = [[NSMutableDictionary alloc] init];
         p_code_all     = [[NSMutableArray alloc] init];
@@ -32,7 +36,9 @@
         [self loadCode:p_code_listing withFile:@"/Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/InputFiles/main.lst" allLines:p_code_all index:&index method:0];
         [self loadCode:p_code_listing withFile:@"/Users/aop007/Documents/Projets/DawnStar/Sipic/Sipic/Sipic/InputFiles/main.txt" allLines:p_code_all index:&index method:1];
         
-
+        //wc = (WindowController *)_p_win_ctrl;
+        
+        //[wc TableViewControllerAlive:self];
     }
     
     return self;
@@ -181,7 +187,7 @@
     value = [aTableColumn identifier];
     
     if ([[aTableColumn identifier] isEqualToString:@"Line"]) {
-        number = [[NSNumber alloc]initWithInt:rowIndex];
+        number = [[NSNumber alloc]initWithInt:(int)rowIndex];
         value  = [number stringValue];
     } else {
         cle = [p_code_all objectAtIndex:rowIndex];
@@ -219,20 +225,37 @@
 
 - (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
+    //NSTableRowView  *trv;
     NSCell          *cell;
     CodeLineElement *cle;
+    CPU_INT32U       PC;
     
+    //trv  = [aTableView rowViewAtRow:0 makeIfNecessary:true];
+    PC   = (Sim_GetValueFromDataMem(0x0030) & 0xFF) << 16 | Sim_GetValueFromDataMem(0x002E);
     cle  = [p_code_all objectAtIndex:rowIndex];
     cell = (NSCell *)aCell;
     
-    if (cle.breakOnPC == true) {
-        [aCell setTextColor:[NSColor redColor]];
-        //[cell setBackgroundColor:[NSColor redColor]];
-        //[cell setForegroundColor:[NSColor whiteColor]];
-    } else {
-        [aCell setTextColor:[NSColor blackColor]];
-    }
     [aCell setFont:[NSFont fontWithName:@"Menlo" size:10.0]];
+    
+    
+    if (cle.isCode == false) {
+        [aCell setTextColor:[NSColor colorWithCalibratedHue:0.333 saturation:1.0 brightness:0.5 alpha:1.0]];
+        return;
+    }
+    
+    if (cle.addr == PC) {
+        [aCell setTextColor:[NSColor yellowColor]];
+        //[trv   setBackgroundColor:[NSColor blackColor]];
+    } else {
+        if (cle.breakOnPC == true) {
+            [aCell setTextColor:[NSColor redColor]];
+            //[trv   setBackgroundColor:[NSColor whiteColor]];
+        } else {
+            [aCell setTextColor:[NSColor whiteColor]];
+            //[trv   setBackgroundColor:[NSColor blackColor]];
+        }
+    }
+    
 }
 
 - (void)doubleClick
@@ -240,19 +263,19 @@
     NSLog(@"DoubleClick");
 }
 
--(IBAction)tableAction:(id)sender
+-(CodeLineElement *)tableAction:(id)sender
 {
     NSTimeInterval     time_int;
     NSTableView       *p_tblview;
     CodeLineElement   *cle;
-    WindowController  *wc;
+    //WindowController  *wc;
     
     time_int = -[p_last_click timeIntervalSinceNow];
-    wc = (WindowController *)_p_win_ctrl;
+    //wc = (WindowController *)_p_win_ctrl;
     
     if (time_int > MAX_DCLICK_TIME) {
         p_last_click = [p_last_click initWithTimeIntervalSinceNow:0];       // No double click. Return.
-        return;
+        return nil;
     } else {
         p_last_click = [p_last_click initWithTimeIntervalSinceNow:-1];
     }
@@ -269,11 +292,11 @@
     /* Add or remove from break list. */
     if (cle.breakOnPC == true) {
         NSLog(@"Add %x:%@ to breaklist", cle.addr, cle.line);
-        [wc AddBreakPoint:cle];
+        return cle;
     } else {
         NSLog(@"Remove %x:%@ to breaklist", cle.addr, cle.line);
+        return cle;
     }
-    //[_p_win_ctrl UpdateWindowControls];
 }
 
 - (BOOL)tableView:(NSTableView *)aTableView shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
@@ -281,7 +304,7 @@
     return false;
 }
 
--(NSInteger)RowForPC:(NSInteger)pc
+-(CodeLineElement *)CleForPC:(NSInteger)pc
 {
     NSNumber         *pc_val;
     CodeLineElement  *cle;
@@ -293,7 +316,7 @@
     
     cle = [p_code_listing objectForKey:key];
  
-    return cle.index;
+    return cle;
 }
 
 @end
