@@ -41,6 +41,7 @@
 
 - (IBAction)sim_step:(id)sender;
 - (IBAction)sim_run_pause:(id)sender;
+- (IBAction)sim_step_over:(id)sender;
 - (IBAction)tableAction:(id)sender;
 
 - (void    )Thread_Run;

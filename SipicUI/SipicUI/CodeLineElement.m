@@ -10,10 +10,11 @@
 
 @implementation CodeLineElement
 
-@synthesize line      = _line;
-@synthesize index     = _index;
-@synthesize breakOnPC = _breakOnPC;
-@synthesize isCode    = _isCode;
-@synthesize addr      = _addr;
+@synthesize line         = _line;
+@synthesize index        = _index;
+@synthesize breakOnPC    = _breakOnPC;
+@synthesize clearOnBreak = _clearOnBreak;
+@synthesize isCode       = _isCode;
+@synthesize addr         = _addr;
 
 @end

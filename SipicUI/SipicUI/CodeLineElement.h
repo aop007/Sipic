@@ -16,6 +16,7 @@
 @property (assign) NSString *line;
 @property (assign) int       index;
 @property (assign) bool      breakOnPC;
+@property (assign) bool      clearOnBreak;
 @property (assign) bool      isCode;
 @property (assign) int       addr;
 

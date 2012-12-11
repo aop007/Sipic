@@ -80,11 +80,12 @@
 
         cle = [[CodeLineElement alloc] init];
         
-        cle.index     = index - 1;
-        cle.line      = [line retain];
-        cle.breakOnPC = false;
-        cle.isCode    = false;
-        cle.addr      = 0;
+        cle.index        = index - 1;
+        cle.line         = [line retain];
+        cle.breakOnPC    = false;
+        cle.clearOnBreak = false;
+        cle.isCode       = false;
+        cle.addr         = 0;
         
         [allLines addObject:cle];
         

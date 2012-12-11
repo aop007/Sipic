@@ -56,14 +56,19 @@
 {
     NSButton   *p_button;
     //UInt32      addr;
-    NSString   *memoryBPstring;
-    NSScanner  *pScanner;
+    //NSString   *memoryBPstring;
+    //NSScanner  *pScanner;
     NSString   *btnName;
     
-    
+#if 0
     memoryBPstring = [_p_pc_bp stringValue];
-    pScanner       = [NSScanner scannerWithString:memoryBPstring];
     
+    if (memoryBPstring == nil) {
+        NSLog(@"Nil Scan");
+    }
+    
+    pScanner       = [NSScanner scannerWithString:memoryBPstring];
+#endif
     p_button = (NSButton *)sender;
     btnName  = [p_button title];
     
@@ -99,6 +104,11 @@
         while (listHead != NULL) {
             if (listHead->cle.addr == PC) {
                 kill_thread = true;
+                
+                if (listHead->cle.clearOnBreak == true) {
+                    [self RemoveBreakPoint:listHead->cle];
+                }
+                
                 break;
             } else {
                 listHead = listHead->next;
@@ -115,7 +125,7 @@
     [p_run_thread    cancel];
 }
 
-- (void    )AddBreakPoint:   (CodeLineElement *)cle
+- (void)AddBreakPoint:   (CodeLineElement *)cle
 {
     BREAK_POINT_LIST  *new_bpl;
     
@@ -236,6 +246,7 @@
     for (ix = 0 ; ix < [allLinedStrings count] ; ix++) {
         line = [allLinedStrings objectAtIndex:ix];
         if ([line length] > 0) {
+            
             /* Find CLE for addr */
             pScanner = [NSScanner scannerWithString: line];
             [pScanner scanInt:&addrVal];
@@ -256,6 +267,33 @@
                 bpl           = new_bpl;
             }
         }
+    }
+}
+
+- (IBAction)sim_step_over:(id)sender
+{
+    CPU_INT32U             PC;
+    OPCODE                 opc;
+    CodeLineElement       *cle;
+    TableViewsController  *tvc;
+    
+    PC  = (Sim_GetValueFromDataMem(0x0030) & 0xFF) << 16 | Sim_GetValueFromDataMem(0x002E);
+    opc =  Sim_GetOPCFromProgMem(PC);
+    
+    if ((opc & 0xFF0000) == CORE_OPC_CALL) {
+        
+        tvc = (TableViewsController *)tableViewController;
+        cle = [tvc CleForPC:(PC + 4)];
+        
+        cle.breakOnPC    = true;
+        cle.clearOnBreak = true;;
+        
+        /* BP on call return */
+        [self AddBreakPoint:cle];
+        
+    } else {
+        /* Sim Step */
+        [self sim_step:nil];
     }
 }
 
